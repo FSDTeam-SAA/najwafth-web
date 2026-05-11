@@ -1,0 +1,43 @@
+import Image from 'next/image'
+
+const achievements = [
+  { value: '200+', label: 'Sells Books' },
+  { value: '20k+', label: 'Customers' },
+  { value: '100+', label: 'Reviews' },
+]
+
+export function AchievementSection() {
+  return (
+    <section className="bg-[#edf5fb] py-14 sm:py-16">
+      <div className="container mx-auto grid w-full gap-10 px-4 sm:px-6 lg:grid-cols-[1.1fr_repeat(3,0.8fr)] lg:px-10">
+        <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
+          <div className="relative h-[76px] w-[140px]">
+            <Image
+              src="/images/logo.png"
+              alt="Books and shack logo"
+              fill
+              className="object-contain"
+            />
+          </div>
+          <h2 className="mt-3 text-[28px] leading-tight text-[#111111] sm:text-[44px]">
+            Achievement
+          </h2>
+        </div>
+
+        {achievements.map(item => (
+          <div
+            key={item.label}
+            className="flex flex-col items-center justify-center text-center lg:items-start lg:text-left"
+          >
+            <span className="text-[40px] font-semibold leading-none text-[#459AE4] sm:text-[52px]">
+              {item.value}
+            </span>
+            <span className="mt-2 text-[24px] leading-tight text-[#1f2937]">
+              {item.label}
+            </span>
+          </div>
+        ))}
+      </div>
+    </section>
+  )
+}

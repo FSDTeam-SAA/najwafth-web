@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Link from 'next/link'
 
 import { Button } from '@/components/ui/button'
 import { AchievementSection } from '@/presentation/home/AchievementSection'
@@ -9,9 +10,7 @@ import { WhyChooseUsSection } from './WhyChooseUsSection'
 export function AboutPage() {
   return (
     <div className="bg-[#FAFAFA]">
-      {/* Hero — about-bg.png as full background, left text visible via gradient */}
       <section className="relative overflow-hidden border-b border-black/6">
-        {/* Full-bleed background image */}
         <Image
           src="/images/about-bg.png"
           alt=""
@@ -20,40 +19,39 @@ export function AboutPage() {
           className="pointer-events-none object-cover object-center"
           priority
         />
-        {/* Left-side white fade so text stays readable — no dark overlay */}
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-white/95 via-white/70 to-transparent" />
 
-        <div className="relative container mx-auto flex flex-col justify-center px-4 py-20 sm:px-6 lg:px-10 lg:py-28">
-          {/* Badge */}
-          <div className="mb-8 inline-flex w-fit rounded-full border border-[#459AE4]/20 bg-white/80 px-4 py-2 text-sm text-[#5F83A2] shadow-sm">
-            About Us
-          </div>
+        <div className="relative container mx-auto flex min-h-[540px] items-center px-4 sm:px-6 lg:min-h-[620px] lg:px-10">
+          <div className="max-w-[540px] pl-2 sm:pl-6 lg:pl-10">
+              <div className="mb-5 text-sm text-[#8A8A8A]">About Us</div>
 
-          <h1 className="font-display max-w-[14ch] text-5xl leading-[1.08] text-[#111111] sm:text-6xl">
-            Discover Your Next Great Read
-          </h1>
+              <h1 className="font-display max-w-[12ch] text-[42px] leading-[0.98] tracking-[-0.03em] text-[#111111] sm:text-[56px] lg:text-[64px]">
+                Discover Your Next Great Read
+              </h1>
 
-          <p className="mt-6 max-w-[36ch] text-xl leading-[1.55] font-light text-[#232323] sm:text-[22px]">
-            Discover millions of books from local sellers worldwide. Same great
-            reads, better impact.
-          </p>
+              <p className="mt-5 max-w-[30ch] text-[18px] leading-[1.5] text-[#2A2A2A] sm:text-[20px]">
+                Discover millions of books from local sellers worldwide. Same
+                great reads, better impact.
+              </p>
 
-          <div className="mt-10">
-            <Button className="h-14 min-w-[260px] rounded-2xl bg-[linear-gradient(90deg,#5F83A2_0%,#5E92C0_100%)] text-[18px] font-semibold shadow-none hover:opacity-95">
-              Browser Books
-            </Button>
-          </div>
+              <div className="mt-8">
+                <Link href="/categories">
+                  <Button className="h-12 min-w-[224px] rounded-md bg-[#6B95BF] px-8 text-[18px] font-medium text-white shadow-none hover:bg-[#5b86b0]">
+                    Browser Books
+                  </Button>
+                </Link>
+              </div>
 
-          <div className="mt-12 flex items-center gap-4">
-            <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[#459AE4] bg-white">
-              <span className="h-3.5 w-3.5 rounded-full bg-[#459AE4]" />
-            </span>
-            {[1, 2, 3].map(dot => (
-              <span
-                key={dot}
-                className="h-3.5 w-3.5 rounded-full border border-[#459AE4]/50 bg-[#459AE4]/35"
-              />
-            ))}
+              <div className="mt-8 flex items-center gap-4">
+                <span className="flex h-8 w-8 items-center justify-center rounded-full border border-[#5AA2E8] bg-white">
+                  <span className="h-3 w-3 rounded-full bg-[#5AA2E8]" />
+                </span>
+                {[1, 2, 3].map(dot => (
+                  <span
+                    key={dot}
+                    className="h-2.5 w-2.5 rounded-full border border-[#5AA2E8]/60 bg-[#B9D9F7]"
+                  />
+                ))}
+              </div>
           </div>
         </div>
       </section>

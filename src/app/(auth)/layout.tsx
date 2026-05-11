@@ -1,9 +1,11 @@
-import type { ReactNode } from "react";
-
-export default function AuthLayout({ children }: { children: ReactNode }) {
+import React from 'react'
+function layout({children}: {children: React.ReactNode}) {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[#FAFAFA] px-4 py-10">
-      {children}
-    </main>
-  );
+    <div className=''>
+      
+        {children}
+    </div>
+  )
 }
+
+export default layout

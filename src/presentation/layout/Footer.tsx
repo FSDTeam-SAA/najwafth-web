@@ -18,12 +18,12 @@ export function Footer() {
       <div className="relative container mx-auto px-4 py-14 sm:px-6 lg:px-10">
         <div className="grid gap-12 lg:grid-cols-[1.5fr_0.9fr_0.9fr_0.8fr]">
           <div>
-            <div className="relative h-[122px] w-[193px]">
+            <div className="relative h-[122px] w-[193px] overflow-hidden">
               <Image
-                src="/images/logo.png"
+                src="/images/footer-logo.png"
                 alt="Books and shack logo"
                 fill
-                className="object-contain opacity-90 brightness-[2.5]"
+                className="scale-[1.55] object-contain object-center opacity-90 brightness-[2.5]"
               />
             </div>
             <p className="mt-4 max-w-[24ch] text-[13px] leading-5 text-white/80">

@@ -1,9 +1,10 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Bell, Search, ShoppingCart } from 'lucide-react'
+import { Bell, Menu, Search, ShoppingCart, X } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 
@@ -27,20 +28,24 @@ function isLinkActive(linkHref: string, pathname: string): boolean {
 
 export function Navbar() {
   const pathname = usePathname()
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+
+  useEffect(() => {
+    setIsMobileMenuOpen(false)
+  }, [pathname])
 
   return (
     <header className="sticky top-0 z-40 border-b border-black/6 bg-white/95 backdrop-blur">
-      <div className="mx-auto flex w-full container items-center justify-between gap-6 px-4 py-2 sm:px-6 lg:px-10">
+      <div className="mx-auto flex w-full container items-center justify-between gap-4 px-4 py-1.5 sm:px-6 lg:gap-6 lg:px-10">
         <Link
           href="/"
-          className="relative flex shrink-0 items-center justify-center"
+          className="relative flex h-[75px] w-[119px] shrink-0 items-center justify-center overflow-hidden"
         >
           <Image
             src="/images/logo.png"
             alt="Books and shack logo"
-            width={90}
-            height={55}
-            className="object-contain"
+            fill
+            className="scale-[1.9] object-contain object-center"
             priority
           />
         </Link>
@@ -64,7 +69,7 @@ export function Navbar() {
           })}
         </nav>
 
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-1.5 sm:gap-3">
           <Button variant="ghost" size="icon" className="rounded-full">
             <Search className="h-5 w-5" />
             <span className="sr-only">Search</span>
@@ -77,11 +82,58 @@ export function Navbar() {
             <Bell className="h-5 w-5" />
             <span className="sr-only">Notifications</span>
           </Button>
-          <Link href="/signin">
-            <Button className="rounded-xl px-5 text-[15px]">Sign in</Button>
+          <Link href="/signin" className="hidden lg:block">
+            <Button className="rounded-xl px-5 text-[15px]">
+              Sign in
+            </Button>
           </Link>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="rounded-full lg:hidden"
+            aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={isMobileMenuOpen}
+            onClick={() => setIsMobileMenuOpen(open => !open)}
+          >
+            {isMobileMenuOpen ? (
+              <X className="h-5 w-5" />
+            ) : (
+              <Menu className="h-5 w-5" />
+            )}
+          </Button>
         </div>
       </div>
+
+      <nav
+        className={`overflow-hidden border-t border-black/6 transition-[max-height,opacity] duration-200 lg:hidden ${
+          isMobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+        }`}
+      >
+        <div className="container mx-auto grid gap-1 px-4 py-3 sm:px-6">
+          {navLinks.map((link) => {
+            const active = isLinkActive(link.href, pathname)
+            return (
+              <Link
+                key={`${link.href}-mobile`}
+                href={link.href}
+                className={`rounded-lg px-3 py-2 text-[15px] transition-colors ${
+                  active
+                    ? 'bg-[#459AE4]/8 text-[#459AE4]'
+                    : 'text-[#111827] hover:bg-[#459AE4]/5 hover:text-[#459AE4]'
+                }`}
+              >
+                {link.label}
+              </Link>
+            )
+          })}
+
+          <Link href="/signin" className="sm:hidden">
+            <Button className="mt-2 w-full rounded-xl text-[14px]">
+              Sign in
+            </Button>
+          </Link>
+        </div>
+      </nav>
     </header>
   )
 }

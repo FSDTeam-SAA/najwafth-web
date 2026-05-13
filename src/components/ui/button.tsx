@@ -9,6 +9,7 @@ export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   size?: ButtonSize;
+  asChild?: boolean;
 }
 
 const variantClasses: Record<ButtonVariant, string> = {
@@ -24,20 +25,50 @@ const sizeClasses: Record<ButtonSize, string> = {
   icon: "h-10 w-10 p-0",
 };
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = "default", size = "default", type, ...props }, ref) => {
+const baseClasses =
+  "inline-flex cursor-pointer items-center justify-center rounded-xl text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#459AE4]/40 disabled:pointer-events-none disabled:opacity-50";
+
+const Button = React.forwardRef<HTMLElement, ButtonProps>(
+  (
+    {
+      className,
+      variant = "default",
+      size = "default",
+      type,
+      asChild = false,
+      children,
+      ...props
+    },
+    ref,
+  ) => {
+    const mergedClassName = cn(
+      baseClasses,
+      variantClasses[variant],
+      sizeClasses[size],
+      className,
+    );
+
+    if (asChild && React.isValidElement(children)) {
+      const child = children as React.ReactElement<{
+        className?: string;
+      }>;
+
+      return React.cloneElement(child, {
+        ...props,
+        ref,
+        className: cn(mergedClassName, child.props.className),
+      });
+    }
+
     return (
       <button
-        ref={ref}
+        ref={ref as React.Ref<HTMLButtonElement>}
         type={type ?? "button"}
-        className={cn(
-          "inline-flex cursor-pointer items-center justify-center rounded-xl text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#459AE4]/40 disabled:pointer-events-none disabled:opacity-50",
-          variantClasses[variant],
-          sizeClasses[size],
-          className,
-        )}
+        className={mergedClassName}
         {...props}
-      />
+      >
+        {children}
+      </button>
     );
   },
 );

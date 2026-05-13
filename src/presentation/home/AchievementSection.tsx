@@ -11,12 +11,12 @@ export function AchievementSection() {
     <section className="bg-[#edf5fb] py-14 sm:py-16">
       <div className="container mx-auto grid w-full gap-10 px-4 sm:px-6 lg:grid-cols-[1.1fr_repeat(3,0.8fr)] lg:px-10">
         <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
-          <div className="relative h-[76px] w-[140px]">
+          <div className="relative h-[122px] w-[193px] overflow-hidden">
             <Image
               src="/images/logo.png"
               alt="Books and shack logo"
               fill
-              className="object-contain"
+              className="scale-[1.55] object-contain object-center"
             />
           </div>
           <h2 className="mt-3 text-[28px] leading-tight text-[#111111] sm:text-[44px]">

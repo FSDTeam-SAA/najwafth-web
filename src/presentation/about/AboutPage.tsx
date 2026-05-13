@@ -12,46 +12,54 @@ export function AboutPage() {
     <div className="bg-[#FAFAFA]">
       <section className="relative overflow-hidden border-b border-black/6">
         <Image
+          src="/images/about-bg-second.png"
+          alt=""
+          fill
+          aria-hidden="true"
+          className="pointer-events-none object-cover object-center lg:hidden"
+          priority
+        />
+        <Image
           src="/images/about-bg.png"
           alt=""
           fill
           aria-hidden="true"
-          className="pointer-events-none object-cover object-center"
+          className="pointer-events-none hidden object-cover object-center lg:block"
           priority
         />
 
-        <div className="relative container mx-auto flex min-h-[540px] items-center px-4 sm:px-6 lg:min-h-[620px] lg:px-10">
-          <div className="max-w-[540px] pl-2 sm:pl-6 lg:pl-10">
-              <div className="mb-5 text-sm text-[#8A8A8A]">About Us</div>
+        <div className="relative flex min-h-[420px] w-full items-center py-0 sm:min-h-[520px] md:min-h-[500px] lg:min-h-[620px]">
+          <div className="max-w-[540px] px-6 py-6 sm:px-4 md:max-w-[480px] md:px-5 lg:ml-[12vw] lg:max-w-[540px] lg:px-0">
+            <div className="mb-5 text-sm text-[#8A8A8A]">About Us</div>
 
-              <h1 className="font-display max-w-[12ch] text-[42px] leading-[0.98] tracking-[-0.03em] text-[#111111] sm:text-[56px] lg:text-[64px]">
-                Discover Your Next Great Read
-              </h1>
+            <h1 className="font-display max-w-[12ch] text-[42px] leading-[0.98] tracking-[-0.03em] text-[#111111] sm:text-[52px] md:text-[44px] lg:text-[64px]">
+              Discover Your Next Great Read
+            </h1>
 
-              <p className="mt-5 max-w-[30ch] text-[18px] leading-[1.5] text-[#2A2A2A] sm:text-[20px]">
-                Discover millions of books from local sellers worldwide. Same
-                great reads, better impact.
-              </p>
+            <p className="mt-5 max-w-[30ch] text-[18px] leading-[1.5] text-[#2A2A2A] sm:text-[20px] md:max-w-[26ch] md:text-[18px] lg:max-w-[30ch] lg:text-[20px]">
+              Discover millions of books from local sellers worldwide. Same
+              great reads, better impact.
+            </p>
 
-              <div className="mt-8">
-                <Link href="/categories">
-                  <Button className="h-12 min-w-[224px] rounded-md bg-[#6B95BF] px-8 text-[18px] font-medium text-white shadow-none hover:bg-[#5b86b0]">
-                    Browser Books
-                  </Button>
-                </Link>
-              </div>
+            <div className="mt-8">
+              <Link href="/categories">
+                <Button className="h-12 min-w-[224px] rounded-md bg-[#6B95BF] px-8 text-[18px] font-medium text-white shadow-none hover:bg-[#5b86b0]">
+                  Browser Books
+                </Button>
+              </Link>
+            </div>
 
-              <div className="mt-8 flex items-center gap-4">
-                <span className="flex h-8 w-8 items-center justify-center rounded-full border border-[#5AA2E8] bg-white">
-                  <span className="h-3 w-3 rounded-full bg-[#5AA2E8]" />
-                </span>
-                {[1, 2, 3].map(dot => (
-                  <span
-                    key={dot}
-                    className="h-2.5 w-2.5 rounded-full border border-[#5AA2E8]/60 bg-[#B9D9F7]"
-                  />
-                ))}
-              </div>
+            <div className="mt-8 flex items-center gap-4">
+              <span className="flex h-8 w-8 items-center justify-center rounded-full border border-[#5AA2E8] bg-white">
+                <span className="h-3 w-3 rounded-full bg-[#5AA2E8]" />
+              </span>
+              {[1, 2, 3].map(dot => (
+                <span
+                  key={dot}
+                  className="h-2.5 w-2.5 rounded-full border border-[#5AA2E8]/60 bg-[#B9D9F7]"
+                />
+              ))}
+            </div>
           </div>
         </div>
       </section>

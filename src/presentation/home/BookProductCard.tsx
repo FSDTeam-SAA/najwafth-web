@@ -48,7 +48,7 @@ export function BookProductCard({ product }: { product: ProductItem }) {
           </span>
           <Button
             size="icon"
-            className="h-9 w-9 rounded-full bg-[#459AE4] shadow-none"
+            className="aspect-square h-9 w-9 !rounded-full bg-[#459AE4] p-0 shadow-none"
           >
             <ShoppingCart className="h-4 w-4" />
             <span className="sr-only">Add to cart</span>

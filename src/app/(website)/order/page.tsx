@@ -1,13 +1,12 @@
-import VerifyOtpForm from '@/presentation/auth/VerifyOtpForm'
+import OrderPage from '@/presentation/order/OrderPage'
 import React from 'react'
 
 function page() {
   return (
     <div>
-      <VerifyOtpForm />
+      <OrderPage />
     </div>
   )
 }
 
 export default page
- 

@@ -1,8 +1,48 @@
+ 'use client'
+
 import Image from 'next/image'
+import { useEffect, useState } from 'react'
+import Link from 'next/link'
 
 import { Button } from '@/components/ui/button'
 
 export function HeroSection() {
+  const slides = [
+    {
+      image: '/images/hero-banner.png',
+      title: 'Discover Your Next Great Read',
+      description:
+        'Discover millions of books from local sellers worldwide. Same great reads, better impact.',
+    },
+    {
+      image: '/images/banner-2.png',
+      title: 'Explore Endless Reading Possibilities',
+      description:
+        'Browse handpicked books with seamless shopping and fast delivery.',
+    },
+    {
+      image: '/images/banner-3.png',
+      title: 'Your Personal Library Starts Here',
+      description:
+        'Shop bestselling books, timeless classics, and new arrivals in one place.',
+    },
+    {
+      image: '/images/banner-4.png',
+      title: 'Books That Inspire Every Journey',
+      description:
+        "From timeless classics to trending favourites discover books you'll love.",
+    },
+  ]
+  const [activeSlide, setActiveSlide] = useState(0)
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setActiveSlide(prev => (prev + 1) % slides.length)
+    }, 4000)
+
+    return () => window.clearInterval(timer)
+  }, [slides.length])
+
   return (
     <section className="relative overflow-hidden border-b border-black/6">
       <div className="hero-haze pointer-events-none absolute inset-0" />
@@ -20,45 +60,71 @@ export function HeroSection() {
             Curated books from trusted local sellers
           </div>
 
-          <h1 className="font-display  max-w-[16ch] text-5xl leading-[1.12] tracking-normal text-[#111111] sm:text-6xl">
-            Discover Your Next Great Read
-          </h1>
+          <div
+            key={`hero-copy-${activeSlide}`}
+            className="animate-in fade-in duration-500"
+          >
+            <h1 className="h-[116px] w-[651px] font-['Prata'] text-[48px] leading-[120%] font-normal tracking-[0%] text-[#111111]">
+              {slides[activeSlide].title}
+            </h1>
 
-          <p className="mt-6  text-xl leading-[1.55] font-light text-[#232323] sm:text-[22px]">
-            Discover millions of books from local sellers worldwide. <br /> Same
-            great reads, better impact.
-          </p>
+            <p className="mt-6 h-[72px] w-[651px] font-['Poppins'] text-[24px] leading-[130%] font-light tracking-[0%] text-[#232323]">
+              {slides[activeSlide].description}
+            </p>
+          </div>
 
           <div className="mt-10">
-            <Button className="h-14 min-w-[284px] rounded-2xl bg-[linear-gradient(90deg,#5F83A2_0%,#5E92C0_100%)] text-xl font-semibold shadow-[0_20px_45px_rgba(94,146,192,0.24)] hover:opacity-95">
-              Browser Books
-            </Button>
+            <Link href="/featured-bookstores">
+              <Button className="h-14 min-w-[284px] cursor-pointer rounded-2xl bg-[linear-gradient(90deg,#5F83A2_0%,#5E92C0_100%)] text-xl font-semibold shadow-[0_20px_45px_rgba(94,146,192,0.24)] hover:opacity-95">
+                Browse Books
+              </Button>
+            </Link>
           </div>
 
           <div className="mt-12 flex items-center gap-4">
-            <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[#459AE4] bg-white">
-              <span className="h-3.5 w-3.5 rounded-full bg-[#459AE4]" />
-            </span>
-            {[1, 2, 3].map(dot => (
-              <span
-                key={dot}
-                className="h-3.5 w-3.5 rounded-full border border-[#459AE4]/50 bg-[#459AE4]/35"
-              />
-            ))}
+            {slides.map((_, index) => {
+              const isActive = index === activeSlide
+
+              return isActive ? (
+                <button
+                  key={index}
+                  type="button"
+                  onClick={() => setActiveSlide(index)}
+                  className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border border-[#459AE4] bg-white"
+                  aria-label={`Go to slide ${index + 1}`}
+                >
+                  <span className="h-3.5 w-3.5 rounded-full bg-[#459AE4]" />
+                </button>
+              ) : (
+                <button
+                  key={index}
+                  type="button"
+                  onClick={() => setActiveSlide(index)}
+                  className="h-3.5 w-3.5 cursor-pointer rounded-full border border-[#459AE4]/50 bg-[#459AE4]/35"
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              )
+            })}
           </div>
         </div>
 
         <div className="relative flex items-center justify-center lg:justify-end">
           <div className="relative w-full max-w-[560px]">
             <div className="absolute inset-4 rounded-[36px] bg-white/50 blur-3xl" />
-            <Image
-              src="/images/hero-banner.png"
-              alt="Featured book collection"
-              width={1367}
-              height={1151}
-              priority
-              className="relative z-10 h-auto w-full object-contain"
-            />
+            <div className="relative z-10 h-[420px] w-full overflow-hidden rounded-[26px] bg-white/45">
+              {slides.map((slide, index) => (
+                <Image
+                  key={slide.image}
+                  src={slide.image}
+                  alt={slide.title}
+                  fill
+                  priority={index === 0}
+                  className={`object-cover transition-opacity duration-700 ease-in-out ${
+                    index === activeSlide ? 'opacity-100' : 'opacity-0'
+                  }`}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </div>

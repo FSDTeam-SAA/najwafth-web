@@ -1,6 +1,7 @@
 import React from "react";
 import { Trash2, Plus, Minus, ChevronRight } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 const CartPage = () => {
   const cartItems = Array(6).fill({
@@ -34,7 +35,9 @@ const CartPage = () => {
                 </button>
 
                 <div className="flex items-center gap-4 text-left">
-                  <img
+                  <Image
+                  width={400}
+                  height={400}
                     src={item.img}
                     alt="book"
                     className="w-20 h-20 rounded-lg object-cover bg-gray-200"

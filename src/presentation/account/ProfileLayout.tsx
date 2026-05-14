@@ -18,6 +18,7 @@ import ChangePassword from "./ChangePassword";
 import EditProfile from "./EditProfile";
 import LanguageSelection from "./LanguageSelection";
 import LogoutModal from "./LogoutModal";
+import Image from "next/image";
 
 const ProfileLayout = () => {
   const [activeTab, setActiveTab] = useState("Edit Profile");
@@ -73,7 +74,9 @@ const ProfileLayout = () => {
               <div className="h-24 bg-[#76b9f0]"></div>
               <div className="flex flex-col items-center -mt-12 pb-6">
                 <div className="relative">
-                  <img
+                  <Image
+                  width={400}
+                  height={500}
                     src="https://i.pravatar.cc/150?u=madiha"
                     alt="Profile"
                     className="w-24 h-24 rounded-full border-4 border-white object-cover shadow-md"

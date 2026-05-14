@@ -23,8 +23,8 @@ export function ExploreCategoriesSection() {
       <div className="container mx-auto w-full px-4 sm:px-6 lg:px-10">
         <div className="grid gap-8 lg:grid-cols-[1fr_1.42fr_1fr] lg:items-stretch">
           <CategoryTile category={romance} className="lg:mt-3" />
-          <Card className="flex min-h-[286px] flex-col items-center justify-center rounded-[18px] border border-[#dce3ea] bg-white px-8 text-center shadow-none">
-            <h2 className="font-display max-w-[10ch] text-4xl leading-[1.05] text-[#264d73] sm:text-[58px]">
+          <Card className="flex min-h-[286px] flex-col items-center justify-center rounded-[18px] border border-[#dce3ea] bg-[#EEF3F6] px-8 text-center shadow-[0_1px_2px_-1px_rgba(0,0,0,0.10),0_1px_3px_0_rgba(0,0,0,0.10)]">
+            <h2 className="font-display max-w-[20ch]  text-4xl leading-[1.25] text-[#264d73] sm:text-[48px]">
               Explore our Top Categories
             </h2>
             <Link href="/categories" className="mt-10">
@@ -60,9 +60,11 @@ function CategoryTile({
 }) {
   return (
     <Card
-      className={`rounded-[18px] border border-[#dce3ea] bg-[#edf5fb] p-3 shadow-none ${className}`}
+      className={`rounded-[18px] border border-[#dce3ea] bg-[#EEF3F6] p-3 shadow-[0_1px_2px_-1px_rgba(0,0,0,0.10),0_1px_3px_0_rgba(0,0,0,0.10)] ${className}`}
     >
-      <div className={`relative overflow-hidden rounded-[12px] ${compact ? 'h-[172px]' : 'h-[220px]'}`}>
+      <div
+        className={`relative overflow-hidden rounded-[12px] ${compact ? 'h-[172px]' : 'h-[220px]'}`}
+      >
         <Image
           src={category.image}
           alt={category.title}

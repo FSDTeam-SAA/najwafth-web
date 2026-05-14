@@ -1,20 +1,20 @@
-"use client"
+"use client";
 import React, { useState } from "react";
-import { ShoppingCart, Star, Plus, Minus, X } from "lucide-react";
+import { ShoppingCart, Star, Plus, Minus } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 const CartDetailsPage = () => {
   const [isReviewOpen, setIsReviewOpen] = useState(false);
-  const [orderCompleted, setOrderCompleted] = useState(true); // Set to true to show the button
+  const [orderCompleted] = useState(true); // Set to true to show the button
 
   return (
     <div className="min-h-screen bg-gray-50 py-20 px-4">
       <div className="container mx-auto bg-white border border-gray-100 p-10 shadow-sm relative">
-        
         {/* Review Button - Only shows if orderCompleted is true */}
         {orderCompleted && (
           <div className="absolute top-10 right-10">
-            <button 
+            <button
               onClick={() => setIsReviewOpen(true)}
               className="bg-green-100 text-green-700 px-4 py-2 rounded-full text-sm font-semibold hover:bg-green-200 transition-colors border border-green-200"
             >
@@ -31,7 +31,9 @@ const CartDetailsPage = () => {
         <div className="flex flex-col md:flex-row gap-8">
           {/* Product Image */}
           <div className="md:w-1/2">
-            <img
+            <Image
+              width={400}
+              height={400}
               src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80&w=400"
               className="w-full h-100 object-cover rounded-xl shadow-lg"
               alt="book"
@@ -101,25 +103,37 @@ const CartDetailsPage = () => {
           <div className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl relative overflow-hidden">
             {/* Background pattern decoration (optional) */}
             <div className="absolute top-0 right-0 opacity-10 pointer-events-none">
-                <svg width="100" height="100" viewBox="0 0 100 100">
-                    <path d="M10 10 Q 50 10 50 50 T 90 90" stroke="currentColor" fill="transparent" />
-                </svg>
+              <svg width="100" height="100" viewBox="0 0 100 100">
+                <path
+                  d="M10 10 Q 50 10 50 50 T 90 90"
+                  stroke="currentColor"
+                  fill="transparent"
+                />
+              </svg>
             </div>
 
             {/* User Info */}
             <div className="flex items-center gap-3 mb-6">
-              <img 
-                src="https://i.pravatar.cc/150?u=madiha" 
-                alt="Profile" 
+              <Image
+              width={300}
+              height={400}
+                src="https://i.pravatar.cc/150?u=madiha"
+                alt="Profile"
                 className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm"
               />
-              <span className="font-semibold text-gray-800 text-lg">Madiha Lata</span>
+              <span className="font-semibold text-gray-800 text-lg">
+                Madiha Lata
+              </span>
             </div>
 
             {/* Star Rating */}
             <div className="flex gap-2 mb-6">
               {[1, 2, 3, 4, 5].map((star) => (
-                <Star key={star} size={28} className="text-yellow-400 cursor-pointer" />
+                <Star
+                  key={star}
+                  size={28}
+                  className="text-yellow-400 cursor-pointer"
+                />
               ))}
             </div>
 
@@ -132,15 +146,13 @@ const CartDetailsPage = () => {
 
             {/* Actions */}
             <div className="flex gap-4">
-              <button 
+              <button
                 onClick={() => setIsReviewOpen(false)}
                 className="flex-1 py-3 px-6 border-2 border-blue-400 text-blue-500 rounded-xl font-semibold hover:bg-blue-50 transition-colors"
               >
                 Cancel
               </button>
-              <button 
-                className="flex-1 py-3 px-6 bg-[#6392b9] text-white rounded-xl font-semibold hover:bg-[#537da1] transition-colors"
-              >
+              <button className="flex-1 py-3 px-6 bg-[#6392b9] text-white rounded-xl font-semibold hover:bg-[#537da1] transition-colors">
                 Post
               </button>
             </div>

@@ -1,7 +1,7 @@
 "use client"; // <--- Add this line at the very top!
 
 import { OrderItem } from "@/types/order/types";
-import { Star, X } from "lucide-react";
+import { Star } from "lucide-react";
 import React, { useState } from "react";
 
 const OrderDetails: React.FC = () => {

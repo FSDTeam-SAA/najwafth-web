@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import Image from "next/image";
 
 const LanguageSelection = () => {
   const [language, setLanguage] = useState("english");
@@ -49,7 +50,9 @@ const LanguageSelection = () => {
               className="flex items-center gap-4 cursor-pointer flex-1"
             >
               <div className="w-12 h-8 overflow-hidden rounded-sm shadow-sm border border-slate-100">
-                <img
+                <Image
+                  width={400}
+                  height={400}
                   src={lang.flag}
                   alt={lang.name}
                   className="w-full h-full object-cover"
@@ -62,7 +65,7 @@ const LanguageSelection = () => {
                 <p className="text-sm text-slate-400">{lang.country}</p>
               </div>
             </Label>
-            
+
             <RadioGroupItem
               value={lang.id}
               id={lang.id}

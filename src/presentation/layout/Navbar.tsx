@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -30,10 +30,6 @@ export function Navbar() {
   const pathname = usePathname()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
-  useEffect(() => {
-    setIsMobileMenuOpen(false)
-  }, [pathname])
-
   return (
     <header className="sticky top-0 z-40 border-b border-black/6 bg-white/95 backdrop-blur">
       <div className="mx-auto flex w-full container items-center justify-between gap-4 px-4 py-1.5 sm:px-6 lg:gap-6 lg:px-10">
@@ -51,7 +47,7 @@ export function Navbar() {
         </Link>
 
         <nav className="hidden items-center gap-9 text-[18px] font-normal text-[#111827] lg:flex">
-          {navLinks.map((link) => {
+          {navLinks.map(link => {
             const active = isLinkActive(link.href, pathname)
             return (
               <Link
@@ -69,21 +65,33 @@ export function Navbar() {
           })}
         </nav>
 
-        <div className="flex items-center gap-1.5 sm:gap-3">
-          <Button variant="ghost" size="icon" className="rounded-full">
-            <Search className="h-5 w-5" />
+        <div className="flex items-center gap-0.5 sm:gap-1">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-10 w-10 cursor-pointer rounded-full p-1"
+          >
+            <Search className="h-7 w-7 stroke-[2.4]" />
             <span className="sr-only">Search</span>
           </Button>
-          <Button variant="ghost" size="icon" className="rounded-full">
-            <ShoppingCart className="h-5 w-5" />
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-10 w-10 cursor-pointer rounded-full p-1"
+          >
+            <ShoppingCart className="h-7 w-7 stroke-[2.4]" />
             <span className="sr-only">Cart</span>
           </Button>
-          <Button variant="ghost" size="icon" className="rounded-full">
-            <Bell className="h-5 w-5" />
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-10 w-10 cursor-pointer rounded-full p-1"
+          >
+            <Bell className="h-7 w-7 stroke-[2.4]" />
             <span className="sr-only">Notifications</span>
           </Button>
           <Link href="/signin" className="hidden lg:block">
-            <Button className="rounded-xl px-5 text-[15px]">
+            <Button className="rounded-xl px-5 py-5 text-[15px]">
               Sign in
             </Button>
           </Link>
@@ -110,7 +118,7 @@ export function Navbar() {
         }`}
       >
         <div className="container mx-auto grid gap-1 px-4 py-3 sm:px-6">
-          {navLinks.map((link) => {
+          {navLinks.map(link => {
             const active = isLinkActive(link.href, pathname)
             return (
               <Link

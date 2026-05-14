@@ -75,8 +75,8 @@ const ProfileLayout = () => {
               <div className="flex flex-col items-center -mt-12 pb-6">
                 <div className="relative">
                   <Image
-                  width={400}
-                  height={500}
+                    width={96} // 24 * 4 = 96px
+                    height={96}
                     src="https://i.pravatar.cc/150?u=madiha"
                     alt="Profile"
                     className="w-24 h-24 rounded-full border-4 border-white object-cover shadow-md"

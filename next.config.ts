@@ -2,7 +2,8 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
-    // domains: ["via.placeholder.com"],
+    // Apnar domains array-te "i.pravatar.cc" add korun
+    domains: ["via.placeholder.com", "i.pravatar.cc"],
   },
 };
 

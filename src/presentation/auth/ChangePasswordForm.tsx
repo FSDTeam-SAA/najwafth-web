@@ -1,16 +1,76 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useResetPassword } from "@/features/auth/hooks/useResetPassword";
+import { toast } from "sonner";
+import { useSession } from "next-auth/react";
 
 function ChangePasswordForm() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // URL থেকে email এবং resetToken সংগ্রহ করা
+  const email = searchParams.get("email") || "";
+  const session = useSession();
+  const resetToken = session?.data?.user?.refreshToken
+  console.log("rese", resetToken)
+
+  const { executeResetPassword, isLoading } = useResetPassword();
+
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] =
-    useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const [formData, setFormData] = useState({
+    newPassword: "",
+    confirmPassword: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+ const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  if (formData.newPassword.length < 6) {
+    toast.error("Password must be at least 6 characters.");
+    return;
+  }
+
+  if (formData.newPassword !== formData.confirmPassword) {
+    toast.error("Passwords do not match!");
+    return;
+  }
+
+  try {
+    const otp = searchParams.get("otp") || "";
+
+    const payload = {
+      email,
+      otp,
+      password: formData.newPassword,
+    };
+
+    const response = await executeResetPassword(payload);
+
+    if (response?.success) {
+      toast.success("Password changed successfully!");
+
+      router.push("/signin");
+    }
+  } catch (err: any) {
+    toast.error(
+      err?.message || "Failed to reset password"
+    );
+  }
+};
 
   return (
     <div className="flex min-h-screen flex-col lg:flex-row">
@@ -22,60 +82,51 @@ function ChangePasswordForm() {
           fill
           className="object-cover"
         />
-
         <div className="absolute inset-0 bg-black/20" />
       </div>
 
       {/* Right Side Form */}
-      <div className="w-full lg:w-1/2 bg-sky-50 flex items-center justify-center p-6 sm:p-10">
-        <div className="w-full max-w-lg bg-white rounded-2xl shadow-md border border-sky-100 p-8">
-          {/* Logo */}
+      <div className="w-full lg:w-1/2 bg-[#F1F9FC] flex items-center justify-center p-6 sm:p-10">
+        <div className="w-full max-w-xl bg-[#F5FBFF] rounded-lg shadow-[0px_4px_5px_0px_#0000001A] border border-sky-100 p-8">
           <div className="flex justify-center mb-4">
-            <div className="relative w-40 h-24">
-              <Image
-                src="/images/logo.png"
-                alt="Logo"
-                fill
-                className="object-contain"
-              />
-            </div>
+            <Image
+              src="/images/logo.png"
+              alt="Logo"
+              width={150}
+              height={60}
+              className="object-contain"
+            />
           </div>
 
-          {/* Title */}
-          <h2 className="text-3xl font-bold text-blue-500">
-            Change Password
+          <h2 className="text-3xl font-bold text-blue-500 text-center">
+            Create New Password
           </h2>
-
-          <p className="text-gray-500 text-sm mt-1 mb-6">
-            Enter your email to recover your password
+          <p className="text-gray-500 text-sm mt-1 mb-6 text-center">
+            Enter your new password to reset it
           </p>
 
-          <form className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             {/* New Password */}
             <div>
               <Label className="text-blue-500 text-sm">
                 Create New Password
               </Label>
-
               <div className="relative mt-1">
                 <Input
+                  name="newPassword"
+                  required
+                  value={formData.newPassword}
+                  onChange={handleChange}
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter Password..."
                   className="rounded-full border-gray-300 h-11 pr-10"
                 />
-
                 <button
                   type="button"
-                  onClick={() =>
-                    setShowPassword(!showPassword)
-                  }
+                  onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
                 >
-                  {showPassword ? (
-                    <EyeOff size={18} />
-                  ) : (
-                    <Eye size={18} />
-                  )}
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
             </div>
@@ -85,39 +136,40 @@ function ChangePasswordForm() {
               <Label className="text-blue-500 text-sm">
                 Confirm New Password
               </Label>
-
               <div className="relative mt-1">
                 <Input
-                  type={
-                    showConfirmPassword
-                      ? "text"
-                      : "password"
-                  }
-                  placeholder="Re- Enter Password..."
+                  name="confirmPassword"
+                  required
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  type={showConfirmPassword ? "text" : "password"}
+                  placeholder="Re-Enter Password..."
                   className="rounded-full border-gray-300 h-11 pr-10"
                 />
-
                 <button
                   type="button"
-                  onClick={() =>
-                    setShowConfirmPassword(
-                      !showConfirmPassword
-                    )
-                  }
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
                 >
-                  {showConfirmPassword ? (
-                    <EyeOff size={18} />
-                  ) : (
-                    <Eye size={18} />
-                  )}
+                  {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
             </div>
 
-            {/* Button */}
-            <Button className="w-full h-11 rounded-md bg-slate-600 hover:bg-slate-700 text-white">
-              Verify
+            {/* Submit Button */}
+            <Button
+              disabled={isLoading}
+              type="submit"
+              className="w-full h-11 rounded-md bg-slate-600 hover:bg-slate-700 text-white flex items-center justify-center gap-2"
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="animate-spin" size={18} />
+                  Updating...
+                </>
+              ) : (
+                "Update Password"
+              )}
             </Button>
           </form>
         </div>

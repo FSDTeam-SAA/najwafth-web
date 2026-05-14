@@ -1,11 +1,11 @@
 import VerifyOtpForm from '@/presentation/auth/VerifyOtpForm'
-import React from 'react'
+import React, { Suspense } from 'react'
 
 function page() {
   return (
-    <div>
+    <Suspense fallback={<div>Loading...</div>}>
       <VerifyOtpForm />
-    </div>
+    </Suspense>
   )
 }
 

@@ -39,7 +39,7 @@ export function Navbar() {
       <div className="mx-auto flex w-full container items-center justify-between gap-4 px-4 py-1.5 sm:px-6 lg:gap-6 lg:px-10">
         <Link
           href="/"
-          className="relative flex h-[75px] w-[119px] shrink-0 items-center justify-center overflow-hidden"
+          className="relative flex h-18.75 w-29.75 shrink-0 items-center justify-center overflow-hidden"
         >
           <Image
             src="/images/logo.png"

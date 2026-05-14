@@ -1,18 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
-import { signupUser } from "../api/auth.api";
-import { SignupRequest } from "../types";
+import { forgotPassword } from "../api/auth.api";
 
-export const useSignup = () => {
+export const useForgotPassword = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const executeSignup = async (data: SignupRequest) => {
+  const executeForgotPassword = async (email: string) => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await signupUser(data);
-      return response; // Success hole data return korbe
+      const response = await forgotPassword(email);
+      return response;
     } catch (err: any) {
       setError(err.message);
       throw err;
@@ -21,5 +20,5 @@ export const useSignup = () => {
     }
   };
 
-  return { executeSignup, isLoading, error };
+  return { executeForgotPassword, isLoading, error };
 };

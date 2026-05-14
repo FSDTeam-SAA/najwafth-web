@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -61,8 +62,8 @@ function SigninForm() {
       </div>
 
       {/* Right Side */}
-      <div className="w-full lg:w-1/2 bg-sky-50 flex items-center justify-center p-6 sm:p-10">
-        <div className="w-full max-w-xl bg-white rounded shadow-[0px_4px_5px_0px_#0000001A] border border-sky-100 p-8">
+      <div className="w-full lg:w-1/2 bg-[#F1F9FC] flex items-center justify-center p-6 sm:p-10">
+        <div className="w-full max-w-xl bg-[#F5FBFF] rounded-lg shadow-[0px_4px_5px_0px_#0000001A] border border-sky-100 p-8">
           {/* Logo */}
           <div className="flex justify-center mb-4">
             <Image
@@ -138,9 +139,14 @@ function SigninForm() {
                 Remember Me
               </label>
 
-              <button type="button" className="text-[#459AE4] hover:underline">
-                Forgot Password?
-              </button>
+              <Link href="/forgot-password">
+                <button
+                  type="button"
+                  className="text-[#459AE4] hover:underline"
+                >
+                  Forgot Password?
+                </button>
+              </Link>
             </div>
 
             {/* Submit */}

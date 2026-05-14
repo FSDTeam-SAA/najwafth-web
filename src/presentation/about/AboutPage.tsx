@@ -59,23 +59,23 @@ export function AboutPage() {
           className="pointer-events-none absolute left-0 top-0 h-full w-full object-cover opacity-40"
         />
 
-        <div className="relative mx-auto grid w-full container gap-12 px-4 py-16 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:px-10 lg:py-20">
+        <div className="relative mx-auto grid w-full container gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12 lg:px-10 lg:py-20">
           <div className="flex flex-col justify-center">
             <div className="mb-5 text-sm text-[#8A8A8A]">About Us</div>
 
             <div key={`about-copy-${activeSlide}`} className="animate-in fade-in duration-500">
-              <h1 className="h-[116px] w-[651px] font-['Prata'] text-[48px] leading-[120%] font-normal tracking-[0%] text-[#111111]">
+              <h1 className="w-full text-balance font-['Prata'] text-[34px] leading-[120%] font-normal tracking-[0%] text-[#111111] sm:text-[40px] lg:h-[116px] lg:w-[651px] lg:text-[48px]">
                 {slides[activeSlide].title}
               </h1>
 
-              <p className="mt-5 h-[72px] w-[651px] font-['Poppins'] text-[24px] leading-[130%] font-light tracking-[0%] text-[#2A2A2A]">
+              <p className="mt-4 w-full font-['Poppins'] text-[18px] leading-[145%] font-light tracking-[0%] text-[#2A2A2A] sm:text-[20px] lg:mt-5 lg:h-[72px] lg:w-[651px] lg:text-[24px] lg:leading-[130%]">
                 {slides[activeSlide].description}
               </p>
             </div>
 
             <div className="mt-8">
               <Link href="/featured-bookstores">
-                <Button className="h-12 min-w-[224px] cursor-pointer rounded-md bg-[#6B95BF] px-8 text-[18px] font-medium text-white shadow-none hover:bg-[#5b86b0]">
+                <Button className="h-12 min-w-[220px] cursor-pointer rounded-xl bg-[#6B95BF] px-6 text-[16px] font-medium text-white shadow-none hover:bg-[#5b86b0] sm:min-w-[224px] sm:px-8 sm:text-[18px]">
                   Browse Books
                 </Button>
               </Link>
@@ -110,7 +110,7 @@ export function AboutPage() {
           <div className="relative flex items-center justify-center lg:justify-end">
             <div className="relative w-full max-w-[560px]">
               <div className="absolute inset-4 rounded-[36px] bg-white/50 blur-3xl" />
-              <div className="relative z-10 h-[420px] w-full overflow-hidden rounded-[26px] bg-white/45">
+              <div className="relative z-10 h-[260px] w-full overflow-hidden rounded-[18px] bg-white/45 sm:h-[330px] sm:rounded-[22px] lg:h-[420px] lg:rounded-[26px]">
                 {slides.map((slide, index) => (
                   <Image
                     key={slide.image}

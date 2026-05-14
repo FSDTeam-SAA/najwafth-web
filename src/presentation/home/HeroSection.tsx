@@ -54,7 +54,7 @@ export function HeroSection() {
         className="pointer-events-none absolute left-0 top-0 h-full w-full object-cover opacity-40"
       />
 
-      <div className="relative mx-auto grid w-full container gap-12 px-4 py-16 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:px-10 lg:py-20">
+        <div className="relative mx-auto grid w-full container gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12 lg:px-10 lg:py-20">
         <div className="flex flex-col justify-center">
           <div className="mb-8 inline-flex w-fit rounded-full border border-[#459AE4]/20 bg-white/80 px-4 py-2 text-sm text-[#5F83A2] shadow-sm">
             Curated books from trusted local sellers
@@ -64,18 +64,18 @@ export function HeroSection() {
             key={`hero-copy-${activeSlide}`}
             className="animate-in fade-in duration-500"
           >
-            <h1 className="h-[116px] w-[651px] font-['Prata'] text-[48px] leading-[120%] font-normal tracking-[0%] text-[#111111]">
+            <h1 className="w-full text-balance font-['Prata'] text-[34px] leading-[120%] font-normal tracking-[0%] text-[#111111] sm:text-[40px] lg:h-[116px] lg:w-[651px] lg:text-[48px]">
               {slides[activeSlide].title}
             </h1>
 
-            <p className="mt-6 h-[72px] w-[651px] font-['Poppins'] text-[24px] leading-[130%] font-light tracking-[0%] text-[#232323]">
+            <p className="mt-4 w-full font-['Poppins'] text-[18px] leading-[145%] font-light tracking-[0%] text-[#232323] sm:text-[20px] lg:mt-6 lg:h-[72px] lg:w-[651px] lg:text-[24px] lg:leading-[130%]">
               {slides[activeSlide].description}
             </p>
           </div>
 
           <div className="mt-10">
             <Link href="/featured-bookstores">
-              <Button className="h-14 min-w-[284px] cursor-pointer rounded-2xl bg-[linear-gradient(90deg,#5F83A2_0%,#5E92C0_100%)] text-xl font-semibold shadow-[0_20px_45px_rgba(94,146,192,0.24)] hover:opacity-95">
+              <Button className="h-12 min-w-[220px] cursor-pointer rounded-xl bg-[linear-gradient(90deg,#5F83A2_0%,#5E92C0_100%)] px-6 text-base font-semibold shadow-[0_20px_45px_rgba(94,146,192,0.24)] hover:opacity-95 sm:h-14 sm:min-w-[284px] sm:rounded-2xl sm:text-xl">
                 Browse Books
               </Button>
             </Link>
@@ -109,10 +109,10 @@ export function HeroSection() {
         </div>
 
         <div className="relative flex items-center justify-center lg:justify-end">
-          <div className="relative w-full max-w-[560px]">
-            <div className="absolute inset-4 rounded-[36px] bg-white/50 blur-3xl" />
-            <div className="relative z-10 h-[420px] w-full overflow-hidden rounded-[26px] bg-white/45">
-              {slides.map((slide, index) => (
+            <div className="relative w-full max-w-[560px]">
+              <div className="absolute inset-4 rounded-[36px] bg-white/50 blur-3xl" />
+            <div className="relative z-10 h-[260px] w-full overflow-hidden rounded-[18px] bg-white/45 sm:h-[330px] sm:rounded-[22px] lg:h-[420px] lg:rounded-[26px]">
+                {slides.map((slide, index) => (
                 <Image
                   key={slide.image}
                   src={slide.image}

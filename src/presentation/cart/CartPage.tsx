@@ -23,7 +23,7 @@ const CartPage = () => {
 
         <div className="space-y-4">
           {cartItems.map((item, index) => (
-            <Link key={index} href={``} className="">
+            <Link key={index} href={`/cart/${item?.id}`} className="">
               <div
                 
                 className="bg-white border border-gray-100 rounded-xl p-4 flex items-center justify-between shadow-sm relative mb-5"

@@ -1,11 +1,28 @@
-import React from "react";
-import { ShoppingCart, Star, Plus, Minus } from "lucide-react";
+"use client"
+import React, { useState } from "react";
+import { ShoppingCart, Star, Plus, Minus, X } from "lucide-react";
 import Link from "next/link";
 
 const CartDetailsPage = () => {
+  const [isReviewOpen, setIsReviewOpen] = useState(false);
+  const [orderCompleted, setOrderCompleted] = useState(true); // Set to true to show the button
+
   return (
     <div className="min-h-screen bg-gray-50 py-20 px-4">
-      <div className="container mx-auto bg-white border border-gray-100 p-10 shadow-sm">
+      <div className="container mx-auto bg-white border border-gray-100 p-10 shadow-sm relative">
+        
+        {/* Review Button - Only shows if orderCompleted is true */}
+        {orderCompleted && (
+          <div className="absolute top-10 right-10">
+            <button 
+              onClick={() => setIsReviewOpen(true)}
+              className="bg-green-100 text-green-700 px-4 py-2 rounded-full text-sm font-semibold hover:bg-green-200 transition-colors border border-green-200"
+            >
+              Write a Review
+            </button>
+          </div>
+        )}
+
         <div className="mb-8">
           <h1 className="text-4xl font-serif text-gray-800">Add to Cart</h1>
           <p className="text-gray-500 mt-1">Complete your order details</p>
@@ -16,7 +33,7 @@ const CartDetailsPage = () => {
           <div className="md:w-1/2">
             <img
               src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80&w=400"
-              className="w-full h-[400px] object-cover rounded-xl shadow-lg"
+              className="w-full h-100 object-cover rounded-xl shadow-lg"
               alt="book"
             />
           </div>
@@ -77,6 +94,59 @@ const CartDetailsPage = () => {
           </div>
         </div>
       </div>
+
+      {/* Review Dialog/Modal - Design based on image_cc5b60.png */}
+      {isReviewOpen && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl relative overflow-hidden">
+            {/* Background pattern decoration (optional) */}
+            <div className="absolute top-0 right-0 opacity-10 pointer-events-none">
+                <svg width="100" height="100" viewBox="0 0 100 100">
+                    <path d="M10 10 Q 50 10 50 50 T 90 90" stroke="currentColor" fill="transparent" />
+                </svg>
+            </div>
+
+            {/* User Info */}
+            <div className="flex items-center gap-3 mb-6">
+              <img 
+                src="https://i.pravatar.cc/150?u=madiha" 
+                alt="Profile" 
+                className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm"
+              />
+              <span className="font-semibold text-gray-800 text-lg">Madiha Lata</span>
+            </div>
+
+            {/* Star Rating */}
+            <div className="flex gap-2 mb-6">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <Star key={star} size={28} className="text-yellow-400 cursor-pointer" />
+              ))}
+            </div>
+
+            {/* Text Area */}
+            <textarea
+              className="w-full border border-gray-200 rounded-xl p-4 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-100 resize-none mb-8"
+              rows={4}
+              placeholder="Write a short review to help fellow books lovers..."
+            ></textarea>
+
+            {/* Actions */}
+            <div className="flex gap-4">
+              <button 
+                onClick={() => setIsReviewOpen(false)}
+                className="flex-1 py-3 px-6 border-2 border-blue-400 text-blue-500 rounded-xl font-semibold hover:bg-blue-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button 
+                className="flex-1 py-3 px-6 bg-[#6392b9] text-white rounded-xl font-semibold hover:bg-[#537da1] transition-colors"
+              >
+                Post
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

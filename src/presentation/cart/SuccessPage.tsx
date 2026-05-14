@@ -3,7 +3,7 @@ import { ClipboardList, Wallet } from 'lucide-react';
 
 const SuccessPage = () => {
   return (
-    <div className="min-h-screen bg-gray-50 py-20 px-4 flex justify-center items-center">
+    <div className="bg-gray-50 px-4 flex justify-center items-center py-10">
       <div className="max-w-3xl w-full bg-white border border-gray-100 rounded-xl p-12 shadow-sm text-center">
         {/* Confetti Icon */}
         <div className="flex justify-center mb-6">

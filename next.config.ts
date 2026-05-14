@@ -1,10 +1,26 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
   images: {
-    // Apnar domains array-te "i.pravatar.cc" add korun
-    domains: ["via.placeholder.com", "i.pravatar.cc"],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'via.placeholder.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'i.pravatar.cc',
+      },
+      {
+        protocol: 'http',
+        hostname: '**',
+      },
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
   },
-};
+}
 
-export default nextConfig;
+export default nextConfig

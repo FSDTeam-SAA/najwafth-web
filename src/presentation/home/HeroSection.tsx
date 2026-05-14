@@ -1,8 +1,48 @@
+ 'use client'
+
 import Image from 'next/image'
+import { useEffect, useState } from 'react'
+import Link from 'next/link'
 
 import { Button } from '@/components/ui/button'
 
 export function HeroSection() {
+  const slides = [
+    {
+      image: '/images/hero-banner.png',
+      title: 'Discover Your Next Great Read',
+      description:
+        'Discover millions of books from local sellers worldwide. Same great reads, better impact.',
+    },
+    {
+      image: '/images/banner-2.png',
+      title: 'Explore Endless Reading Possibilities',
+      description:
+        'Browse handpicked books with seamless shopping and fast delivery.',
+    },
+    {
+      image: '/images/banner-3.png',
+      title: 'Your Personal Library Starts Here',
+      description:
+        'Shop bestselling books, timeless classics, and new arrivals in one place.',
+    },
+    {
+      image: '/images/banner-4.png',
+      title: 'Books That Inspire Every Journey',
+      description:
+        "From timeless classics to trending favourites discover books you'll love.",
+    },
+  ]
+  const [activeSlide, setActiveSlide] = useState(0)
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setActiveSlide(prev => (prev + 1) % slides.length)
+    }, 4000)
+
+    return () => window.clearInterval(timer)
+  }, [slides.length])
+
   return (
     <section className="relative overflow-hidden border-b border-black/6">
       <div className="hero-haze pointer-events-none absolute inset-0" />
@@ -14,51 +54,77 @@ export function HeroSection() {
         className="pointer-events-none absolute left-0 top-0 h-full w-full object-cover opacity-40"
       />
 
-      <div className="relative mx-auto grid w-full container gap-12 px-4 py-16 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:px-10 lg:py-20">
+        <div className="relative mx-auto grid w-full container gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12 lg:px-10 lg:py-20">
         <div className="flex flex-col justify-center">
           <div className="mb-8 inline-flex w-fit rounded-full border border-[#459AE4]/20 bg-white/80 px-4 py-2 text-sm text-[#5F83A2] shadow-sm">
             Curated books from trusted local sellers
           </div>
 
-          <h1 className="font-display  max-w-[16ch] text-5xl leading-[1.12] tracking-normal text-[#111111] sm:text-6xl">
-            Discover Your Next Great Read
-          </h1>
+          <div
+            key={`hero-copy-${activeSlide}`}
+            className="animate-in fade-in duration-500"
+          >
+            <h1 className="w-full text-balance font-['Prata'] text-[34px] leading-[120%] font-normal tracking-[0%] text-[#111111] sm:text-[40px] lg:h-[116px] lg:w-[651px] lg:text-[48px]">
+              {slides[activeSlide].title}
+            </h1>
 
-          <p className="mt-6  text-xl leading-[1.55] font-light text-[#232323] sm:text-[22px]">
-            Discover millions of books from local sellers worldwide. <br /> Same
-            great reads, better impact.
-          </p>
+            <p className="mt-4 w-full font-['Poppins'] text-[18px] leading-[145%] font-light tracking-[0%] text-[#232323] sm:text-[20px] lg:mt-6 lg:h-[72px] lg:w-[651px] lg:text-[24px] lg:leading-[130%]">
+              {slides[activeSlide].description}
+            </p>
+          </div>
 
           <div className="mt-10">
-            <Button className="h-14 min-w-[284px] rounded-2xl bg-[linear-gradient(90deg,#5F83A2_0%,#5E92C0_100%)] text-xl font-semibold shadow-[0_20px_45px_rgba(94,146,192,0.24)] hover:opacity-95">
-              Browser Books
-            </Button>
+            <Link href="/featured-bookstores">
+              <Button className="h-12 min-w-[220px] cursor-pointer rounded-xl bg-[linear-gradient(90deg,#5F83A2_0%,#5E92C0_100%)] px-6 text-base font-semibold shadow-[0_20px_45px_rgba(94,146,192,0.24)] hover:opacity-95 sm:h-14 sm:min-w-[284px] sm:rounded-2xl sm:text-xl">
+                Browse Books
+              </Button>
+            </Link>
           </div>
 
           <div className="mt-12 flex items-center gap-4">
-            <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[#459AE4] bg-white">
-              <span className="h-3.5 w-3.5 rounded-full bg-[#459AE4]" />
-            </span>
-            {[1, 2, 3].map(dot => (
-              <span
-                key={dot}
-                className="h-3.5 w-3.5 rounded-full border border-[#459AE4]/50 bg-[#459AE4]/35"
-              />
-            ))}
+            {slides.map((_, index) => {
+              const isActive = index === activeSlide
+
+              return isActive ? (
+                <button
+                  key={index}
+                  type="button"
+                  onClick={() => setActiveSlide(index)}
+                  className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border border-[#459AE4] bg-white"
+                  aria-label={`Go to slide ${index + 1}`}
+                >
+                  <span className="h-3.5 w-3.5 rounded-full bg-[#459AE4]" />
+                </button>
+              ) : (
+                <button
+                  key={index}
+                  type="button"
+                  onClick={() => setActiveSlide(index)}
+                  className="h-3.5 w-3.5 cursor-pointer rounded-full border border-[#459AE4]/50 bg-[#459AE4]/35"
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              )
+            })}
           </div>
         </div>
 
         <div className="relative flex items-center justify-center lg:justify-end">
-          <div className="relative w-full max-w-[560px]">
-            <div className="absolute inset-4 rounded-[36px] bg-white/50 blur-3xl" />
-            <Image
-              src="/images/hero-banner.png"
-              alt="Featured book collection"
-              width={1367}
-              height={1151}
-              priority
-              className="relative z-10 h-auto w-full object-contain"
-            />
+            <div className="relative w-full max-w-[560px]">
+              <div className="absolute inset-4 rounded-[36px] bg-white/50 blur-3xl" />
+            <div className="relative z-10 h-[260px] w-full overflow-hidden rounded-[18px] bg-white/45 sm:h-[330px] sm:rounded-[22px] lg:h-[420px] lg:rounded-[26px]">
+                {slides.map((slide, index) => (
+                <Image
+                  key={slide.image}
+                  src={slide.image}
+                  alt={slide.title}
+                  fill
+                  priority={index === 0}
+                  className={`object-cover transition-opacity duration-700 ease-in-out ${
+                    index === activeSlide ? 'opacity-100' : 'opacity-0'
+                  }`}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </div>

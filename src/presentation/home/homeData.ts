@@ -1,5 +1,6 @@
 export type ProductItem = {
-  id: number
+  id: number | string
+  categoryId?: string
   title: string
   author: string
   location: string

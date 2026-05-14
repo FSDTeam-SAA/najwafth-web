@@ -21,9 +21,10 @@ export default function RootLayout({
       lang="en"
       className={cn("h-full antialiased", "font-sans", geist.variable)}
     >
-      <AuthProvider>
-        <body className="min-h-full flex flex-col">{children}</body>
-      </AuthProvider>
+      <body className="min-h-full flex flex-col">
+        {" "}
+        <AuthProvider>{children}</AuthProvider>
+      </body>
     </html>
   );
 }

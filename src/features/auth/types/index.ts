@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface SignupRequest {
   name: string;      // fullName থেকে name এ পরিবর্তন করা হয়েছে
   email: string;

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -70,8 +71,8 @@ function SignUpFrom() {
       </div>
 
       {/* Right - Form */}
-      <div className="w-full lg:w-1/2 bg-sky-50 flex items-center justify-center p-6 sm:p-10 shadow-[0px_4px_5px_0px_#0000001A]">
-        <div className="w-full max-w-xl bg-white rounded border border-sky-100 p-8">
+      <div className="w-full lg:w-1/2 bg-[#F1F9FC] flex items-center justify-center p-6 sm:p-10 shadow-[0px_4px_5px_0px_#0000001A]">
+        <div className="w-full max-w-xl bg-[#F5FBFF] rounded-lg shadow-[0px_4px_5px_0px_#0000001A] border border-sky-100 p-8">
           {/* Logo */}
           <div className="flex justify-center mb-4">
             <Image

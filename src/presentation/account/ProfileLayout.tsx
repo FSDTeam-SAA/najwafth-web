@@ -163,7 +163,7 @@ const ProfileLayout = () => {
           </aside>
 
           {/* Main Content Area */}
-          <main className="lg:w-2/3 border border-gray-100 rounded-xl p-8 min-h-[600px]">
+          <main className="lg:w-2/3 border border-gray-100 rounded-xl p-8 min-h-150">
             {activeTab === "Edit Profile" && <EditProfile />}
             {activeTab === "Change Password" && (
               <div className="text-gray-400">

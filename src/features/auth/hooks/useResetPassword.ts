@@ -1,18 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
-import { signupUser } from "../api/auth.api";
-import { SignupRequest } from "../types";
+import { resetPassword } from "../api/auth.api";
 
-export const useSignup = () => {
+export const useResetPassword = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const executeSignup = async (data: SignupRequest) => {
+  const executeResetPassword = async (data: any) => {
+    // data এর মধ্যে সাধারণত email, otp এবং newPassword থাকে
     setIsLoading(true);
     setError(null);
     try {
-      const response = await signupUser(data);
-      return response; // Success hole data return korbe
+      const response = await resetPassword(data);
+      return response;
     } catch (err: any) {
       setError(err.message);
       throw err;
@@ -21,5 +21,5 @@ export const useSignup = () => {
     }
   };
 
-  return { executeSignup, isLoading, error };
+  return { executeResetPassword, isLoading, error };
 };

@@ -5,6 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Bell, Menu, Search, ShoppingCart, X } from 'lucide-react'
+import { useSession } from 'next-auth/react'
 
 import { Button } from '@/components/ui/button'
 
@@ -29,6 +30,9 @@ function isLinkActive(linkHref: string, pathname: string): boolean {
 export function Navbar() {
   const pathname = usePathname()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const { data: session, status } = useSession()
+  const isAuthenticated = status === 'authenticated'
+  const avatarUrl = session?.user?.avatar || 'https://i.pravatar.cc/120?u=books-user'
 
   return (
     <header className="sticky top-0 z-40 border-b border-black/6 bg-white/95 backdrop-blur">
@@ -41,6 +45,7 @@ export function Navbar() {
             src="/images/logo.png"
             alt="Books and shack logo"
             fill
+            sizes="119px"
             className="scale-[1.9] object-contain object-center"
             priority
           />
@@ -90,11 +95,25 @@ export function Navbar() {
             <Bell className="h-7 w-7 stroke-[2.4]" />
             <span className="sr-only">Notifications</span>
           </Button>
-          <Link href="/signin" className="hidden lg:block">
-            <Button className="rounded-xl px-5 py-5 text-[15px]">
-              Sign in
-            </Button>
-          </Link>
+          {isAuthenticated ? (
+            <Link href="/account" className="ml-1 hidden lg:block">
+              <div className="h-10 w-10 overflow-hidden rounded-full border border-[#d8e4ef]">
+                <Image
+                  src={avatarUrl}
+                  alt="Profile"
+                  width={40}
+                  height={40}
+                  className="h-full w-full object-cover"
+                />
+              </div>
+            </Link>
+          ) : (
+            <Link href="/signin" className="hidden lg:block">
+              <Button className="rounded-xl px-5 py-5 text-[15px]">
+                Sign in
+              </Button>
+            </Link>
+          )}
           <Button
             variant="ghost"
             size="icon"
@@ -135,11 +154,13 @@ export function Navbar() {
             )
           })}
 
-          <Link href="/signin" className="sm:hidden">
-            <Button className="mt-2 w-full rounded-xl text-[14px]">
-              Sign in
-            </Button>
-          </Link>
+          {!isAuthenticated ? (
+            <Link href="/signin" className="sm:hidden">
+              <Button className="mt-2 w-full rounded-xl text-[14px]">
+                Sign in
+              </Button>
+            </Link>
+          ) : null}
         </div>
       </nav>
     </header>

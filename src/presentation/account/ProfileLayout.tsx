@@ -75,8 +75,8 @@ const ProfileLayout = () => {
               <div className="flex flex-col items-center -mt-12 pb-6">
                 <div className="relative">
                   <Image
-                  width={400}
-                  height={500}
+                    width={96} // 24 * 4 = 96px
+                    height={96}
                     src="https://i.pravatar.cc/150?u=madiha"
                     alt="Profile"
                     className="w-24 h-24 rounded-full border-4 border-white object-cover shadow-md"
@@ -163,7 +163,7 @@ const ProfileLayout = () => {
           </aside>
 
           {/* Main Content Area */}
-          <main className="lg:w-2/3 border border-gray-100 rounded-xl p-8 min-h-[600px]">
+          <main className="lg:w-2/3 border border-gray-100 rounded-xl p-8 min-h-150">
             {activeTab === "Edit Profile" && <EditProfile />}
             {activeTab === "Change Password" && (
               <div className="text-gray-400">

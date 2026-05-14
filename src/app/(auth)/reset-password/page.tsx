@@ -1,12 +1,12 @@
-import ChangePasswordForm from '@/presentation/auth/ChangePasswordForm'
-import React from 'react'
+import ChangePasswordForm from "@/presentation/auth/ChangePasswordForm";
+import React, { Suspense } from "react";
 
 function page() {
   return (
-    <div>
+    <Suspense fallback={<div>Loading...</div>}>
       <ChangePasswordForm />
-    </div>
-  )
+    </Suspense>
+  );
 }
 
-export default page
+export default page;

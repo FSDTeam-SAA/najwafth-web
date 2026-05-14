@@ -1,4 +1,4 @@
-import SigninPageForm from "@/presentation/auth/SigninPageForm";
+import SigninPageForm from "@/presentation/auth/SignUpFrom";
 
 export default function SignUpPage() {
   return (

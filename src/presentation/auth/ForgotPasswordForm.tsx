@@ -1,11 +1,37 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
+import { useState } from "react";
+import { useForgotPassword } from "@/features/auth/hooks/useForgotPassword"; // আপনার হুক পাথ অনুযায়ী চেঞ্জ করবেন
+import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 function ForgotPasswordForm() {
+  const [email, setEmail] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
+  const { executeForgotPassword, isLoading, error } = useForgotPassword();
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSuccess(false);
+
+    try {
+      const response = await executeForgotPassword(email);
+      if (response?.success) {
+        toast.success(response.message || "OTP has been sent to your email!");
+        router.push(`/verify-otp?email=${encodeURIComponent(email)}`);
+      }
+    } catch (err: any) {
+      toast.error(err.message || "Something went wrong. Please try again.");
+    }
+  };
+
   return (
     <div className="flex min-h-screen flex-col lg:flex-row">
       {/* Left Side Image */}
@@ -16,51 +42,75 @@ function ForgotPasswordForm() {
           fill
           className="object-cover"
         />
-
         <div className="absolute inset-0 bg-black/20" />
       </div>
 
       {/* Right Side Form */}
-      <div className="w-full lg:w-1/2 bg-sky-50 flex items-center justify-center p-6 sm:p-10">
-        <div className="w-full max-w-lg bg-white rounded-2xl shadow-md border border-sky-100 p-8">
+      <div className="w-full lg:w-1/2 bg-[#F1F9FC] flex items-center justify-center p-6 sm:p-10">
+        <div className="w-full max-w-xl bg-[#F5FBFF] rounded-lg shadow-[0px_4px_5px_0px_#0000001A] border border-sky-100 p-8">
           {/* Logo */}
           <div className="flex justify-center mb-4">
-            <div className="relative w-40 h-24">
-              <Image
-                src="/images/logo.png"
-                alt="Logo"
-                fill
-                className="object-contain"
-              />
-            </div>
+            {/* Logo */}
+                      <div className="flex justify-center mb-4">
+                        <Image
+                          src="/images/logo.png"
+                          alt="Logo"
+                          width={150}
+                          height={60}
+                          className="object-contain"
+                        />
+                      </div>
           </div>
 
           {/* Title */}
-          <h2 className="text-3xl font-bold text-blue-500">
-            Forgot Password!
-          </h2>
+          <h2 className="text-3xl font-bold text-blue-500">Forgot Password!</h2>
 
           <p className="text-gray-500 text-sm mt-1 mb-6">
             Enter your email to recover your password
           </p>
 
-          <form className="space-y-4">
+          {/* Success Message */}
+          {isSuccess && (
+            <div className="bg-green-50 border border-green-200 text-green-600 px-4 py-2 rounded-lg text-sm mb-4">
+              OTP has been sent to your email!
+            </div>
+          )}
+
+          {/* Error Message */}
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-2 rounded-lg text-sm mb-4">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-4">
             {/* Email */}
             <div>
-              <Label className="text-blue-500 text-sm">
-                Email Address
-              </Label>
-
+              <Label className="text-blue-500 text-sm">Email Address</Label>
               <Input
                 type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email..."
                 className="mt-1 rounded-full border-gray-300 h-11"
               />
             </div>
 
             {/* Button */}
-            <Button className="w-full h-11 rounded-md bg-slate-600 hover:bg-slate-700 text-white">
-              Send OTP
+            <Button
+              disabled={isLoading}
+              type="submit"
+              className="w-full h-11 rounded-md bg-slate-600 hover:bg-slate-700 text-white flex items-center justify-center gap-2"
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="animate-spin" size={18} />
+                  Sending...
+                </>
+              ) : (
+                "Send OTP"
+              )}
             </Button>
           </form>
         </div>

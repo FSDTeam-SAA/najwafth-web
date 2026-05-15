@@ -61,6 +61,7 @@ export function TestimonialsSection() {
                           src="/images/book1.jpg"
                           alt={item.name}
                           fill
+                          sizes="48px"
                           className="object-cover object-[42%_28%]"
                         />
                       </div>

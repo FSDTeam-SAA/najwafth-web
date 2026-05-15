@@ -1,10 +1,11 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Bell, Menu, Search, ShoppingCart, X } from 'lucide-react'
+import { useSession } from 'next-auth/react'
 
 import { Button } from '@/components/ui/button'
 
@@ -29,10 +30,9 @@ function isLinkActive(linkHref: string, pathname: string): boolean {
 export function Navbar() {
   const pathname = usePathname()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-
-  useEffect(() => {
-    setIsMobileMenuOpen(false)
-  }, [pathname])
+  const { data: session, status } = useSession()
+  const isAuthenticated = status === 'authenticated'
+  const avatarUrl = session?.user?.avatar || 'https://i.pravatar.cc/120?u=books-user'
 
   return (
     <header className="sticky top-0 z-40 border-b border-black/6 bg-white/95 backdrop-blur">
@@ -45,13 +45,14 @@ export function Navbar() {
             src="/images/logo.png"
             alt="Books and shack logo"
             fill
+            sizes="119px"
             className="scale-[1.9] object-contain object-center"
             priority
           />
         </Link>
 
         <nav className="hidden items-center gap-9 text-[18px] font-normal text-[#111827] lg:flex">
-          {navLinks.map((link) => {
+          {navLinks.map(link => {
             const active = isLinkActive(link.href, pathname)
             return (
               <Link
@@ -69,24 +70,50 @@ export function Navbar() {
           })}
         </nav>
 
-        <div className="flex items-center gap-1.5 sm:gap-3">
-          <Button variant="ghost" size="icon" className="rounded-full">
-            <Search className="h-5 w-5" />
+        <div className="flex items-center gap-0.5 sm:gap-1">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-10 w-10 cursor-pointer rounded-full p-1"
+          >
+            <Search className="h-7 w-7 stroke-[2.4]" />
             <span className="sr-only">Search</span>
           </Button>
-          <Button variant="ghost" size="icon" className="rounded-full">
-            <ShoppingCart className="h-5 w-5" />
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-10 w-10 cursor-pointer rounded-full p-1"
+          >
+            <ShoppingCart className="h-7 w-7 stroke-[2.4]" />
             <span className="sr-only">Cart</span>
           </Button>
-          <Button variant="ghost" size="icon" className="rounded-full">
-            <Bell className="h-5 w-5" />
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-10 w-10 cursor-pointer rounded-full p-1"
+          >
+            <Bell className="h-7 w-7 stroke-[2.4]" />
             <span className="sr-only">Notifications</span>
           </Button>
-          <Link href="/signin" className="hidden lg:block">
-            <Button className="rounded-xl px-5 text-[15px]">
-              Sign in
-            </Button>
-          </Link>
+          {isAuthenticated ? (
+            <Link href="/account" className="ml-1 hidden lg:block">
+              <div className="h-10 w-10 overflow-hidden rounded-full border border-[#d8e4ef]">
+                <Image
+                  src={avatarUrl}
+                  alt="Profile"
+                  width={40}
+                  height={40}
+                  className="h-full w-full object-cover"
+                />
+              </div>
+            </Link>
+          ) : (
+            <Link href="/signin" className="hidden lg:block">
+              <Button className="rounded-xl px-5 py-5 text-[15px]">
+                Sign in
+              </Button>
+            </Link>
+          )}
           <Button
             variant="ghost"
             size="icon"
@@ -110,7 +137,7 @@ export function Navbar() {
         }`}
       >
         <div className="container mx-auto grid gap-1 px-4 py-3 sm:px-6">
-          {navLinks.map((link) => {
+          {navLinks.map(link => {
             const active = isLinkActive(link.href, pathname)
             return (
               <Link
@@ -127,11 +154,13 @@ export function Navbar() {
             )
           })}
 
-          <Link href="/signin" className="sm:hidden">
-            <Button className="mt-2 w-full rounded-xl text-[14px]">
-              Sign in
-            </Button>
-          </Link>
+          {!isAuthenticated ? (
+            <Link href="/signin" className="sm:hidden">
+              <Button className="mt-2 w-full rounded-xl text-[14px]">
+                Sign in
+              </Button>
+            </Link>
+          ) : null}
         </div>
       </nav>
     </header>

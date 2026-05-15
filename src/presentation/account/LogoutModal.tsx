@@ -41,13 +41,13 @@ const LogoutModal: React.FC<LogoutModalProps> = ({ isOpen, onClose }) => {
           <Button
             variant="outline"
             onClick={onClose}
-            className="flex-1 py-6 rounded border-gray-100 text-gray-500 font-medium hover:bg-gray-50"
+            className="cursor-pointer flex-1 py-6 rounded-xl border-gray-100 text-gray-500 font-medium hover:bg-gray-50"
           >
             Cancel
           </Button>
           <Button
-            onClick={handleLogout} // এখানে handleLogout কল করা হয়েছে
-            className="flex-1 py-6 rounded bg-[#e11d48] hover:bg-[#be123c] text-white font-medium shadow-lg shadow-rose-100"
+            onClick={onConfirm}
+            className="cursor-pointer flex-1 py-6 rounded-xl bg-[#e11d48] hover:bg-[#be123c] text-white font-medium shadow-lg shadow-rose-100"
           >
             Log Out
           </Button>

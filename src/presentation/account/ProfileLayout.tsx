@@ -1,6 +1,6 @@
-"use client";
+'use client'
 
-import React, { useState } from "react";
+import React, { useState } from 'react'
 import {
   User,
   Lock,
@@ -9,53 +9,52 @@ import {
   ShieldCheck,
   FileText,
   Globe,
-  Bell,
   LogOut,
   ChevronRight,
   Pencil,
-} from "lucide-react";
-import ChangePassword from "./ChangePassword";
-import EditProfile from "./EditProfile";
-import LanguageSelection from "./LanguageSelection";
-import LogoutModal from "./LogoutModal";
-import Image from "next/image";
+} from 'lucide-react'
+import { signOut } from 'next-auth/react'
+import ChangePassword from './ChangePassword'
+import EditProfile from './EditProfile'
+import LanguageSelection from './LanguageSelection'
+import LogoutModal from './LogoutModal'
+import Image from 'next/image'
 
 const ProfileLayout = () => {
-  const [activeTab, setActiveTab] = useState("Edit Profile");
-  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState('Edit Profile')
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false)
 
-  const handleLogoutConfirm = () => {
-    console.log("Logging out...");
-    // Logout logic ekhane hobe (e.g., clearing tokens)
-    setIsLogoutModalOpen(false);
-  };
+  const handleLogoutConfirm = async () => {
+    setIsLogoutModalOpen(false)
+    await signOut({ callbackUrl: '/' })
+  }
 
   // Navigation Items from image_cbf169.png
   const navItems = [
-    { id: "Edit Profile", icon: <User size={18} />, label: "Edit Profile" },
+    { id: 'Edit Profile', icon: <User size={18} />, label: 'Edit Profile' },
     {
-      id: "Change Password",
+      id: 'Change Password',
       icon: <Lock size={18} />,
-      label: "Change Password",
+      label: 'Change Password',
     },
     {
-      id: "Order History",
+      id: 'Order History',
       icon: <History size={18} />,
-      label: "Order History",
+      label: 'Order History',
     },
-    { id: "About Us", icon: <Info size={18} />, label: "About Us" },
+    { id: 'About Us', icon: <Info size={18} />, label: 'About Us' },
     {
-      id: "Privacy Policy",
+      id: 'Privacy Policy',
       icon: <ShieldCheck size={18} />,
-      label: "Privacy Policy",
+      label: 'Privacy Policy',
     },
     {
-      id: "Terms & Conditions",
+      id: 'Terms & Conditions',
       icon: <FileText size={18} />,
-      label: "Terms & Conditions",
+      label: 'Terms & Conditions',
     },
-    { id: "Language", icon: <Globe size={18} />, label: "Language" },
-  ];
+    { id: 'Language', icon: <Globe size={18} />, label: 'Language' },
+  ]
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 font-sans">
@@ -95,22 +94,22 @@ const ProfileLayout = () => {
             {/* Sidebar Routes */}
             <nav className="px-4 pb-4">
               <div className="space-y-1">
-                {navItems.map((item) => (
+                {navItems.map(item => (
                   <button
                     key={item.id}
                     onClick={() => setActiveTab(item.id)}
                     className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition-all ${
                       activeTab === item.id
-                        ? "text-blue-400 bg-blue-50/50"
-                        : "text-gray-600 hover:bg-gray-50"
+                        ? 'text-blue-400 bg-blue-50/50'
+                        : 'text-gray-600 hover:bg-gray-50'
                     }`}
                   >
                     <div className="flex items-center gap-3">
                       <span
                         className={
                           activeTab === item.id
-                            ? "text-blue-400"
-                            : "text-gray-400"
+                            ? 'text-blue-400'
+                            : 'text-gray-400'
                         }
                       >
                         {item.icon}
@@ -121,30 +120,17 @@ const ProfileLayout = () => {
                       size={16}
                       className={
                         activeTab === item.id
-                          ? "text-blue-400"
-                          : "text-gray-300"
+                          ? 'text-blue-400'
+                          : 'text-gray-300'
                       }
                     />
                   </button>
                 ))}
 
-                {/* Push Notifications Toggle */}
-                <div className="flex items-center justify-between px-4 py-3 text-gray-600">
-                  <div className="flex items-center gap-3">
-                    <Bell size={18} className="text-gray-400" />
-                    <span className="text-sm font-medium">
-                      Push Notifications
-                    </span>
-                  </div>
-                  <div className="w-10 h-5 bg-blue-400 rounded-full relative cursor-pointer">
-                    <div className="absolute right-1 top-1 w-3 h-3 bg-white rounded-full"></div>
-                  </div>
-                </div>
-
                 {/* Log Out Button - Integration point */}
                 <button
                   onClick={() => setIsLogoutModalOpen(true)} // Modal open korbe
-                  className="w-full flex items-center justify-between px-4 py-3 text-gray-600 hover:bg-red-50 hover:text-red-500 transition-colors group"
+                  className="cursor-pointer w-full flex items-center justify-between px-4 py-3 text-gray-600 hover:bg-red-50 hover:text-red-500 transition-colors group"
                 >
                   <div className="flex items-center gap-3">
                     <LogOut
@@ -164,18 +150,18 @@ const ProfileLayout = () => {
 
           {/* Main Content Area */}
           <main className="lg:w-2/3 border border-gray-100 rounded-xl p-8 min-h-150">
-            {activeTab === "Edit Profile" && <EditProfile />}
-            {activeTab === "Change Password" && (
+            {activeTab === 'Edit Profile' && <EditProfile />}
+            {activeTab === 'Change Password' && (
               <div className="text-gray-400">
                 <ChangePassword />
               </div>
             )}
-            {activeTab === "Language" && (
+            {activeTab === 'Language' && (
               <div className="text-gray-400">
-                <LanguageSelection />{" "}
+                <LanguageSelection />{' '}
               </div>
             )}
-            {activeTab === "Order History" && (
+            {activeTab === 'Order History' && (
               <div className="text-gray-400">Order History Component</div>
             )}
             {/* Add other components here */}
@@ -190,7 +176,7 @@ const ProfileLayout = () => {
         onConfirm={handleLogoutConfirm}
       />
     </div>
-  );
-};
+  )
+}
 
-export default ProfileLayout;
+export default ProfileLayout

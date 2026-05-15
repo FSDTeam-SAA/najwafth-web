@@ -4,9 +4,6 @@ import { authOptions } from '@/lib/auth'
 
 const BACKEND_BASE_URL =
   process.env.NEXT_PUBLIC_BACKEND_API_URL || 'http://localhost:5001/api/v1'
-const BACKEND_TOKEN =
-  process.env.BACKEND_API_TOKEN ||
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OWY4NTEwMjE3NGFlZWE2YTYzMDNmMTgiLCJlbWFpbCI6ImpvaG4xQGV4YW1wbGUuY29tIiwicm9sZSI6InNlbGxlciIsImlhdCI6MTc3ODczMzAzMiwiZXhwIjoxNzc4ODE5NDMyfQ.4Jt9z6PNkJn6Xhp1WQeGpMwqeAnuIUxsIBPr4GaExJ4'
 
 type BackendBook = {
   _id?: string
@@ -53,7 +50,14 @@ function mapBook(item: BackendBook, index: number) {
 export async function GET(request: Request) {
   try {
     const session = await getServerSession(authOptions)
-    const token = session?.user?.accessToken || BACKEND_TOKEN
+    const token = session?.user?.accessToken
+
+    if (!token) {
+      return NextResponse.json(
+        { message: 'Unauthorized: No valid session' },
+        { status: 401 },
+      )
+    }
 
     const { searchParams } = new URL(request.url)
 

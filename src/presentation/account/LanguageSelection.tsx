@@ -27,8 +27,10 @@ const LanguageSelection = () => {
   return (
     <div className="w-full">
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-slate-800">Choose Language</h2>
-        <p className="text-slate-500 text-sm mt-1">Choose Language</p>
+        <h2 className="text-3xl font-bold text-slate-900 font-serif">
+          Choose Language
+        </h2>
+        <p className="text-slate-500 text-base mt-1">Choose Language</p>
       </div>
 
       <RadioGroup
@@ -39,10 +41,8 @@ const LanguageSelection = () => {
         {languages.map((lang) => (
           <div
             key={lang.id}
-            className={`flex items-center justify-between p-5 rounded-xl border transition-all cursor-pointer ${
-              language === lang.id
-                ? "border-slate-300 bg-white"
-                : "border-slate-100 bg-slate-50/30"
+            className={`flex items-center justify-between p-5 rounded border transition-all cursor-pointer ${
+              language === lang.id ? "border-slate-300 bg-white" : ""
             }`}
           >
             <Label
@@ -76,13 +76,7 @@ const LanguageSelection = () => {
       </RadioGroup>
 
       <div className="flex justify-end gap-3 mt-8">
-        <Button
-          variant="outline"
-          className="px-8 border-blue-400 text-blue-500 hover:bg-blue-50"
-        >
-          Cancel
-        </Button>
-        <Button className="px-8 bg-[#6392b9] hover:bg-[#537da1] text-white shadow-sm font-medium">
+        <Button className="h-[55px] px-5 bg-[#5F83A2] hover:bg-[#5e7e9a] text-white font-bold text-base rounded transition-all min-w-[200px] cursor-pointer">
           Save Changes
         </Button>
       </div>

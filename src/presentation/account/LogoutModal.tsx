@@ -3,20 +3,28 @@
 import React from "react";
 import { AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { signOut } from "next-auth/react"; // NextAuth ইমপোর্ট করা হয়েছে
 
 interface LogoutModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: () => void;
+  onConfirm?: () => void; // এটি এখন অপশনাল কারণ আমরা ভেতরেই signOut কল করতে পারি
 }
 
-const LogoutModal: React.FC<LogoutModalProps> = ({ isOpen, onClose, onConfirm }) => {
+const LogoutModal: React.FC<LogoutModalProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
+
+  // লগআউট হ্যান্ডলার
+  const handleLogout = async () => {
+    await signOut({
+      callbackUrl: "/signin", // লগআউট হওয়ার পর ইউজারকে কোন পেজে পাঠাবেন (ইচ্ছামতো চেঞ্জ করুন)
+      redirect: true,
+    });
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
-      <div className="bg-white rounded-2xl p-8 max-w-sm w-full shadow-2xl flex flex-col items-center text-center">
-        
+      <div className="bg-white rounded-lg p-8 max-w-lg w-full shadow-2xl flex flex-col items-center text-center">
         {/* Warning Icon with Pink Circle Background */}
         <div className="w-14 h-14 bg-rose-50 rounded-full flex items-center justify-center mb-4">
           <AlertCircle className="text-rose-500 w-8 h-8" />

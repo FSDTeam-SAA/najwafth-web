@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Bell, Menu, Search, ShoppingCart, X } from 'lucide-react'
+import { Menu, Search, ShoppingCart, X } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 
 import { Button } from '@/components/ui/button'
@@ -32,7 +32,8 @@ export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const { data: session, status } = useSession()
   const isAuthenticated = status === 'authenticated'
-  const avatarUrl = session?.user?.avatar || 'https://i.pravatar.cc/120?u=books-user'
+  const avatarUrl =
+    session?.user?.avatar || 'https://i.pravatar.cc/120?u=books-user'
 
   return (
     <header className="sticky top-0 z-40 border-b border-black/6 bg-white/95 backdrop-blur">
@@ -87,14 +88,6 @@ export function Navbar() {
             <ShoppingCart className="h-7 w-7 stroke-[2.4]" />
             <span className="sr-only">Cart</span>
           </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-10 w-10 cursor-pointer rounded-full p-1"
-          >
-            <Bell className="h-7 w-7 stroke-[2.4]" />
-            <span className="sr-only">Notifications</span>
-          </Button>
           {isAuthenticated ? (
             <Link href="/account" className="ml-1 hidden lg:block">
               <div className="h-10 w-10 overflow-hidden rounded-full border border-[#d8e4ef]">
@@ -109,7 +102,7 @@ export function Navbar() {
             </Link>
           ) : (
             <Link href="/signin" className="hidden lg:block">
-              <Button className="rounded-xl px-5 py-5 text-[15px]">
+              <Button className="cursor-pointer rounded-xl px-5 py-5 text-[15px]">
                 Sign in
               </Button>
             </Link>
@@ -156,7 +149,7 @@ export function Navbar() {
 
           {!isAuthenticated ? (
             <Link href="/signin" className="sm:hidden">
-              <Button className="mt-2 w-full rounded-xl text-[14px]">
+              <Button className="cursor-pointer mt-2 w-full rounded-xl text-[14px]">
                 Sign in
               </Button>
             </Link>

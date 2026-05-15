@@ -8,10 +8,14 @@ import { signOut } from "next-auth/react"; // NextAuth ইমপোর্ট ক
 interface LogoutModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm?: () => void; // এটি এখন অপশনাল কারণ আমরা ভেতরেই signOut কল করতে পারি
+  onConfirm?: () => void; // অপশনাল: চাইলে parent থেকে custom confirm handler পাঠানো যাবে
 }
 
-const LogoutModal: React.FC<LogoutModalProps> = ({ isOpen, onClose }) => {
+const LogoutModal: React.FC<LogoutModalProps> = ({
+  isOpen,
+  onClose,
+  onConfirm,
+}) => {
   if (!isOpen) return null;
 
   // লগআউট হ্যান্ডলার
@@ -46,7 +50,7 @@ const LogoutModal: React.FC<LogoutModalProps> = ({ isOpen, onClose }) => {
             Cancel
           </Button>
           <Button
-            onClick={onConfirm}
+            onClick={onConfirm ?? handleLogout}
             className="cursor-pointer flex-1 py-6 rounded-xl bg-[#e11d48] hover:bg-[#be123c] text-white font-medium shadow-lg shadow-rose-100"
           >
             Log Out

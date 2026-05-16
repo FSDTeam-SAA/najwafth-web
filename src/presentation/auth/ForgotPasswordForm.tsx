@@ -10,12 +10,14 @@ import { useForgotPassword } from "@/features/auth/hooks/useForgotPassword"; // 
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 function ForgotPasswordForm() {
   const [email, setEmail] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const { executeForgotPassword, isLoading, error } = useForgotPassword();
   const router = useRouter();
+  const { t } = useTranslation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,11 +26,11 @@ function ForgotPasswordForm() {
     try {
       const response = await executeForgotPassword(email);
       if (response?.success) {
-        toast.success(response.message || "OTP has been sent to your email!");
+        toast.success(response.message || t("auth.otpSent"));
         router.push(`/verify-otp?email=${encodeURIComponent(email)}`);
       }
     } catch (err: any) {
-      toast.error(err.message || "Something went wrong. Please try again.");
+      toast.error(err.message || t("auth.somethingWrong"));
     }
   };
 
@@ -63,16 +65,16 @@ function ForgotPasswordForm() {
           </div>
 
           {/* Title */}
-          <h2 className="text-3xl font-bold text-blue-500">Forgot Password!</h2>
+          <h2 className="text-3xl font-bold text-blue-500">{t("auth.forgotTitle")}</h2>
 
           <p className="text-gray-500 text-sm mt-1 mb-6">
-            Enter your email to recover your password
+            {t("auth.forgotSub")}
           </p>
 
           {/* Success Message */}
           {isSuccess && (
             <div className="bg-green-50 border border-green-200 text-green-600 px-4 py-2 rounded-lg text-sm mb-4">
-              OTP has been sent to your email!
+              {t("auth.otpSent")}
             </div>
           )}
 
@@ -86,13 +88,13 @@ function ForgotPasswordForm() {
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Email */}
             <div>
-              <Label className="text-blue-500 text-sm">Email Address</Label>
+              <Label className="text-blue-500 text-sm">{t("contact.emailAddress")}</Label>
               <Input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email..."
+                placeholder={t("contact.enterEmail")}
                 className="mt-1 rounded-full border-gray-300 h-11"
               />
             </div>
@@ -106,10 +108,10 @@ function ForgotPasswordForm() {
               {isLoading ? (
                 <>
                   <Loader2 className="animate-spin" size={18} />
-                  Sending...
+                  {t("contact.sending")}
                 </>
               ) : (
-                "Send OTP"
+                t("auth.sendOtp")
               )}
             </Button>
           </form>

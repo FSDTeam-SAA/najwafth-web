@@ -12,6 +12,7 @@ import { signupUser } from "@/features/auth/api/auth.api";
 import { toast } from "sonner";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";
 
 function SignUpFrom() {
   const [isLoading, setIsLoading] = useState(false);
@@ -20,6 +21,7 @@ function SignUpFrom() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const router = useRouter();
+  const { t } = useTranslation();
 
   // Form State: এখানে role-এ "buyer" সেট করে দেওয়া হয়েছে
   const [formData, setFormData] = useState<SignupRequest>({
@@ -40,7 +42,7 @@ function SignUpFrom() {
     setError(null);
 
     if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match!");
+      setError(t("auth.passwordMismatch"));
       return;
     }
 
@@ -49,7 +51,7 @@ function SignUpFrom() {
       // এপিআই কল করার সময় এখন অটোমেটিক role: "buyer" যাবে
       const response = await signupUser(formData);
       console.log("Signup Success:", response);
-      toast.success("Account Created Successfully!");
+      toast.success(t("auth.accountCreated"));
       router.push('/signin')
     } catch (err: any) {
       toast.error(err.message);
@@ -85,10 +87,10 @@ function SignUpFrom() {
           </div>
 
           <h2 className="text-3xl font-bold text-center text-[#459AE4]">
-            Create Your Account
+            {t("auth.createAccount")}
           </h2>
           <p className="text-center text-gray-500 text-sm mt-1 mb-6">
-            Connect families with trusted care today.
+            {t("auth.createAccountSub")}
           </p>
 
           {error && (
@@ -100,32 +102,32 @@ function SignUpFrom() {
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Full Name */}
             <div>
-              <Label className="text-[#459AE4] text-sm">Your Full Name</Label>
+              <Label className="text-[#459AE4] text-sm">{t("account.fullName")}</Label>
               <Input
                 name="name"
                 required
                 onChange={handleChange}
-                placeholder="Write here..."
+                placeholder={t("auth.writeHere")}
                 className="mt-1 rounded-full border-gray-300 h-11"
               />
             </div>
 
             {/* Email */}
             <div>
-              <Label className="text-[#459AE4] text-sm">Email Address</Label>
+              <Label className="text-[#459AE4] text-sm">{t("contact.emailAddress")}</Label>
               <Input
                 name="email"
                 type="email"
                 required
                 onChange={handleChange}
-                placeholder="Enter your email..."
+                placeholder={t("contact.enterEmail")}
                 className="mt-1 rounded-full border-gray-300 h-11"
               />
             </div>
 
             {/* Phone */}
             <div>
-              <Label className="text-[#459AE4] text-sm">Phone Number</Label>
+              <Label className="text-[#459AE4] text-sm">{t("account.phoneNumber")}</Label>
               <Input
                 name="phone"
                 required
@@ -138,7 +140,7 @@ function SignUpFrom() {
             {/* Password */}
             <div>
               <Label className="text-[#459AE4] text-sm">
-                Create New Password
+                {t("auth.createNewPassword")}
               </Label>
               <div className="relative mt-1">
                 <Input
@@ -146,7 +148,7 @@ function SignUpFrom() {
                   type={showPassword ? "text" : "password"}
                   required
                   onChange={handleChange}
-                  placeholder="Enter Password..."
+                  placeholder={t("auth.enterPassword")}
                   className="rounded-full border-gray-300 h-11 pr-10"
                 />
                 <button
@@ -159,16 +161,16 @@ function SignUpFrom() {
               </div>
             </div>
 
-            {/* Confirm Password */}
+            {/* {t("auth.confirmPassword")} */}
             <div>
-              <Label className="text-[#459AE4] text-sm">Confirm Password</Label>
+              <Label className="text-[#459AE4] text-sm">{t("auth.confirmPassword")}</Label>
               <div className="relative mt-1">
                 <Input
                   name="confirmPassword"
                   type={showConfirmPassword ? "text" : "password"}
                   required
                   onChange={handleChange}
-                  placeholder="Re-enter Password..."
+                  placeholder={t("auth.reenterPassword")}
                   className="rounded-full border-gray-300 h-11 pr-10"
                 />
                 <button
@@ -193,18 +195,18 @@ function SignUpFrom() {
               {isLoading ? (
                 <div className="flex items-center gap-2">
                   <Loader2 className="animate-spin" size={18} />
-                  <span>Signing up...</span>
+                  <span>{t("auth.signingUp")}</span>
                 </div>
               ) : (
-                "Sign up"
+                t("auth.signUp")
               )}
             </Button>
 
             <p className="text-center text-xs text-gray-500 mt-2">
-              Already have an account?{" "}
+              {t("auth.alreadyHaveAccount")}{" "}
               <Link href="/signin">
                 <span className="text-[#459AE4] font-semibold cursor-pointer hover:underline">
-                  Log In
+                  {t("auth.logIn")}
                 </span>
               </Link>
             </p>

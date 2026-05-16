@@ -13,6 +13,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 type CartItem = {
   _id: string;
@@ -38,6 +39,7 @@ const CheckoutPage = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
   const [address, setAddress] = React.useState("Demo street");
+  const { t } = useTranslation();
 
   const { data: cartResponse, isLoading } = useQuery<CartResponse>({
     queryKey: ["cart", TOKEN],
@@ -48,7 +50,7 @@ const CheckoutPage = () => {
         },
       });
 
-      if (!res.ok) throw new Error("Failed to fetch cart");
+      if (!res.ok) throw new Error(t("cart.fetchFail"));
       return res.json();
     },
     enabled: !!TOKEN,
@@ -60,11 +62,11 @@ const CheckoutPage = () => {
   const createOrderMutation = useMutation({
     mutationFn: async () => {
       if (!TOKEN) {
-        throw new Error("Please login to place order");
+        throw new Error(t("cart.loginPlace"));
       }
 
       if (cartItems.length === 0) {
-        throw new Error("Your cart is empty");
+        throw new Error(t("cart.empty"));
       }
 
       const res = await fetch(
@@ -88,13 +90,13 @@ const CheckoutPage = () => {
       const result = await res.json().catch(() => null);
 
       if (!res.ok) {
-        throw new Error(result?.message || "Failed to create order");
+        throw new Error(result?.message || t("cart.createOrderFail"));
       }
 
       return result;
     },
     onSuccess: () => {
-      toast.success("Order created successfully");
+      toast.success(t("cart.orderCreated"));
       queryClient.invalidateQueries({ queryKey: ["cart", TOKEN] });
       queryClient.invalidateQueries({ queryKey: ["my-order", TOKEN] });
       router.push("/order");
@@ -116,15 +118,15 @@ const CheckoutPage = () => {
     <div className="bg-gray-50 py-10 px-4">
       <div className="max-w-4xl mx-auto bg-white border border-gray-100 rounded-xl p-10 shadow-sm">
         <div className="mb-10">
-          <h1 className="text-4xl font-serif text-gray-800">Checkout</h1>
-          <p className="text-gray-500 mt-1">Complete your order details</p>
+          <h1 className="text-4xl font-serif text-gray-800">{t("cart.checkoutTitle")}</h1>
+          <p className="text-gray-500 mt-1">{t("cart.checkoutSub")}</p>
         </div>
 
         {/* Inputs */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
           <div className="space-y-2">
             <label className="flex items-center gap-2 text-gray-700 font-bold">
-              <User size={18} className="text-blue-500" /> Name
+              <User size={18} className="text-blue-500" /> {t("account.fullName")}
             </label>
             <input
               type="text"
@@ -134,7 +136,7 @@ const CheckoutPage = () => {
           </div>
           <div className="space-y-2">
             <label className="flex items-center gap-2 text-gray-700 font-bold">
-              <MapPin size={18} className="text-blue-500" /> Address
+              <MapPin size={18} className="text-blue-500" /> {t("account.address")}
             </label>
             <input
               type="text"
@@ -146,7 +148,7 @@ const CheckoutPage = () => {
           </div>
           <div className="space-y-2">
             <label className="flex items-center gap-2 text-gray-700 font-bold">
-              <Phone size={18} className="text-blue-500" /> Phone number
+              <Phone size={18} className="text-blue-500" /> {t("account.phoneNumber")}
             </label>
             <input
               type="text"
@@ -156,10 +158,10 @@ const CheckoutPage = () => {
           </div>
         </div>
 
-        {/* Order Summary */}
+        {/* {t("order.orderSummary")} */}
         <div className="mb-10">
           <h3 className="flex items-center gap-2 text-gray-700 font-bold mb-4 underline decoration-blue-500 underline-offset-8">
-            <ClipboardList size={18} className="text-blue-500" /> Order Summary
+            <ClipboardList size={18} className="text-blue-500" /> {t("order.orderSummary")}
           </h3>
           <div className="space-y-2 py-4 border-b border-gray-100">
             {cartItems.length > 0 ? (
@@ -169,7 +171,7 @@ const CheckoutPage = () => {
                   className="flex justify-between gap-4 text-gray-500"
                 >
                   <span>
-                    {item.product?.title || "Untitled"} x {item.quantity || 1}
+                    {item.product?.title || t("cart.untitled")} x {item.quantity || 1}
                   </span>
                   <span>
                     ৳
@@ -180,25 +182,25 @@ const CheckoutPage = () => {
                 </div>
               ))
             ) : (
-              <div className="text-gray-400">Your cart is empty.</div>
+              <div className="text-gray-400">{t("cart.empty")}</div>
             )}
             <div className="flex justify-between text-gray-500">
-              <span>Subtotal</span>
+              <span>{t("order.subtotal")}</span>
               <span>৳{Number(totalAmount).toFixed(2)}</span>
             </div>
           </div>
           <div className="flex justify-between py-4 text-xl font-bold">
-            <span className="text-gray-800">Total</span>
+            <span className="text-gray-800">{t("order.total")}</span>
             <span className="text-blue-500">
               ৳{Number(totalAmount).toFixed(2)}
             </span>
           </div>
         </div>
 
-        {/* Payment */}
+        {/* {t("order.payment")} */}
         <div className="mb-10">
           <h3 className="flex items-center gap-2 text-gray-700 font-bold mb-6">
-            <Wallet size={18} className="text-blue-500" /> Payment
+            <Wallet size={18} className="text-blue-500" /> {t("order.payment")}
           </h3>
           <div className="bg-gray-50 rounded-xl p-8 flex justify-center items-center">
             <h2 className="text-blue-600 font-black text-4xl italic tracking-tighter">
@@ -213,7 +215,7 @@ const CheckoutPage = () => {
           className="w-full bg-blue-500 disabled:bg-gray-400 disabled:shadow-none text-white rounded-lg py-4 font-bold flex items-center justify-center gap-2 shadow-lg shadow-blue-200"
         >
           <ShoppingCart size={18} />{" "}
-          {createOrderMutation.isPending ? "Placing Order..." : "Place Order"}
+          {createOrderMutation.isPending ? t("cart.placingOrder") : t("cart.placeOrder")}
         </button>
       </div>
     </div>

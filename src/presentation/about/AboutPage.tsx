@@ -2,7 +2,8 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/components/ui/button'
 import { AchievementSection } from '@/presentation/home/AchievementSection'
@@ -11,32 +12,34 @@ import { TestimonialsSection } from '@/presentation/home/TestimonialsSection'
 import { WhyChooseUsSection } from './WhyChooseUsSection'
 
 export function AboutPage() {
-  const slides = [
-    {
-      image: '/images/hero-banner.png',
-      title: 'Discover Your Next Great Read',
-      description:
-        'Discover millions of books from local sellers worldwide. Same great reads, better impact.',
-    },
-    {
-      image: '/images/banner-2.png',
-      title: 'Explore Endless Reading Possibilities',
-      description:
-        'Browse handpicked books with seamless shopping and fast delivery.',
-    },
-    {
-      image: '/images/banner-3.png',
-      title: 'Your Personal Library Starts Here',
-      description:
-        'Shop bestselling books, timeless classics, and new arrivals in one place.',
-    },
-    {
-      image: '/images/banner-4.png',
-      title: 'Books That Inspire Every Journey',
-      description:
-        "From timeless classics to trending favourites discover books you'll love.",
-    },
-  ]
+  const { t } = useTranslation()
+
+  const slides = useMemo(
+    () => [
+      {
+        image: '/images/hero-banner.png',
+        title: t('about.hero.s1.title'),
+        description: t('about.hero.s1.desc'),
+      },
+      {
+        image: '/images/banner-2.png',
+        title: t('about.hero.s2.title'),
+        description: t('about.hero.s2.desc'),
+      },
+      {
+        image: '/images/banner-3.png',
+        title: t('about.hero.s3.title'),
+        description: t('about.hero.s3.desc'),
+      },
+      {
+        image: '/images/banner-4.png',
+        title: t('about.hero.s4.title'),
+        description: t('about.hero.s4.desc'),
+      },
+    ],
+    [t],
+  )
+
   const [activeSlide, setActiveSlide] = useState(slides.length - 1)
 
   useEffect(() => {
@@ -61,7 +64,7 @@ export function AboutPage() {
 
         <div className="relative mx-auto grid w-full container gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12 lg:px-10 lg:py-20">
           <div className="flex flex-col justify-center">
-            <div className="mb-5 text-sm text-[#8A8A8A]">About Us</div>
+            <div className="mb-5 text-sm text-[#8A8A8A]">{t('nav.aboutUs')}</div>
 
             <div key={`about-copy-${activeSlide}`} className="animate-in fade-in duration-500">
               <h1 className="w-full text-balance font-['Prata'] text-[34px] leading-[120%] font-normal tracking-[0%] text-[#111111] sm:text-[40px] lg:h-[116px] lg:w-[651px] lg:text-[48px]">
@@ -74,9 +77,9 @@ export function AboutPage() {
             </div>
 
             <div className="mt-8">
-              <Link href="/featured-bookstores">
+              <Link href="/all-books">
                 <Button className="h-12 min-w-[220px] cursor-pointer rounded-xl bg-[#6B95BF] px-6 text-[16px] font-medium text-white shadow-none hover:bg-[#5b86b0] sm:min-w-[224px] sm:px-8 sm:text-[18px]">
-                  Browse Books
+                  {t('footer.browseBooks')}
                 </Button>
               </Link>
             </div>
@@ -141,30 +144,16 @@ export function AboutPage() {
 
         <div className="container mx-auto px-4 sm:px-6 lg:px-10">
           <div className="mx-auto max-w-[420px] text-center">
-            <h2 className="font-display text-4xl leading-[1.2] text-[#111111] sm:text-6xl">
-              About Us
-            </h2>
-            <p className="mt-3 text-[24px] text-[#1f2937]">See our story</p>
+            <h2 className="font-display text-4xl leading-[1.2] text-[#111111] sm:text-6xl">{t('nav.aboutUs')}</h2>
+            <p className="mt-3 text-[24px] text-[#1f2937]">{t('about.seeStory')}</p>
           </div>
 
           <div className="mt-12 grid items-center gap-10 lg:grid-cols-[0.88fr_1.12fr]">
             <div className="max-w-[480px]">
-              <h3 className="font-display text-4xl leading-[1.15] text-[#111111] sm:text-5xl">
-                Who We Are
-              </h3>
+              <h3 className="font-display text-4xl leading-[1.15] text-[#111111] sm:text-5xl">{t('about.whoWeAre')}</h3>
               <div className="mt-6 space-y-6 text-[20px] leading-[1.7] text-[#555f6d]">
-                <p>
-                  We&apos;re a passionate team dedicated to connecting readers
-                  with independent bookstores across the country. Founded in
-                  2020, our platform has become the bridge between book lovers
-                  and local businesses.
-                </p>
-                <p>
-                  Every purchase you make helps keep independent bookstores
-                  thriving in your community. We believe in the power of local
-                  businesses and the magic of discovering your next favorite
-                  book.
-                </p>
+                <p>{t('about.p1')}</p>
+                <p>{t('about.p2')}</p>
               </div>
             </div>
 

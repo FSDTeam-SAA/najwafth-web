@@ -1,11 +1,21 @@
+'use client'
+
 import Image from 'next/image'
 import { ChevronLeft, ChevronRight, Quote, Star } from 'lucide-react'
+import { useMemo } from 'react'
 
 import { Card, CardContent } from '@/components/ui/card'
 
-import { testimonials } from './homeData'
+import { useHomeReviewsQuery } from './useHomeQueries'
 
 export function TestimonialsSection() {
+  const reviewsQuery = useHomeReviewsQuery()
+
+  const testimonialItems = useMemo(() => {
+    const apiItems = reviewsQuery.data?.items || []
+    return apiItems
+  }, [reviewsQuery.data?.items])
+
   return (
     <section className="relative overflow-hidden py-18 sm:py-22">
       <Image
@@ -44,7 +54,22 @@ export function TestimonialsSection() {
           </button>
 
           <div className="grid flex-1 gap-5 lg:grid-cols-3">
-            {testimonials.map(item => (
+            {reviewsQuery.isLoading
+              ? Array.from({ length: 3 }).map((_, index) => (
+                  <Card
+                    key={`testimonial-skeleton-${index}`}
+                    className="rounded-[14px] border border-[#e7edf2] bg-white shadow-[0_10px_24px_rgba(15,23,42,0.06)]"
+                  >
+                    <CardContent className="p-8">
+                      <div className="h-4 w-11/12 animate-pulse rounded bg-[#e8eef4]" />
+                      <div className="mt-3 h-4 w-10/12 animate-pulse rounded bg-[#e8eef4]" />
+                      <div className="mt-3 h-4 w-7/12 animate-pulse rounded bg-[#e8eef4]" />
+                    </CardContent>
+                  </Card>
+                ))
+              : null}
+
+            {!reviewsQuery.isLoading && testimonialItems.map(item => (
               <Card
                 key={item.id}
                 className="rounded-[14px] border border-[#e7edf2] bg-white shadow-[0_10px_24px_rgba(15,23,42,0.06)]"
@@ -73,7 +98,7 @@ export function TestimonialsSection() {
                           {item.role}
                         </p>
                         <div className="mt-2 flex items-center gap-1 text-[#f5b301]">
-                          {Array.from({ length: 5 }).map((_, index) => (
+                          {Array.from({ length: Math.max(1, Math.min(5, Math.round(item.rating || 5))) }).map((_, index) => (
                             <Star
                               key={index}
                               className="h-3.5 w-3.5 fill-current"
@@ -88,6 +113,12 @@ export function TestimonialsSection() {
                 </CardContent>
               </Card>
             ))}
+
+            {!reviewsQuery.isLoading && testimonialItems.length === 0 ? (
+              <div className="col-span-full rounded-[14px] border border-[#e7edf2] bg-white p-8 text-center text-sm text-[#6b7280]">
+                No client reviews available right now.
+              </div>
+            ) : null}
           </div>
 
           <button

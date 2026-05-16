@@ -65,6 +65,7 @@ export async function GET(request: Request) {
     const page = Number(searchParams.get('page') || '1')
     const limit = Number(searchParams.get('limit') || '8')
     const category = searchParams.get('category')
+    const search = searchParams.get('search')?.trim()
     const selectedCategories = category
       ? category
           .split(',')
@@ -81,6 +82,9 @@ export async function GET(request: Request) {
       sortBy,
       sortOrder,
     })
+    if (search) {
+      backendQuery.set('search', search)
+    }
 
     const fetchBooks = async (categoryId?: string) => {
       const query = new URLSearchParams(backendQuery)

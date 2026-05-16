@@ -4,7 +4,13 @@ import { useQuery } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { useEffect } from 'react'
 
-import { getFeaturedBooks, getPopularBooks, getTopCategories } from '@/lib/home-api'
+import {
+  getFeaturedBooks,
+  getHomeAchievements,
+  getHomeReviews,
+  getPopularBooks,
+  getTopCategories,
+} from '@/lib/home-api'
 
 export function useFeaturedBooksQuery() {
   const query = useQuery({
@@ -45,6 +51,36 @@ export function useTopCategoriesQuery() {
   useEffect(() => {
     if (query.error) {
       toast.error('Unable to load categories.')
+    }
+  }, [query.error])
+
+  return query
+}
+
+export function useHomeReviewsQuery() {
+  const query = useQuery({
+    queryKey: ['home', 'reviews'],
+    queryFn: getHomeReviews,
+  })
+
+  useEffect(() => {
+    if (query.error) {
+      toast.error('Unable to load reviews.')
+    }
+  }, [query.error])
+
+  return query
+}
+
+export function useHomeAchievementsQuery() {
+  const query = useQuery({
+    queryKey: ['home', 'achievements'],
+    queryFn: getHomeAchievements,
+  })
+
+  useEffect(() => {
+    if (query.error) {
+      toast.error('Unable to load achievements.')
     }
   }, [query.error])
 

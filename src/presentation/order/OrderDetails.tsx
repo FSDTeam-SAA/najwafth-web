@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation"; // URL থেকে ID নেওয়ার জন্য
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { Star } from "lucide-react";
 import React, { useState } from "react";
@@ -46,6 +46,7 @@ interface OrderDetailsData {
 
 const OrderDetails: React.FC = () => {
   const params = useParams();
+  const queryClient = useQueryClient();
   const id = params?.id; // URL params থেকে id নেওয়া হলো
 
   const { data: session } = useSession();
@@ -79,6 +80,65 @@ const OrderDetails: React.FC = () => {
 
   // API রেসপন্স থেকে মেইন ডাটা অবজেক্ট নেওয়া
   const orderInfo: OrderDetailsData = orderResponse?.data;
+
+  // রিভিউ পোস্ট করার জন্য useMutation ইন্টিগ্রেশন
+  const reviewMutation = useMutation({
+    mutationFn: async (reviewBody: {
+      shop: string;
+      order: string;
+      comment: string;
+      rating: number;
+    }) => {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/user/write-review`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${TOKEN}`,
+          },
+          body: JSON.stringify(reviewBody),
+        },
+      );
+
+      if (!res.ok) {
+        throw new Error("Failed to submit review");
+      }
+      return res.json();
+    },
+    onSuccess: () => {
+      alert("Review posted successfully!");
+      // ফিল্ডগুলো খালি করা
+      setRating(0);
+      setReviewText("");
+      // অর্ডার ডিটেইলস কুয়েরি রিফ্রেশ করা (যদি প্রয়োজন হয়)
+      queryClient.invalidateQueries({ queryKey: ["order-details", id, TOKEN] });
+    },
+    onError: (err: any) => {
+      alert(err.message || "Something went wrong while posting review.");
+    },
+  });
+
+  // রিভিউ সাবমিট হ্যান্ডলার
+  const handleReviewSubmit = () => {
+    if (!rating) {
+      alert("Please select a rating star!");
+      return;
+    }
+    if (!reviewText.trim()) {
+      alert("Please write some comments before posting!");
+      return;
+    }
+    if (!orderInfo) return;
+
+    // আপনার চাহিদা অনুযায়ী রিকোয়েস্ট বডি সাজানো হলো
+    reviewMutation.mutate({
+      shop: orderInfo.vendor?._id, // seller or vendor id
+      order: orderInfo._id, // order database object id
+      comment: reviewText, // user comment
+      rating: rating, // rating number
+    });
+  };
 
   // স্ট্যাটাস ট্র্যাকিং ডাইনামিক করার লজিক
   const getStatusSteps = (currentStatus: string = "") => {
@@ -286,6 +346,7 @@ const OrderDetails: React.FC = () => {
           </div>
         </div>
 
+        {/* রিভিউ সেকশন */}
         {isDelivered && (
           <div className="border border-gray-200 bg-white rounded-2xl p-8 max-w-sm w-full ">
             {/* ইউজার প্রোফাইল সেকশন */}
@@ -314,12 +375,13 @@ const OrderDetails: React.FC = () => {
               ))}
             </div>
 
-            {/* রিভিউ টেক্সট এরিয়া */}
+            {/* রিভিউ টেক্সট এরিয়া */}
             <textarea
               className="w-full border border-gray-200 rounded-xl p-4 text-sm text-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-400 resize-none min-h-[120px]"
               placeholder="Write a short review to help fellow books lovers..."
               value={reviewText}
               onChange={(e) => setReviewText(e.target.value)}
+              disabled={reviewMutation.isPending}
             />
 
             {/* ক্যানসেল এবং পোস্ট বাটন */}
@@ -329,18 +391,17 @@ const OrderDetails: React.FC = () => {
                   setRating(0);
                   setReviewText("");
                 }}
-                className="flex-1 py-3 px-4 border border-blue-400 text-blue-400 rounded-xl font-semibold hover:bg-blue-50 transition-colors"
+                disabled={reviewMutation.isPending}
+                className="flex-1 py-3 px-4 border border-blue-400 text-blue-400 rounded-xl font-semibold hover:bg-blue-50 transition-colors disabled:opacity-50"
               >
                 Cancel
               </button>
               <button
-                className="flex-1 py-3 px-4 bg-[#6392b9] text-white rounded-xl font-semibold hover:bg-[#537da1] transition-colors shadow-md"
-                onClick={() => {
-                  console.log({ rating, reviewText });
-                  // আপনার রিভিউ সাবমিট API হ্যান্ডলার এখানে দিতে পারেন।
-                }}
+                onClick={handleReviewSubmit}
+                disabled={reviewMutation.isPending}
+                className="flex-1 py-3 px-4 bg-[#6392b9] text-white rounded-xl font-semibold hover:bg-[#537da1] transition-colors shadow-md flex justify-center items-center disabled:opacity-70"
               >
-                Post
+                {reviewMutation.isPending ? "Posting..." : "Post"}
               </button>
             </div>
           </div>

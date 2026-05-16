@@ -4,6 +4,7 @@ import React from "react";
 import { AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { signOut } from "next-auth/react";
+import { useTranslation } from "react-i18next";
 
 interface LogoutModalProps {
   isOpen: boolean;
@@ -16,6 +17,7 @@ const LogoutModal: React.FC<LogoutModalProps> = ({
   onClose,
   onConfirm,
 }) => {
+  const { t } = useTranslation();
   if (!isOpen) return null;
 
   const handleLogout = async () => {
@@ -39,9 +41,9 @@ const LogoutModal: React.FC<LogoutModalProps> = ({
           <AlertCircle className="text-rose-500 w-8 h-8" />
         </div>
 
-        <h2 className="text-xl font-bold text-gray-800 mb-2">Are You Sure?</h2>
+        <h2 className="text-xl font-bold text-gray-800 mb-2">{t("account.logoutModalTitle")}</h2>
         <p className="text-gray-400 text-sm mb-8">
-          Are you sure you want to log out?
+          {t("account.logoutModalText")}
         </p>
 
         <div className="flex gap-4 w-full">
@@ -50,13 +52,13 @@ const LogoutModal: React.FC<LogoutModalProps> = ({
             onClick={onClose}
             className="cursor-pointer flex-1 py-6 rounded border-gray-100 text-gray-500 font-medium hover:bg-gray-50"
           >
-            Cancel
+            {t("account.cancel")}
           </Button>
           <Button
             onClick={handleLogout}
             className="cursor-pointer flex-1 py-6 rounded bg-[#e11d48] hover:bg-[#be123c] text-white font-medium shadow-lg shadow-rose-100"
           >
-            Log Out
+            {t("account.logout")}
           </Button>
         </div>
       </div>

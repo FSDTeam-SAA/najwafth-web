@@ -1,41 +1,51 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
+import { useTranslation } from "react-i18next";
+import { useLanguageStore } from "@/lib/i18n/store";
+import type { AppLanguage } from "@/lib/i18n/resources";
+import { toast } from "sonner";
 
 const LanguageSelection = () => {
-  const [language, setLanguage] = useState("english");
+  const { t, i18n } = useTranslation();
+  const { language, setLanguage } = useLanguageStore();
 
   const languages = [
     {
-      id: "english",
-      name: "English",
-      country: "United Kingdom",
+      id: "en-GB" as AppLanguage,
+      name: t("account.english"),
+      country: t("account.unitedKingdom"),
       flag: "https://flagcdn.com/w80/gb.png", // UK Flag
     },
     {
-      id: "france",
-      name: "France",
-      country: "France",
+      id: "fr-FR" as AppLanguage,
+      name: t("account.france"),
+      country: t("account.france"),
       flag: "https://flagcdn.com/w80/fr.png", // France Flag
     },
   ];
+
+  const onSave = async () => {
+    await i18n.changeLanguage(language);
+    toast.success(t("account.saveChanges"));
+  };
 
   return (
     <div className="w-full">
       <div className="mb-8">
         <h2 className="text-3xl font-bold text-slate-900 font-serif">
-          Choose Language
+          {t("account.chooseLanguage")}
         </h2>
-        <p className="text-slate-500 text-base mt-1">Choose Language</p>
+        <p className="text-slate-500 text-base mt-1">{t("account.chooseLanguageSub")}</p>
       </div>
 
       <RadioGroup
-        defaultValue="english"
-        onValueChange={(value) => setLanguage(value)}
+        value={language}
+        onValueChange={(value) => setLanguage(value as AppLanguage)}
         className="space-y-4"
       >
         {languages.map((lang) => (
@@ -76,8 +86,11 @@ const LanguageSelection = () => {
       </RadioGroup>
 
       <div className="flex justify-end gap-3 mt-8">
-        <Button className="h-[55px] px-5 bg-[#5F83A2] hover:bg-[#5e7e9a] text-white font-bold text-base rounded transition-all min-w-[200px] cursor-pointer">
-          Save Changes
+        <Button
+          onClick={onSave}
+          className="h-[55px] px-5 bg-[#5F83A2] hover:bg-[#5e7e9a] text-white font-bold text-base rounded transition-all min-w-[200px] cursor-pointer"
+        >
+          {t("account.saveChanges")}
         </Button>
       </div>
     </div>

@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import { ChevronLeft, ChevronRight, Quote, Star } from 'lucide-react'
 import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { Card, CardContent } from '@/components/ui/card'
 
@@ -10,6 +11,7 @@ import { useHomeReviewsQuery } from './useHomeQueries'
 
 export function TestimonialsSection() {
   const reviewsQuery = useHomeReviewsQuery()
+  const { t } = useTranslation()
 
   const testimonialItems = useMemo(() => {
     const apiItems = reviewsQuery.data?.items || []
@@ -38,10 +40,10 @@ export function TestimonialsSection() {
       <div className="container mx-auto w-full px-4 sm:px-6 lg:px-10">
         <div className="mx-auto max-w-[760px] text-center">
           <h2 className="font-display text-3xl leading-[1.2] text-[#111111] sm:text-5xl">
-            What Clients Say
+            {t("home.whatClientsSay")}
           </h2>
           <p className="mt-4 text-base text-[#333333] sm:text-lg">
-            Hear what our clients say about working with us
+            {t("home.hearClients")}
           </p>
         </div>
 
@@ -116,7 +118,7 @@ export function TestimonialsSection() {
 
             {!reviewsQuery.isLoading && testimonialItems.length === 0 ? (
               <div className="col-span-full rounded-[14px] border border-[#e7edf2] bg-white p-8 text-center text-sm text-[#6b7280]">
-                No client reviews available right now.
+                {t("home.noClientReviews")}
               </div>
             ) : null}
           </div>

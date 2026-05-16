@@ -1,23 +1,29 @@
+'use client'
+
 import Image from 'next/image'
 import Link from 'next/link'
 import { Mail, MapPin, Phone } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
-import { footerColumns } from '@/presentation/home/homeData'
-
-const footerLinkMap: Record<string, string> = {
-  Home: '/',
-  'Browse Books': '/popular-books',
-  Categories: '/categories',
-  Order: '/order',
-  'About us': '/about-us',
-  'Privacy Policy': '/privacy-policy',
-  'Terms & Conditions': '/t&c',
-  'Choose Language': '/account',
-  'Contact Us': '/contact',
+const footerSections = {
+  quickLinks: [
+    { key: 'nav.home', href: '/' },
+    { key: 'footer.browseBooks', href: '/all-books' },
+    { key: 'nav.categories', href: '/categories' },
+    { key: 'nav.order', href: '/order' },
+  ],
+  menu: [
+    { key: 'nav.aboutUs', href: '/about-us' },
+    { key: 'account.privacyPolicy', href: '/privacy-policy' },
+    { key: 'account.terms', href: '/t&c' },
+    { key: 'account.chooseLanguage', href: '/account' },
+  ],
+  support: [{ key: 'footer.contactUs', href: '/contact' }],
 }
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
+  const { t } = useTranslation()
 
   return (
     <footer className="relative overflow-hidden bg-[#1f1f1f] text-white">
@@ -41,8 +47,7 @@ export function Footer() {
               />
             </div>
             <p className="mt-4 max-w-[24ch] text-[13px] leading-5 text-white/80">
-              Your curated marketplace for independent bookstores and
-              passionate readers.
+              {t('footer.aboutText')}
             </p>
 
             <div className="mt-6 space-y-3 text-[13px] text-white/85">
@@ -61,12 +66,12 @@ export function Footer() {
             </div>
           </div>
 
-          <FooterColumn title="Quick Links" items={footerColumns.quickLinks} />
-          <FooterColumn title="Menu" items={footerColumns.menu} />
+          <FooterColumn title={t('footer.quickLinks')} items={footerSections.quickLinks} />
+          <FooterColumn title={t('footer.menu')} items={footerSections.menu} />
           <div className="flex flex-col justify-between">
-            <FooterColumn title="Support" items={footerColumns.support} />
+            <FooterColumn title={t('footer.support')} items={footerSections.support} />
             <div className="pt-8 text-left text-[13px] text-white/85 lg:pt-10 lg:text-right">
-              © {currentYear} All rights reserved.
+              © {currentYear} {t('footer.rights')}
             </div>
           </div>
         </div>
@@ -80,19 +85,21 @@ function FooterColumn({
   items,
 }: {
   title: string
-  items: string[]
+  items: { key: string; href: string }[]
 }) {
+  const { t } = useTranslation()
+
   return (
     <div>
       <h3 className="text-[18px] font-medium text-white">{title}</h3>
       <div className="mt-5 space-y-3 text-[14px] text-white/80">
         {items.map(item => (
           <Link
-            key={item}
-            href={footerLinkMap[item] || '/'}
+            key={item.key}
+            href={item.href}
             className="block transition-colors hover:text-white"
           >
-            {item}
+            {t(item.key)}
           </Link>
         ))}
       </div>

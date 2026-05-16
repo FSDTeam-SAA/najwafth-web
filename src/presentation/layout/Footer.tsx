@@ -4,7 +4,21 @@ import { Mail, MapPin, Phone } from 'lucide-react'
 
 import { footerColumns } from '@/presentation/home/homeData'
 
+const footerLinkMap: Record<string, string> = {
+  Home: '/',
+  'Browse Books': '/popular-books',
+  Categories: '/categories',
+  Order: '/order',
+  'About us': '/about-us',
+  'Privacy Policy': '/privacy-policy',
+  'Terms & Conditions': '/t&c',
+  'Choose Language': '/account',
+  'Contact Us': '/contact',
+}
+
 export function Footer() {
+  const currentYear = new Date().getFullYear()
+
   return (
     <footer className="relative overflow-hidden bg-[#1f1f1f] text-white">
       <Image
@@ -52,7 +66,7 @@ export function Footer() {
           <div className="flex flex-col justify-between">
             <FooterColumn title="Support" items={footerColumns.support} />
             <div className="pt-8 text-left text-[13px] text-white/85 lg:pt-10 lg:text-right">
-              © 2025 All rights reserved.
+              © {currentYear} All rights reserved.
             </div>
           </div>
         </div>
@@ -75,7 +89,7 @@ function FooterColumn({
         {items.map(item => (
           <Link
             key={item}
-            href="/"
+            href={footerLinkMap[item] || '/'}
             className="block transition-colors hover:text-white"
           >
             {item}

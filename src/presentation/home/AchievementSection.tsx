@@ -1,12 +1,23 @@
-import Image from 'next/image'
+'use client'
 
-const achievements = [
-  { value: '200+', label: 'Sells Books' },
-  { value: '20k+', label: 'Customers' },
-  { value: '100+', label: 'Reviews' },
-]
+import Image from 'next/image'
+import { useMemo } from 'react'
+
+import { useHomeAchievementsQuery } from './useHomeQueries'
 
 export function AchievementSection() {
+  const achievementsQuery = useHomeAchievementsQuery()
+
+  const achievements = useMemo(() => {
+    const data = achievementsQuery.data
+
+    return [
+      { value: `${Number(data?.totalBooks || 0)}+`, label: 'Sells Books' },
+      { value: `${Number(data?.totalUsers || 0)}+`, label: 'Customers' },
+      { value: `${Number(data?.totalReviews || 0)}+`, label: 'Reviews' },
+    ]
+  }, [achievementsQuery.data])
+
   return (
     <section className="bg-[#edf5fb] py-14 sm:py-16">
       <div className="container mx-auto grid w-full gap-10 px-4 sm:px-6 lg:grid-cols-[1.1fr_repeat(3,0.8fr)] lg:px-10">

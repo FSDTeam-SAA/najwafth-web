@@ -26,6 +26,7 @@ import { useTranslation } from "react-i18next";
 const ProfileLayout = () => {
   const [activeTab, setActiveTab] = useState("Edit Profile");
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
   const { t } = useTranslation();
   const { data: session, status } = useSession();
   const TOKEN = session?.user?.accessToken;
@@ -103,7 +104,7 @@ const ProfileLayout = () => {
     },
   ];
 
-  if (isLoading || status === "loading")
+  if ((isLoading && !profileResponse) || (status === "loading" && !session))
     return (
       <div className="flex justify-center items-center h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-400"></div>
@@ -130,7 +131,8 @@ const ProfileLayout = () => {
                     width={112}
                     height={112}
                     src={
-                      userData?.avatar?.url ||
+                      previewImage ||
+                      (typeof userData?.avatar === 'string' ? userData.avatar : userData?.avatar?.url) ||
                       "https://i.pravatar.cc/150?u=default"
                     }
                     alt="Profile"
@@ -256,7 +258,11 @@ const ProfileLayout = () => {
 
           <main className="lg:w-2/3 border border-gray-100 rounded p-8 min-h-[650px] bg-[#F8F9FA]">
             {activeTab === "Edit Profile" && (
-              <EditProfile initialData={userData} fileRef={fileInputRef} />
+              <EditProfile 
+                initialData={userData} 
+                fileRef={fileInputRef} 
+                onImageSelect={(fileUrl) => setPreviewImage(fileUrl)}
+              />
             )}
             {activeTab === "Change Password" && <ChangePassword />}
             {activeTab === "Language" && <LanguageSelection />}

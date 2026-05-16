@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react";
 import { Star } from "lucide-react";
 import React, { useState } from "react";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 // API Response এর জন্য সঠিক টাইপ ডেফিনিশন
 interface OrderProduct {
@@ -52,6 +53,7 @@ const OrderDetails: React.FC = () => {
 
   const { data: session, status } = useSession();
   const TOKEN = session?.user?.accessToken;
+  const { t } = useTranslation();
 
   // ইন-লাইন রিভিউ সেকশনের জন্য স্টেট
   const [rating, setRating] = useState<number>(0);
@@ -73,7 +75,7 @@ const OrderDetails: React.FC = () => {
           },
         },
       );
-      if (!res.ok) throw new Error("Failed to fetch order details");
+      if (!res.ok) throw new Error(t("order.fetchDetailFail"));
       return res.json();
     },
     enabled: !!id && !!TOKEN,
@@ -156,23 +158,23 @@ const OrderDetails: React.FC = () => {
 
     return [
       {
-        title: "Pending",
-        desc: "Order received by store",
+        title: t("order.pending"),
+        desc: t("order.stepPending"),
         completed: currentIndex >= 0,
       },
       {
-        title: "Processing",
-        desc: "Store is preparing your order",
+        title: t("order.processing"),
+        desc: t("order.stepProcessing"),
         completed: currentIndex >= 1,
       },
       {
-        title: "Picked",
-        desc: "Delivery partner picked up order",
+        title: t("order.picked"),
+        desc: t("order.stepPicked"),
         completed: currentIndex >= 2,
       },
       {
-        title: "Delivered",
-        desc: "Order delivered successfully",
+        title: t("order.delivered"),
+        desc: t("order.stepDelivered"),
         completed: currentIndex >= 3,
       },
     ];
@@ -251,7 +253,7 @@ const OrderDetails: React.FC = () => {
   if (error || !orderInfo)
     return (
       <div className="text-center py-20 text-red-500 font-sans text-xl">
-        Failed to load order details or Order not found.
+        {t("order.detailNotFound")}
       </div>
     );
 
@@ -263,8 +265,8 @@ const OrderDetails: React.FC = () => {
     <div className="min-h-screen bg-gray-50 py-10 px-4 font-sans relative overflow-hidden">
       <div className="container mx-auto rounded-2xl bg-white border border-gray-100 p-6 md:p-8 shadow-sm relative z-10">
         <div className="mb-8">
-          <h1 className="text-4xl font-serif text-gray-800">Order Details</h1>
-          <p className="text-gray-500 mt-1">Review your purchase and status</p>
+          <h1 className="text-4xl font-serif text-gray-800">{t("order.detailsTitle")}</h1>
+          <p className="text-gray-500 mt-1">{t("order.detailsSub")}</p>
         </div>
 
         {/* Address and Summary Info */}
@@ -272,8 +274,7 @@ const OrderDetails: React.FC = () => {
           <div className="lg:w-1/2 flex flex-col sm:flex-row gap-4">
             <div className="flex-1 border border-gray-100 rounded-xl p-5 bg-[#fbfdff]">
               <h3 className="flex items-center gap-2 font-serif text-lg text-gray-700 mb-3">
-                <span className="text-blue-500 text-xl">📍</span> Delivery
-                Address
+                <span className="text-blue-500 text-xl">📍</span> {t("order.deliveryAddress")}
               </h3>
               <p className="text-gray-500 text-sm leading-relaxed">
                 {orderInfo.address}
@@ -281,23 +282,23 @@ const OrderDetails: React.FC = () => {
             </div>
             <div className="flex-1 border border-gray-100 rounded-xl p-5 bg-[#fbfdff]">
               <h3 className="flex items-center gap-2 font-serif text-lg text-gray-700 mb-3">
-                <span className="text-blue-500 text-xl">📞</span> Contact Info
+                <span className="text-blue-500 text-xl">📞</span> {t("order.contactInfo")}
               </h3>
               <div className="space-y-1 text-sm text-gray-400">
                 <p>
-                  Date:{" "}
+                  {t("order.date")}:{" "}
                   <span className="text-gray-700 font-bold">
                     {formattedDate}
                   </span>
                 </p>
                 <p>
-                  Email:{" "}
+                  {t("contact.email")}:{" "}
                   <span className="text-gray-700 font-bold">
                     {orderInfo.customer?.email}
                   </span>
                 </p>
                 <p>
-                  ID:{" "}
+                  {t("order.orderId")}:{" "}
                   <span className="text-gray-700 font-bold">
                     {orderInfo.orderId}
                   </span>
@@ -308,11 +309,11 @@ const OrderDetails: React.FC = () => {
 
           <div className="lg:w-1/2 border border-gray-100 rounded-xl p-5 bg-[#fbfdff]">
             <h3 className="flex items-center gap-2 font-serif text-lg text-gray-700 mb-3">
-              <span className="text-blue-500 text-xl">📋</span> Order Summary
+              <span className="text-blue-500 text-xl">📋</span> {t("order.orderSummary")}
             </h3>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between text-gray-500">
-                <span>Subtotal</span>
+                <span>{t("order.subtotal")}</span>
                 <span className="font-bold text-gray-800">
                   ৳
                   {orderInfo.totalAmount -
@@ -321,19 +322,19 @@ const OrderDetails: React.FC = () => {
                 </span>
               </div>
               <div className="flex justify-between text-gray-500">
-                <span>Delivery Fee</span>
+                <span>{t("order.deliveryFee")}</span>
                 <span className="font-bold text-gray-800">
                   ৳{orderInfo.shippingFee}
                 </span>
               </div>
               {orderInfo.discount > 0 && (
                 <div className="flex justify-between text-green-500">
-                  <span>Discount</span>
+                  <span>{t("order.discount")}</span>
                   <span className="font-bold">-৳{orderInfo.discount}</span>
                 </div>
               )}
               <div className="flex justify-between pt-2 border-t font-bold text-xl mt-2">
-                <span className="text-gray-800">Total</span>
+                <span className="text-gray-800">{t("order.total")}</span>
                 <span className="text-blue-500">৳{orderInfo.totalAmount}</span>
               </div>
             </div>
@@ -364,10 +365,10 @@ const OrderDetails: React.FC = () => {
                   </div>
                   <div>
                     <h4 className="font-serif text-gray-800 font-bold leading-tight">
-                      {item.product?.title || "Unknown Product"}
+                      {item.product?.title || t("cart.untitled")}
                     </h4>
                     <p className="text-xs text-gray-400 mb-1">
-                      Quantity: {item.quantity}
+                      {t("order.quantity")}: {item.quantity}
                     </p>
                     <p className="text-[10px] text-gray-400 flex items-center">
                       📍 {orderInfo.address}
@@ -458,7 +459,7 @@ const OrderDetails: React.FC = () => {
             {/* রিভিউ টেক্সট এরিয়া */}
             <textarea
               className="w-full border border-gray-200 rounded-xl p-4 text-sm text-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-400 resize-none min-h-[120px]"
-              placeholder="Write a short review to help fellow books lovers..."
+              placeholder={t("order.reviewPlaceholder")}
               value={reviewText}
               onChange={(e) => setReviewText(e.target.value)}
               disabled={reviewMutation.isPending}

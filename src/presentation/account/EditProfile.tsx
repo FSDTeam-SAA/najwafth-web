@@ -20,13 +20,15 @@ import { useTranslation } from "react-i18next";
 const EditProfile = ({
   initialData,
   fileRef,
+  onImageSelect,
 }: {
   initialData?: Record<string, unknown>;
   fileRef?: React.RefObject<HTMLInputElement | null>;
+  onImageSelect?: (url: string) => void;
 }) => {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
-  const { data: session } = useSession();
+  const { data: session, update } = useSession();
   const queryClient = useQueryClient();
   const TOKEN = session?.user?.accessToken;
 
@@ -51,10 +53,20 @@ const EditProfile = ({
       }
       return res.json();
     },
-    onSuccess: () => {
+    onSuccess: async (data) => {
       toast.success(t("account.profileUpdated"));
       setLoading(false);
       queryClient.invalidateQueries({ queryKey: ["profileData"] });
+      
+      const newAvatar = data?.data?.avatar?.url || data?.data?.avatar;
+      const newName = data?.data?.name;
+      
+      if (newAvatar || newName) {
+        await update({ 
+          ...(newAvatar && { avatar: newAvatar }),
+          ...(newName && { name: newName }) 
+        });
+      }
     },
     onError: (error: unknown) => {
       const message =
@@ -94,7 +106,11 @@ const EditProfile = ({
             ref={fileRef}
             onChange={(e) => {
               if (e.target.files?.[0]) {
-                toast.info(t("account.imageReady", { name: e.target.files[0].name }));
+                const file = e.target.files[0];
+                toast.info(t("account.imageReady", { name: file.name }));
+                if (onImageSelect) {
+                  onImageSelect(URL.createObjectURL(file));
+                }
               }
             }}
           />

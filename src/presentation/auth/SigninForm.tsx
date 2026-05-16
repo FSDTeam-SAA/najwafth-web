@@ -11,9 +11,11 @@ import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 function SigninForm() {
   const router = useRouter();
+  const { t } = useTranslation();
 
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -39,7 +41,7 @@ function SigninForm() {
         throw new Error(res.error);
       }
 
-      toast.success("Login Successfully!");
+      toast.success(t("auth.loginSuccess", { defaultValue: "Login Successfully!" }));
       router.push("/");
       router.refresh();
     } catch (err: any) {
@@ -77,20 +79,20 @@ function SigninForm() {
             />
           </div>
 
-          <h2 className="text-3xl font-bold text-[#459AE4]">Hello!</h2>
+          <h2 className="text-3xl font-bold text-[#459AE4]">{t("auth.hello", { defaultValue: "Hello!" })}</h2>
 
           <p className="text-gray-500 text-sm mt-1 mb-6">
-            Access to manage your account
+            {t("auth.signinSub", { defaultValue: "Access to manage your account" })}
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Email */}
             <div>
-              <Label className="text-[#459AE4] text-sm">Email Address</Label>
+              <Label className="text-[#459AE4] text-sm">{t("contact.emailAddress")}</Label>
 
               <Input
                 type="email"
-                placeholder="Enter your email..."
+                placeholder={t("contact.enterEmail")}
                 value={formData.email}
                 onChange={(e) =>
                   setFormData({
@@ -104,12 +106,12 @@ function SigninForm() {
 
             {/* Password */}
             <div>
-              <Label className="text-[#459AE4] text-sm">Password</Label>
+              <Label className="text-[#459AE4] text-sm">{t("auth.password", { defaultValue: "Password" })}</Label>
 
               <div className="relative mt-1">
                 <Input
                   type={showPassword ? "text" : "password"}
-                  placeholder="Enter Password..."
+                  placeholder={t("auth.enterPassword", { defaultValue: "Enter Password..." })}
                   value={formData.password}
                   onChange={(e) =>
                     setFormData({
@@ -138,7 +140,7 @@ function SigninForm() {
                   defaultChecked
                   className="accent-blue-500"
                 />
-                Remember Me
+                {t("auth.remember", { defaultValue: "Remember Me" })}
               </label>
 
               <Link href="/forgot-password">
@@ -146,7 +148,7 @@ function SigninForm() {
                   type="button"
                   className="text-[#459AE4] hover:underline"
                 >
-                  Forgot Password?
+                  {t("auth.forgot", { defaultValue: "Forgot Password?" })}
                 </button>
               </Link>
             </div>
@@ -157,7 +159,7 @@ function SigninForm() {
               disabled={isLoading}
               className="w-full h-11 rounded-md bg-slate-600 hover:bg-slate-700 text-white"
             >
-              {isLoading ? "Signing In..." : "Sign In"}
+              {isLoading ? t("auth.signingIn", { defaultValue: "Signing In..." }) : t("auth.signIn", { defaultValue: "Sign In" })}
             </Button>
 
             {/* Signup */}
@@ -165,7 +167,7 @@ function SigninForm() {
               Don&apos;t have an account?{" "}
               <Link href="/signup">
                 <span className="text-[#459AE4] font-semibold hover:underline">
-                  Sign Up
+                  {t("auth.signUp", { defaultValue: "Sign Up" })}
                 </span>
               </Link>
             </p>

@@ -7,12 +7,14 @@ import { useState, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
-import { useVerifyOtp } from "@/features/auth/hooks/useVerifyOtp"; // আপনার হুক ইমপোর্ট করুন
+import { useVerifyOtp } from "@/features/auth/hooks/useVerifyOtp";
+import { useTranslation } from "react-i18next";
 
 function VerifyOtpForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email") || "";
+  const { t } = useTranslation();
 
   const [otp, setOtp] = useState<string[]>(new Array(6).fill(""));
   const { executeVerifyOtp, isLoading } = useVerifyOtp(); // হুক কল করা হলো
@@ -59,7 +61,7 @@ function VerifyOtpForm() {
   const handleVerify = async () => {
     const fullOtp = otp.join("");
     if (fullOtp.length < 6) {
-      toast.error("Please enter all 6 digits");
+      toast.error(t("auth.enter6Digits"));
       return;
     }
 
@@ -68,7 +70,7 @@ function VerifyOtpForm() {
       const response = await executeVerifyOtp(email, fullOtp);
 
       if (response?.success) {
-        toast.success("OTP Verified Successfully!");
+        toast.success(t("auth.otpVerified"));
 
         // রিডাইরেক্ট করার সময় email, otp এবং resetToken (যা আসলে OTP ই) পাঠানো হচ্ছে
         router.push(
@@ -76,7 +78,7 @@ function VerifyOtpForm() {
         );
       }
     } catch (err: any) {
-      toast.error(err.message || "Invalid OTP");
+      toast.error(err.message || t("auth.invalidOtp"));
     }
   };
 
@@ -106,10 +108,10 @@ function VerifyOtpForm() {
           </div>
 
           <h2 className="text-3xl font-bold text-blue-500 text-center">
-            Verify Email
+            {t("auth.verifyEmail")}
           </h2>
           <p className="text-gray-500 text-sm mt-1 mb-6 text-center">
-            Enter OTP sent to{" "}
+            {t("auth.enterOtpSentTo")}{" "}
             <span className="font-semibold text-blue-400">{email}</span>
           </p>
 
@@ -138,7 +140,7 @@ function VerifyOtpForm() {
             <p>
               Didn&apos;t get a code?{" "}
               <button className="text-blue-500 font-semibold cursor-pointer hover:underline bg-transparent border-none">
-                Resend
+                {t("auth.resend")}
               </button>
             </p>
           </div>
@@ -151,7 +153,7 @@ function VerifyOtpForm() {
             {isLoading ? (
               <Loader2 className="animate-spin" size={20} />
             ) : (
-              "Verify"
+              t("auth.verify")
             )}
           </Button>
         </div>

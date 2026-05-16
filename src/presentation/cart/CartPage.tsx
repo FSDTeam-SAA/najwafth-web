@@ -7,6 +7,7 @@ import Image from "next/image";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 type CartItem = {
   _id: string;
@@ -30,6 +31,7 @@ const CartPage = () => {
   const { data: session } = useSession();
   const TOKEN = session?.user?.accessToken;
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
 
   // ১. ফেচিং লজিক ফিক্স (টোকেনসহ এবং ডাটা রিটার্ন)
   const { data: cartResponse, isLoading } = useQuery({
@@ -43,7 +45,7 @@ const CartPage = () => {
           },
         },
       );
-      if (!res.ok) throw new Error("Failed to fetch cart");
+      if (!res.ok) throw new Error(t("cart.fetchFail"));
       return res.json();
     },
     enabled: !!TOKEN,
@@ -62,7 +64,7 @@ const CartPage = () => {
       quantity: number;
     }) => {
       if (!TOKEN) {
-        throw new Error("Please login to update cart");
+        throw new Error(t("cart.loginUpdate"));
       }
 
       const res = await fetch(
@@ -83,7 +85,7 @@ const CartPage = () => {
       const result = await res.json().catch(() => null);
 
       if (!res.ok) {
-        throw new Error(result?.message || "Failed to update cart");
+        throw new Error(result?.message || t("cart.updateFail"));
       }
 
       return result;
@@ -92,7 +94,7 @@ const CartPage = () => {
       queryClient.invalidateQueries({ queryKey: ["cart", TOKEN] });
     },
     onError: (error: Error) => {
-      toast.error(error.message || "Something went wrong");
+      toast.error(error.message || t("auth.somethingWrong"));
     },
   });
 
@@ -108,9 +110,9 @@ const CartPage = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-4 relative overflow-hidden">
       <div className="container mx-auto text-center">
-        <h1 className="text-4xl font-serif text-gray-800">My Cart</h1>
+        <h1 className="text-4xl font-serif text-gray-800">{t("cart.title")}</h1>
         <p className="text-gray-500 mt-2 mb-8 font-medium">
-          Manage & see my My Cart list
+          {t("cart.subtitle")}
         </p>
 
         <div className="space-y-4">
@@ -148,12 +150,12 @@ const CartPage = () => {
                     <h3 className="font-serif text-lg text-gray-800 hover:text-blue-500 transition-colors">
                       {item.product?.title || "Untitled"}
                     </h3>
-                    <p className="text-gray-500 text-sm">Unknown Author</p>
+                    <p className="text-gray-500 text-sm">{t("cart.unknownAuthor")}</p>
                     <p className="text-gray-400 text-xs flex items-center mt-1">
-                      <span className="mr-1">📍</span> Store Location
+                      <span className="mr-1">📍</span> {t("cart.storeLocation")}
                     </p>
                     <div className="flex items-center gap-1 mt-2 text-blue-500 font-bold text-lg">
-                      £{Number(item.product?.price || 0).toFixed(2)}
+                      ${Number(item.product?.price || 0).toFixed(2)}
                       <ChevronRight size={16} className="mt-0.5" />
                     </div>
                   </div>
@@ -197,7 +199,7 @@ const CartPage = () => {
             ))
           ) : (
             <div className="bg-white p-20 rounded-2xl border border-dashed border-gray-200 text-gray-400 text-xl">
-              Your cart is empty.
+              {t("cart.empty")}
             </div>
           )}
         </div>
@@ -206,14 +208,14 @@ const CartPage = () => {
         {cartItems.length > 0 && (
           <div className="mt-10 p-6 bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col gap-5 sm:flex-row sm:justify-between sm:items-center">
             <div className="text-left">
-              <p className="text-gray-500">Total Items: {cartItems.length}</p>
+              <p className="text-gray-500">{t("cart.totalItems")}: {cartItems.length}</p>
               <p className="text-2xl font-bold text-gray-800">
-                Total Amount: ৳{Number(totalAmount).toFixed(2)}
+                {t("cart.totalAmount")}: ${Number(totalAmount).toFixed(2)}
               </p>
             </div>
             <Link href="/checkout">
               <button className="w-full sm:w-auto bg-blue-500 hover:bg-blue-600 text-white px-10 py-3 rounded-xl font-bold text-lg transition-all shadow-lg shadow-blue-100">
-                Check Out
+                {t("cart.checkout")}
               </button>
             </Link>
           </div>

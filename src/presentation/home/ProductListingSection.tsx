@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { AlertTriangle, BookX, ChevronLeft, ChevronRight } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import { BookProductCard } from './BookProductCard'
 import { StateMessageCard } from './StateMessageCard'
@@ -33,6 +34,7 @@ export function ProductListingSection({
   bottomLeafClassName,
   pagination,
 }: ProductListingSectionProps) {
+  const { t } = useTranslation()
   const canGoPrev = Boolean(pagination && pagination.page > 1)
   const canGoNext = Boolean(pagination && pagination.page < pagination.totalPage)
 
@@ -75,7 +77,7 @@ export function ProductListingSection({
               href={viewAllHref}
               className="text-[18px] font-medium text-[#459AE4] no-underline decoration-2 underline-offset-4 transition hover:!underline"
             >
-              View all
+              {t('home.viewAll')}
             </Link>
           </div>
         ) : null}
@@ -109,7 +111,7 @@ export function ProductListingSection({
             <StateMessageCard
               tone="error"
               icon={AlertTriangle}
-              title="Something went wrong"
+              title={t('home.somethingWrong')}
               description={error}
             />
           </div>
@@ -119,8 +121,8 @@ export function ProductListingSection({
           <div className="mt-6">
             <StateMessageCard
               icon={BookX}
-              title="No books found"
-              description="There are no books to display at the moment."
+              title={t('home.noBooksFound')}
+              description={t('home.noBooksDesc')}
             />
           </div>
         ) : null}
@@ -145,11 +147,14 @@ export function ProductListingSection({
                   className="inline-flex items-center gap-2 rounded-lg border border-[#d3deea] bg-white px-3 py-2 text-sm text-[#1f2937] disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   <ChevronLeft className="h-4 w-4" />
-                  Previous
+                  {t('home.previous')}
                 </button>
 
                 <span className="rounded-lg bg-[#eef4fa] px-3 py-2 text-sm font-medium text-[#1f2937]">
-                  Page {pagination.page} of {pagination.totalPage}
+                  {t('home.pageOf', {
+                    page: pagination.page,
+                    total: pagination.totalPage,
+                  })}
                 </span>
 
                 <button
@@ -158,7 +163,7 @@ export function ProductListingSection({
                   disabled={!canGoNext}
                   className="inline-flex items-center gap-2 rounded-lg border border-[#d3deea] bg-white px-3 py-2 text-sm text-[#1f2937] disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  Next
+                  {t('home.next')}
                   <ChevronRight className="h-4 w-4" />
                 </button>
               </div>

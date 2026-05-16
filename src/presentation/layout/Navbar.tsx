@@ -7,18 +7,10 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Menu, Search, ShoppingCart, X } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { useTranslation } from "react-i18next";
 
 import { Button } from "@/components/ui/button";
 
-const navLinks = [
-  { href: "/", label: "Home" },
-  { href: "/categories", label: "Categories" },
-  { href: "/order", label: "Order" },
-  { href: "/contact", label: "Contact" },
-  { href: "/about-us", label: "About Us" },
-];
-
-// Routes that belong to the Home section (so Home link stays active)
 const HOME_SECTION_ROUTES = ["/", "/popular-books", "/featured-bookstores"];
 
 function isLinkActive(linkHref: string, pathname: string): boolean {
@@ -36,6 +28,7 @@ type SearchItem = {
 };
 
 export function Navbar() {
+  const { t } = useTranslation();
   const router = useRouter();
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -51,6 +44,14 @@ export function Navbar() {
   const isAuthenticated = status === "authenticated";
   const avatarUrl =
     session?.user?.avatar || "https://i.pravatar.cc/120?u=books-user";
+
+  const navLinks = [
+    { href: "/", label: t("nav.home") },
+    { href: "/categories", label: t("nav.categories") },
+    { href: "/order", label: t("nav.order") },
+    { href: "/contact", label: t("nav.contact") },
+    { href: "/about-us", label: t("nav.aboutUs") },
+  ];
 
   useEffect(() => {
     const timeout = window.setTimeout(() => {
@@ -205,7 +206,7 @@ export function Navbar() {
               onClick={handleOpenSearch}
             >
               <Search className="!h-6 !w-5 stroke-[2.3]" />
-              <span className="sr-only">Open search</span>
+              <span className="sr-only">{t("nav.searchPlaceholder")}</span>
             </Button>
 
             {isDesktopSearchOpen ? (
@@ -219,7 +220,7 @@ export function Navbar() {
                     value={searchText}
                     onChange={(event) => handleSearchChange(event.target.value)}
                     onFocus={() => setShowSearchDropdown(true)}
-                    placeholder="Search books, authors, stores..."
+                    placeholder={t("nav.searchPlaceholder")}
                     className="h-full w-full border-0 bg-transparent px-5 text-[15px] text-[#111827] outline-none placeholder:text-[#9CA3AF]"
                     autoFocus
                   />
@@ -243,9 +244,7 @@ export function Navbar() {
                 {showSearchDropdown && searchText.trim().length > 0 ? (
                   <div className="absolute left-0 top-[calc(100%+8px)] z-50 w-[520px] overflow-hidden rounded-xl border border-[#dbe7f3] bg-white shadow-xl">
                     {isSearching ? (
-                      <p className="px-4 py-3 text-sm text-[#6B7280]">
-                        Searching...
-                      </p>
+                      <p className="px-4 py-3 text-sm text-[#6B7280]">{t("nav.searching")}</p>
                     ) : searchResults.length > 0 ? (
                       <ul className="max-h-72 overflow-y-auto">
                         {searchResults.map((item) => (
@@ -267,7 +266,7 @@ export function Navbar() {
                       </ul>
                     ) : (
                       <p className="px-4 py-3 text-sm text-[#6B7280]">
-                        No books found for &quot;{searchText.trim()}&quot;
+                        {t("nav.noBooksFound", { query: searchText.trim() })}
                       </p>
                     )}
                   </div>
@@ -283,18 +282,16 @@ export function Navbar() {
             onClick={handleOpenMobileSearch}
           >
             <Search className="h-5 w-5 stroke-[2.3]" />
-            <span className="sr-only">Search</span>
+            <span className="sr-only">{t("nav.searchPlaceholder")}</span>
           </Button>
-          <Link href="/cart">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-10 w-10 cursor-pointer rounded-full p-1"
-            >
-              <ShoppingCart className="!h-6 !w-6" />
-              <span className="sr-only">Cart</span>
-            </Button>
-          </Link>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-10 w-10 cursor-pointer rounded-full p-1"
+          >
+            <ShoppingCart className="h-7 w-7 stroke-[2.4]" />
+            <span className="sr-only">Cart</span>
+          </Button>
           {isAuthenticated ? (
             <Link href="/account" className="ml-1 hidden xl:block">
               <div className="h-10 w-10 overflow-hidden rounded-full border border-[#d8e4ef]">
@@ -310,7 +307,7 @@ export function Navbar() {
           ) : (
             <Link href="/signin" className="hidden xl:block">
               <Button className="cursor-pointer rounded-xl px-5 py-5 text-[15px]">
-                Sign in
+                {t("nav.signIn")}
               </Button>
             </Link>
           )}
@@ -343,7 +340,7 @@ export function Navbar() {
                 value={searchText}
                 onChange={(event) => handleSearchChange(event.target.value)}
                 onFocus={() => setShowSearchDropdown(true)}
-                placeholder="Search books, authors, stores..."
+                placeholder={t("nav.searchPlaceholder")}
                 className="h-full w-full border-0 bg-transparent px-4 text-[14px] text-[#111827] outline-none placeholder:text-[#9CA3AF]"
                 autoFocus
               />
@@ -367,9 +364,7 @@ export function Navbar() {
             {showSearchDropdown && searchText.trim().length > 0 ? (
               <div className="absolute left-0 top-[calc(100%+6px)] z-50 w-full overflow-hidden rounded-xl border border-[#dbe7f3] bg-white shadow-xl">
                 {isSearching ? (
-                  <p className="px-4 py-3 text-sm text-[#6B7280]">
-                    Searching...
-                  </p>
+                  <p className="px-4 py-3 text-sm text-[#6B7280]">{t("nav.searching")}</p>
                 ) : searchResults.length > 0 ? (
                   <ul className="max-h-72 overflow-y-auto">
                     {searchResults.map((item) => (
@@ -391,7 +386,7 @@ export function Navbar() {
                   </ul>
                 ) : (
                   <p className="px-4 py-3 text-sm text-[#6B7280]">
-                    No books found for &quot;{searchText.trim()}&quot;
+                    {t("nav.noBooksFound", { query: searchText.trim() })}
                   </p>
                 )}
               </div>
@@ -426,7 +421,7 @@ export function Navbar() {
           {!isAuthenticated ? (
             <Link href="/signin" className="sm:hidden">
               <Button className="cursor-pointer mt-2 w-full rounded-xl text-[14px]">
-                Sign in
+                {t("nav.signIn")}
               </Button>
             </Link>
           ) : null}

@@ -2,21 +2,23 @@
 
 import Image from 'next/image'
 import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { useHomeAchievementsQuery } from './useHomeQueries'
 
 export function AchievementSection() {
   const achievementsQuery = useHomeAchievementsQuery()
+  const { t } = useTranslation()
 
   const achievements = useMemo(() => {
     const data = achievementsQuery.data
 
     return [
-      { value: `${Number(data?.totalBooks || 0)}+`, label: 'Sells Books' },
-      { value: `${Number(data?.totalUsers || 0)}+`, label: 'Customers' },
-      { value: `${Number(data?.totalReviews || 0)}+`, label: 'Reviews' },
+      { value: `${Number(data?.totalBooks || 0)}+`, label: t('home.sellsBooks') },
+      { value: `${Number(data?.totalUsers || 0)}+`, label: t('home.customers') },
+      { value: `${Number(data?.totalReviews || 0)}+`, label: t('home.reviews') },
     ]
-  }, [achievementsQuery.data])
+  }, [achievementsQuery.data, t])
 
   return (
     <section className="bg-[#edf5fb] py-14 sm:py-16">
@@ -31,7 +33,7 @@ export function AchievementSection() {
             />
           </div>
           <h2 className="mt-3 text-[28px] leading-tight text-[#111111] sm:text-[44px]">
-            Achievement
+            {t('home.achievementTitle')}
           </h2>
         </div>
 

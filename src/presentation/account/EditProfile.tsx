@@ -15,14 +15,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useTranslation } from "react-i18next";
 
 const EditProfile = ({
   initialData,
   fileRef,
 }: {
-  initialData?: any;
-  fileRef?: any;
+  initialData?: Record<string, unknown>;
+  fileRef?: React.RefObject<HTMLInputElement | null>;
 }) => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const { data: session } = useSession();
   const queryClient = useQueryClient();
@@ -50,12 +52,14 @@ const EditProfile = ({
       return res.json();
     },
     onSuccess: () => {
-      toast.success("Profile updated successfully");
+      toast.success(t("account.profileUpdated"));
       setLoading(false);
       queryClient.invalidateQueries({ queryKey: ["profileData"] });
     },
-    onError: (error: any) => {
-      toast.error(error.message || "Something went wrong");
+    onError: (error: unknown) => {
+      const message =
+        error instanceof Error ? error.message : "Something went wrong";
+      toast.error(message);
       setLoading(false);
     },
   });
@@ -67,19 +71,17 @@ const EditProfile = ({
     updateMutation.mutate(formData);
   };
 
-  // ইনপুট টেক্সট সাইজ text-lg (বড়) করা হয়েছে
   const inputStyles =
     "h-[50px] pl-10 focus-visible:ring-blue-400 border-[#C0C3C1] text-lg transition-all rounded";
 
   return (
     <div className="w-full">
       <div className="mb-8 pb-4 border-b border-slate-100">
-        {/* মেইন হেডিং বড় করা হয়েছে */}
         <h2 className="text-3xl font-bold text-slate-900 font-serif">
-          Edit Profile
+          {t("account.editProfileTitle")}
         </h2>
         <p className="text-slate-500 text-base mt-1">
-          Update your account information and profile picture.
+          {t("account.editProfileSub")}
         </p>
       </div>
 
@@ -92,19 +94,16 @@ const EditProfile = ({
             ref={fileRef}
             onChange={(e) => {
               if (e.target.files?.[0]) {
-                toast.info(
-                  `Image "${e.target.files[0].name}" ready. Click Save Changes.`,
-                );
+                toast.info(t("account.imageReady", { name: e.target.files[0].name }));
               }
             }}
           />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Label সাইজ text-lg করা হয়েছে এবং font-bold */}
           <div className="space-y-2">
             <Label className="text-base font-medium text-[#1E1E1E] leading-[150%]">
-              Full Name
+              {t("account.fullName")}
             </Label>
             <div className="relative">
               <User
@@ -113,16 +112,16 @@ const EditProfile = ({
               />
               <Input
                 name="name"
-                defaultValue={initialData?.name}
+                defaultValue={(initialData?.name as string) || ""}
                 className={inputStyles}
-                placeholder="Full Name"
+                placeholder={t("account.fullName")}
               />
             </div>
           </div>
 
           <div className="space-y-2">
             <Label className="text-base font-medium text-[#1E1E1E] leading-[150%]">
-              Phone Number
+              {t("account.phoneNumber")}
             </Label>
             <div className="relative">
               <Phone
@@ -131,42 +130,42 @@ const EditProfile = ({
               />
               <Input
                 name="phone"
-                defaultValue={initialData?.phone}
+                defaultValue={(initialData?.phone as string) || ""}
                 className={inputStyles}
-                placeholder="Phone Number"
+                placeholder={t("account.phoneNumber")}
               />
             </div>
           </div>
 
           <div className="md:col-span-2 space-y-2">
-            <Label className="text-base font-medium text-[#1E1E1E] leading-[150%]">Bio</Label>
+            <Label className="text-base font-medium text-[#1E1E1E] leading-[150%]">{t("account.bio")}</Label>
             <Input
               name="bio"
-              defaultValue={initialData?.bio}
+              defaultValue={(initialData?.bio as string) || ""}
               className="h-[50px] focus-visible:ring-blue-400 border-[#C0C3C1] text-lg transition-all rounded"
-              placeholder="Tell us something about you"
+              placeholder={t("account.bioPlaceholder")}
             />
           </div>
 
           <div className="space-y-2">
-            <Label className="text-base font-medium text-[#1E1E1E] leading-[150%]">Gender</Label>
+            <Label className="text-base font-medium text-[#1E1E1E] leading-[150%]">{t("account.gender")}</Label>
 
-            <Select defaultValue={initialData?.gender || ""}>
+            <Select defaultValue={(initialData?.gender as string) || ""}>
               <SelectTrigger className="!h-[50px] rounded w-full text-lg border border-[#C0C3C1] focus:ring-2 focus:ring-blue-400">
-                <SelectValue placeholder="Select gender" />
+                <SelectValue placeholder={t("account.selectGender")} />
               </SelectTrigger>
 
               <SelectContent>
-                <SelectItem value="male">Male</SelectItem>
-                <SelectItem value="female">Female</SelectItem>
-                <SelectItem value="other">Other</SelectItem>
+                <SelectItem value="male">{t("account.male")}</SelectItem>
+                <SelectItem value="female">{t("account.female")}</SelectItem>
+                <SelectItem value="other">{t("account.other")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div className="space-y-2">
             <Label className="text-base font-medium text-[#1E1E1E] leading-[150%]">
-              Date of Birth
+              {t("account.dob")}
             </Label>
             <div className="relative">
               <Calendar
@@ -176,25 +175,29 @@ const EditProfile = ({
               <Input
                 type="date"
                 name="dob"
-                defaultValue={initialData?.dob?.split("T")[0]}
+                defaultValue={
+                  typeof initialData?.dob === "string"
+                    ? initialData.dob.split("T")[0]
+                    : ""
+                }
                 className={inputStyles}
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label className="text-base font-medium text-[#1E1E1E] leading-[150%]">Age</Label>
+            <Label className="text-base font-medium text-[#1E1E1E] leading-[150%]">{t("account.age")}</Label>
             <Input
               type="number"
               name="age"
-              defaultValue={initialData?.age}
+              defaultValue={(initialData?.age as number | string) || ""}
               className="h-[50px] focus-visible:ring-blue-400 border-[#C0C3C1] text-lg transition-all rounded w-full"
-              placeholder="Age"
+              placeholder={t("account.age")}
             />
           </div>
 
           <div className="space-y-2 md:col-span-2">
-            <Label className="text-base font-medium text-[#1E1E1E] leading-[150%]">Address</Label>
+            <Label className="text-base font-medium text-[#1E1E1E] leading-[150%]">{t("account.address")}</Label>
             <div className="relative">
               <MapPin
                 className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
@@ -202,9 +205,9 @@ const EditProfile = ({
               />
               <Input
                 name="address"
-                defaultValue={initialData?.address}
+                defaultValue={(initialData?.address as string) || ""}
                 className={inputStyles}
-                placeholder="Your Address"
+                placeholder={t("account.addressPlaceholder")}
               />
             </div>
           </div>
@@ -216,7 +219,7 @@ const EditProfile = ({
             disabled={loading}
             className="h-[55px] px-5 bg-[#5F83A2] hover:bg-[#5e7e9a] text-white font-bold text-base rounded transition-all min-w-[200px] cursor-pointer"
           >
-            {loading ? "Saving..." : "Save Changes"}
+            {loading ? t("account.saving") : t("account.saveChanges")}
           </Button>
         </div>
       </form>

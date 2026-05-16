@@ -1,93 +1,105 @@
 "use client";
-import { OrderItem, OrderStatus } from "@/types/order/types"; // OrderItem ইন্টারফেসটি ইম্পোর্ট করুন
+import { useQuery } from "@tanstack/react-query";
+import { useSession } from "next-auth/react"; 
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
 
-const OrderPage = () => {
-  // ডাটাতে সরাসরি টাইপ বলে দিলে TS এরর আসবে না
-  const orders: OrderItem[] = [
-    {
-      id: 1,
-      title: "The Great Gatsby",
-      author: "F. Scott Fitzgerald",
-      address: "123 Library, Book City",
-      price: 12.99,
-      items: 2,
-      status: "Processing",
-      img: "/images/orderImage.jpg",
-    },
-    {
-      id: 2,
-      title: "The Great Gatsby",
-      author: "F. Scott Fitzgerald",
-      address: "123 Library, Book City",
-      price: 12.99,
-      items: 2,
-      status: "Pending",
-      img: "/images/orderImage.jpg",
-    },
-    {
-      id: 3,
-      title: "The Great Gatsby",
-      author: "F. Scott Fitzgerald",
-      address: "123 Library, Book City",
-      price: 12.99,
-      items: 2,
-      status: "Picked",
-      img: "/images/orderImage.jpg",
-    },
-    {
-      id: 4,
-      title: "The Great Gatsby",
-      author: "F. Scott Fitzgerald",
-      address: "123 Library, Book City",
-      price: 12.99,
-      items: 2,
-      status: "Delivered",
-      img: "/images/orderImage.jpg",
-    },
-    {
-      id: 5,
-      title: "The Great Gatsby",
-      author: "F. Scott Fitzgerald",
-      address: "123 Library, Book City",
-      price: 12.99,
-      items: 2,
-      status: "Processing",
-      img: "/images/orderImage.jpg",
-    },
-  ];
+// API Response এর জন্য টাইপ ডেফিনিশন
+interface OrderProduct {
+  _id: string;
+  title: string;
+  price: number;
+  coverImage?: string; // নতুন ইমেজের ফিল্ড
+}
 
-  const categories = [
-    "All",
-    "Pending (2)",
-    "Processing",
-    "Picked (1)",
-    "Delivered",
-  ];
+interface OrderItemPayload {
+  product: OrderProduct;
+  quantity: number;
+  price: number;
+  _id: string;
+}
+
+interface Order {
+  _id: string;
+  orderId: string;
+  items: OrderItemPayload[];
+  totalAmount: number;
+  shippingFee: number;
+  discount: number;
+  status: string;
+  trackingNumber: string;
+  expectedDeliveryDate: string;
+  customer: {
+    _id: string;
+    email: string;
+  };
+  address: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+const OrderPage = () => {
+  const { data: session } = useSession();
+  const TOKEN = session?.user?.accessToken;
+
+  const categories = ["All", "Pending", "Processing", "Picked", "Delivered"];
   const [activeTab, setActiveTab] = useState("All");
 
-  // স্ট্যাটাস অনুযায়ী কালার নির্ধারণ - টাইপ সেফ করা হয়েছে
-  const getStatusStyle = (status: OrderStatus) => {
-    switch (status) {
-      case "Processing":
+  // API থেকে ডাটা ফেচ করা
+  const { data: orderResponse, isLoading } = useQuery({
+    queryKey: ["my-order", TOKEN],
+    queryFn: async () => {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/order/my-orders?page=1&limit=10`,
+        {
+          headers: {
+            Authorization: `Bearer ${TOKEN}`,
+          },
+        },
+      );
+      if (!res.ok) throw new Error("Failed to fetch orders");
+      return res.json();
+    },
+    enabled: !!TOKEN, 
+  });
+
+  // API রেসপন্স থেকে orders অ্যারে নেওয়া
+  const myOrders: Order[] = orderResponse?.data?.orders || [];
+
+  // ফিল্টারিং লজিক
+  const filteredOrders =
+    activeTab === "All"
+      ? myOrders
+      : myOrders.filter(
+          (order) => order.status.toLowerCase() === activeTab.toLowerCase(),
+        );
+
+  const getStatusStyle = (status: string) => {
+    switch (status.toLowerCase()) {
+      case "processing":
         return "bg-green-100 text-green-600";
-      case "Pending":
+      case "pending":
         return "bg-yellow-100 text-yellow-600";
-      case "Picked":
+      case "picked":
         return "bg-orange-100 text-orange-600";
-      case "Delivered":
+      case "delivered":
         return "bg-blue-100 text-blue-600";
       default:
         return "bg-gray-100 text-gray-600";
     }
   };
 
+  if (isLoading)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-500"></div>
+      </div>
+    );
+
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-4 font-sans relative overflow-hidden">
       <div className="container mx-auto">
-        {/* হেডার সেকশন */}
         <div className="text-center mb-10">
           <h1 className="text-5xl font-serif text-[#1A1A1A]">My Orders</h1>
           <p className="text-gray-500 text-lg mt-2">
@@ -114,64 +126,79 @@ const OrderPage = () => {
 
         {/* অর্ডার লিস্ট */}
         <div className="space-y-4">
-          {orders.map((order) => (
-            <Link key={order.id} href={`/order/${order.id}`} className="block">
-              <div className="bg-white border border-gray-100 rounded-xl p-4 flex items-center justify-between shadow-[0px_1px_2px_-1px_#0000001A] hover:shadow-[0px_1px_3px_0px_#0000001A]">
-                <div className="flex items-center gap-4 text-left">
-                  {/* ইমেজ - Next.js Image Component */}
-                  <div className="relative w-33 h-33 overflow-hidden rounded-lg bg-gray-200">
-                    <Image
-                      src={order.img}
-                      alt={order.title}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
+          {filteredOrders.length > 0 ? (
+            filteredOrders.map((order) => {
+              // প্রথম প্রোডাক্টের ডাটা বের করা কার্ডে দেখানোর জন্য
+              const firstItem = order.items?.[0];
+              const productTitle = firstItem?.product?.title || "Unknown Product";
+              const productImage = firstItem?.product?.coverImage || "/images/placeholder.jpg";
+              const totalItemsCount = order.items?.length || 0;
 
-                  {/* ইনফরমেশন */}
-                  <div>
-                    <h3 className="font-serif text-lg text-gray-800 leading-tight">
-                      {order.title}
-                    </h3>
-                    <p className="text-gray-500 text-sm">{order.author}</p>
-                    <p className="text-gray-400 text-xs flex items-center mt-1">
-                      <span className="mr-1">📍</span> {order.address}
-                    </p>
-                    {/* ছোট কালার সার্কেলগুলো */}
-                    <div className="flex -space-x-2 mt-2">
-                      <div className="w-5 h-5 rounded-full bg-[#8B5E3C] border-2 border-white"></div>
-                      <div className="w-5 h-5 rounded-full bg-[#2D4F1E] border-2 border-white"></div>
+              return (
+                <Link
+                  key={order._id}
+                  href={`/order/${order.orderId}`}
+                  className="block"
+                >
+                  <div className="bg-white border border-gray-100 rounded-xl p-4 flex items-center justify-between shadow-sm hover:shadow-md transition-shadow">
+                    <div className="flex items-center gap-4 text-left">
+                      <div className="relative w-24 h-24 overflow-hidden rounded-lg bg-gray-100">
+                        {/* API থেকে আসা রিয়েল coverImage ব্যবহার করা হয়েছে */}
+                        <Image
+                          src={productImage}
+                          alt={productTitle}
+                          fill
+                          className="object-cover"
+                          unoptimized // এক্সটার্নাল ইমেজ ডোমেইন কনফিগার করা না থাকলে এরর এড়াতে এটি ব্যবহার করতে পারেন
+                        />
+                      </div>
+
+                      <div>
+                        <h3 className="font-serif text-lg text-gray-800 leading-tight">
+                          {productTitle}
+                          {totalItemsCount > 1 && (
+                            <span className="text-xs text-gray-400 block mt-1">
+                              + {totalItemsCount - 1} more item(s)
+                            </span>
+                          )}
+                        </h3>
+                        <p className="text-gray-500 text-sm mt-1">Order ID: {order.orderId}</p>
+                        <p className="text-gray-400 text-xs flex items-center mt-1">
+                          <span className="mr-1">📍</span> {order.address}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col items-end justify-between h-20">
+                      <span
+                        className={`text-[10px] uppercase font-bold px-3 py-1 rounded-full ${getStatusStyle(order.status)}`}
+                      >
+                        {order.status}
+                      </span>
+
+                      <div className="flex items-center gap-2 group">
+                        <div className="text-right">
+                          <p className="text-[#3B82F6] font-bold text-xl leading-none">
+                            ৳{order.totalAmount}
+                          </p>
+                          <p className="text-blue-300 text-[10px] mt-1">
+                            {totalItemsCount} {totalItemsCount > 1 ? "Items" : "Item"}
+                          </p>
+                        </div>
+                        <span className="text-[#3B82F6] font-bold text-2xl leading-none group-hover:translate-x-1 transition-transform">
+                          ›
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
-
-                {/* স্ট্যাটাস ও প্রাইস সেকশন */}
-                <div className="flex flex-col items-end justify-between h-20">
-                  <span
-                    className={`text-[10px] uppercase font-bold px-3 py-1 rounded-full ${getStatusStyle(
-                      order.status,
-                    )}`}
-                  >
-                    {order.status}
-                  </span>
-
-                  <div className="flex items-center gap-2 group">
-                    <div className="text-right">
-                      <p className="text-[#3B82F6] font-bold text-xl leading-none">
-                        ${order.price}
-                      </p>
-                      <p className="text-blue-300 text-[10px] mt-1">
-                        {order.items} Items
-                      </p>
-                    </div>
-                    <span className="text-[#3B82F6] font-bold text-2xl leading-none group-hover:translate-x-1 transition-transform">
-                      ›
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </Link>
-          ))}
+                </Link>
+              );
+            })
+          ) : (
+            <div className="text-center py-20 text-gray-400 text-xl">
+              No orders found in this category.
+            </div>
+          )}
         </div>
       </div>
     </div>

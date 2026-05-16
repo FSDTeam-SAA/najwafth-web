@@ -1,27 +1,27 @@
-'use client'
+"use client";
 
-import { useQuery } from '@tanstack/react-query'
-import { useEffect, useState } from 'react'
-import { toast } from 'sonner'
+import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
-import { getBooks } from '@/lib/home-api'
-import { ProductListingSection } from '@/presentation/home/ProductListingSection'
+import { getBooks } from "@/lib/home-api";
+import { ProductListingSection } from "@/presentation/home/ProductListingSection";
 
-const LIMIT = 8
+const LIMIT = 8;
 
 export default function FeaturedBookstoresPage() {
-  const [page, setPage] = useState(1)
+  const [page, setPage] = useState(1);
 
   const query = useQuery({
-    queryKey: ['featured-bookstores-page', page],
-    queryFn: () => getBooks({ kind: 'featured', page, limit: LIMIT }),
-  })
+    queryKey: ["featured-bookstores-page", page],
+    queryFn: () => getBooks({ kind: "featured", page, limit: LIMIT }),
+  });
 
   useEffect(() => {
     if (query.error) {
-      toast.error('Unable to load featured bookstores.')
+      toast.error("Unable to load featured bookstores.");
     }
-  }, [query.error])
+  }, [query.error]);
 
   return (
     <div className="bg-[#FAFAFA]">
@@ -39,5 +39,5 @@ export default function FeaturedBookstoresPage() {
         bottomLeafClassName="pointer-events-none absolute bottom-6 left-[-2.5rem] h-auto w-[240px] opacity-45"
       />
     </div>
-  )
+  );
 }

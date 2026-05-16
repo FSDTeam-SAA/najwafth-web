@@ -1,10 +1,12 @@
 import CartDetailsPage from '@/presentation/cart/CartDetailsPage'
 import React from 'react'
 
-function page() {
+async function page({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+
   return (
     <div>
-      <CartDetailsPage />
+      <CartDetailsPage cartItemId={id} />
     </div>
   )
 }

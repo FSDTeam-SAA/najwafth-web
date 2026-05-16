@@ -1,63 +1,63 @@
-'use client'
+"use client";
 
-import { useEffect, useRef, useState } from 'react'
-import type { FormEvent } from 'react'
-import Image from 'next/image'
-import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
-import { Menu, Search, ShoppingCart, X } from 'lucide-react'
-import { useSession } from 'next-auth/react'
+import { useEffect, useRef, useState } from "react";
+import type { FormEvent } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { Menu, Search, ShoppingCart, X } from "lucide-react";
+import { useSession } from "next-auth/react";
 
-import { Button } from '@/components/ui/button'
+import { Button } from "@/components/ui/button";
 
 const navLinks = [
-  { href: '/', label: 'Home' },
-  { href: '/categories', label: 'Categories' },
-  { href: '/order', label: 'Order' },
-  { href: '/contact', label: 'Contact' },
-  { href: '/about-us', label: 'About Us' },
-]
+  { href: "/", label: "Home" },
+  { href: "/categories", label: "Categories" },
+  { href: "/order", label: "Order" },
+  { href: "/contact", label: "Contact" },
+  { href: "/about-us", label: "About Us" },
+];
 
 // Routes that belong to the Home section (so Home link stays active)
-const HOME_SECTION_ROUTES = ['/', '/popular-books', '/featured-bookstores']
+const HOME_SECTION_ROUTES = ["/", "/popular-books", "/featured-bookstores"];
 
 function isLinkActive(linkHref: string, pathname: string): boolean {
-  if (linkHref === '/') {
-    return HOME_SECTION_ROUTES.includes(pathname)
+  if (linkHref === "/") {
+    return HOME_SECTION_ROUTES.includes(pathname);
   }
-  return pathname === linkHref || pathname.startsWith(linkHref + '/')
+  return pathname === linkHref || pathname.startsWith(linkHref + "/");
 }
 
 type SearchItem = {
-  id: string
-  title: string
-  author: string
-  location: string
-}
+  id: string;
+  title: string;
+  author: string;
+  location: string;
+};
 
 export function Navbar() {
-  const router = useRouter()
-  const pathname = usePathname()
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [searchText, setSearchText] = useState('')
-  const [debouncedSearch, setDebouncedSearch] = useState('')
-  const [searchResults, setSearchResults] = useState<SearchItem[]>([])
-  const [isSearching, setIsSearching] = useState(false)
-  const [showSearchDropdown, setShowSearchDropdown] = useState(false)
-  const [isDesktopSearchOpen, setIsDesktopSearchOpen] = useState(false)
-  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false)
-  const searchContainerRef = useRef<HTMLDivElement | null>(null)
-  const { data: session, status } = useSession()
-  const isAuthenticated = status === 'authenticated'
+  const router = useRouter();
+  const pathname = usePathname();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [searchText, setSearchText] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [searchResults, setSearchResults] = useState<SearchItem[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [showSearchDropdown, setShowSearchDropdown] = useState(false);
+  const [isDesktopSearchOpen, setIsDesktopSearchOpen] = useState(false);
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
+  const searchContainerRef = useRef<HTMLDivElement | null>(null);
+  const { data: session, status } = useSession();
+  const isAuthenticated = status === "authenticated";
   const avatarUrl =
-    session?.user?.avatar || 'https://i.pravatar.cc/120?u=books-user'
+    session?.user?.avatar || "https://i.pravatar.cc/120?u=books-user";
 
   useEffect(() => {
     const timeout = window.setTimeout(() => {
-      setDebouncedSearch(searchText.trim())
-    }, 300)
-    return () => window.clearTimeout(timeout)
-  }, [searchText])
+      setDebouncedSearch(searchText.trim());
+    }, 300);
+    return () => window.clearTimeout(timeout);
+  }, [searchText]);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -65,96 +65,96 @@ export function Navbar() {
         searchContainerRef.current &&
         !searchContainerRef.current.contains(event.target as Node)
       ) {
-        setShowSearchDropdown(false)
+        setShowSearchDropdown(false);
       }
     }
 
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     if (debouncedSearch.length < 2) {
-      return
+      return;
     }
 
-    const controller = new AbortController()
+    const controller = new AbortController();
 
     async function runSearch() {
       try {
-        setIsSearching(true)
+        setIsSearching(true);
         const query = new URLSearchParams({
-          kind: 'popular',
-          page: '1',
-          limit: '6',
+          kind: "popular",
+          page: "1",
+          limit: "6",
           search: debouncedSearch,
-        })
+        });
 
         const response = await fetch(`/api/home/books?${query.toString()}`, {
           signal: controller.signal,
-          cache: 'no-store',
-        })
-        const payload = (await response.json().catch(() => null)) as
-          | { items?: SearchItem[] }
-          | null
+          cache: "no-store",
+        });
+        const payload = (await response.json().catch(() => null)) as {
+          items?: SearchItem[];
+        } | null;
 
         if (!response.ok) {
-          setSearchResults([])
-          return
+          setSearchResults([]);
+          return;
         }
 
-        setSearchResults(Array.isArray(payload?.items) ? payload.items : [])
+        setSearchResults(Array.isArray(payload?.items) ? payload.items : []);
       } catch {
-        setSearchResults([])
+        setSearchResults([]);
       } finally {
-        setIsSearching(false)
+        setIsSearching(false);
       }
     }
 
-    runSearch()
+    runSearch();
 
-    return () => controller.abort()
-  }, [debouncedSearch])
+    return () => controller.abort();
+  }, [debouncedSearch]);
 
   function handleSearchSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    const value = searchText.trim()
-    if (!value) return
-    setShowSearchDropdown(false)
-    router.push(`/popular-books?search=${encodeURIComponent(value)}`)
+    event.preventDefault();
+    const value = searchText.trim();
+    if (!value) return;
+    setShowSearchDropdown(false);
+    router.push(`/popular-books?search=${encodeURIComponent(value)}`);
   }
 
   function handlePickResult(value: string) {
-    setSearchText(value)
-    setShowSearchDropdown(false)
-    router.push(`/popular-books?search=${encodeURIComponent(value)}`)
+    setSearchText(value);
+    setShowSearchDropdown(false);
+    router.push(`/popular-books?search=${encodeURIComponent(value)}`);
   }
 
   function handleOpenSearch() {
-    setIsDesktopSearchOpen(true)
-    setShowSearchDropdown(true)
+    setIsDesktopSearchOpen(true);
+    setShowSearchDropdown(true);
   }
 
   function handleCloseSearch() {
-    setIsDesktopSearchOpen(false)
-    setShowSearchDropdown(false)
+    setIsDesktopSearchOpen(false);
+    setShowSearchDropdown(false);
   }
 
   function handleOpenMobileSearch() {
-    setIsMobileSearchOpen(true)
-    setShowSearchDropdown(true)
+    setIsMobileSearchOpen(true);
+    setShowSearchDropdown(true);
   }
 
   function handleCloseMobileSearch() {
-    setIsMobileSearchOpen(false)
-    setShowSearchDropdown(false)
+    setIsMobileSearchOpen(false);
+    setShowSearchDropdown(false);
   }
 
   function handleSearchChange(value: string) {
-    setSearchText(value)
+    setSearchText(value);
     if (value.trim().length < 2) {
-      setSearchResults([])
-      setIsSearching(false)
+      setSearchResults([]);
+      setIsSearching(false);
     }
   }
 
@@ -176,21 +176,21 @@ export function Navbar() {
         </Link>
 
         <nav className="hidden items-center gap-9 text-[18px] font-normal text-[#111827] xl:flex">
-          {navLinks.map(link => {
-            const active = isLinkActive(link.href, pathname)
+          {navLinks.map((link) => {
+            const active = isLinkActive(link.href, pathname);
             return (
               <Link
                 key={link.href}
                 href={link.href}
                 className={
                   active
-                    ? 'text-[#459AE4]'
-                    : 'transition-colors hover:text-[#459AE4]'
+                    ? "text-[#459AE4]"
+                    : "transition-colors hover:text-[#459AE4]"
                 }
               >
                 {link.label}
               </Link>
-            )
+            );
           })}
         </nav>
 
@@ -200,11 +200,11 @@ export function Navbar() {
               variant="ghost"
               size="icon"
               className={`hidden h-10 w-10 cursor-pointer rounded-full p-1 xl:inline-flex ${
-                isDesktopSearchOpen ? 'xl:hidden' : ''
+                isDesktopSearchOpen ? "xl:hidden" : ""
               }`}
               onClick={handleOpenSearch}
             >
-              <Search className="h-5 w-5 stroke-[2.3]" />
+              <Search className="!h-6 !w-5 stroke-[2.3]" />
               <span className="sr-only">Open search</span>
             </Button>
 
@@ -217,7 +217,7 @@ export function Navbar() {
                   <input
                     type="text"
                     value={searchText}
-                    onChange={event => handleSearchChange(event.target.value)}
+                    onChange={(event) => handleSearchChange(event.target.value)}
                     onFocus={() => setShowSearchDropdown(true)}
                     placeholder="Search books, authors, stores..."
                     className="h-full w-full border-0 bg-transparent px-5 text-[15px] text-[#111827] outline-none placeholder:text-[#9CA3AF]"
@@ -243,10 +243,12 @@ export function Navbar() {
                 {showSearchDropdown && searchText.trim().length > 0 ? (
                   <div className="absolute left-0 top-[calc(100%+8px)] z-50 w-[520px] overflow-hidden rounded-xl border border-[#dbe7f3] bg-white shadow-xl">
                     {isSearching ? (
-                      <p className="px-4 py-3 text-sm text-[#6B7280]">Searching...</p>
+                      <p className="px-4 py-3 text-sm text-[#6B7280]">
+                        Searching...
+                      </p>
                     ) : searchResults.length > 0 ? (
                       <ul className="max-h-72 overflow-y-auto">
-                        {searchResults.map(item => (
+                        {searchResults.map((item) => (
                           <li key={item.id}>
                             <button
                               type="button"
@@ -283,14 +285,16 @@ export function Navbar() {
             <Search className="h-5 w-5 stroke-[2.3]" />
             <span className="sr-only">Search</span>
           </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-10 w-10 cursor-pointer rounded-full p-1"
-          >
-            <ShoppingCart className="h-7 w-7 stroke-[2.4]" />
-            <span className="sr-only">Cart</span>
-          </Button>
+          <Link href="/cart">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-10 w-10 cursor-pointer rounded-full p-1"
+            >
+              <ShoppingCart className="!h-6 !w-6" />
+              <span className="sr-only">Cart</span>
+            </Button>
+          </Link>
           {isAuthenticated ? (
             <Link href="/account" className="ml-1 hidden xl:block">
               <div className="h-10 w-10 overflow-hidden rounded-full border border-[#d8e4ef]">
@@ -314,9 +318,9 @@ export function Navbar() {
             variant="ghost"
             size="icon"
             className="rounded-full xl:hidden"
-            aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
             aria-expanded={isMobileMenuOpen}
-            onClick={() => setIsMobileMenuOpen(open => !open)}
+            onClick={() => setIsMobileMenuOpen((open) => !open)}
           >
             {isMobileMenuOpen ? (
               <X className="h-5 w-5" />
@@ -337,7 +341,7 @@ export function Navbar() {
               <input
                 type="text"
                 value={searchText}
-                onChange={event => handleSearchChange(event.target.value)}
+                onChange={(event) => handleSearchChange(event.target.value)}
                 onFocus={() => setShowSearchDropdown(true)}
                 placeholder="Search books, authors, stores..."
                 className="h-full w-full border-0 bg-transparent px-4 text-[14px] text-[#111827] outline-none placeholder:text-[#9CA3AF]"
@@ -363,10 +367,12 @@ export function Navbar() {
             {showSearchDropdown && searchText.trim().length > 0 ? (
               <div className="absolute left-0 top-[calc(100%+6px)] z-50 w-full overflow-hidden rounded-xl border border-[#dbe7f3] bg-white shadow-xl">
                 {isSearching ? (
-                  <p className="px-4 py-3 text-sm text-[#6B7280]">Searching...</p>
+                  <p className="px-4 py-3 text-sm text-[#6B7280]">
+                    Searching...
+                  </p>
                 ) : searchResults.length > 0 ? (
                   <ul className="max-h-72 overflow-y-auto">
-                    {searchResults.map(item => (
+                    {searchResults.map((item) => (
                       <li key={`mobile-${item.id}`}>
                         <button
                           type="button"
@@ -396,25 +402,25 @@ export function Navbar() {
 
       <nav
         className={`overflow-hidden border-t border-black/6 transition-[max-height,opacity] duration-200 xl:hidden ${
-          isMobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+          isMobileMenuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
         }`}
       >
         <div className="container mx-auto grid gap-1 px-4 py-3 sm:px-6">
-          {navLinks.map(link => {
-            const active = isLinkActive(link.href, pathname)
+          {navLinks.map((link) => {
+            const active = isLinkActive(link.href, pathname);
             return (
               <Link
                 key={`${link.href}-mobile`}
                 href={link.href}
                 className={`rounded-lg px-3 py-2 text-[15px] transition-colors ${
                   active
-                    ? 'bg-[#459AE4]/8 text-[#459AE4]'
-                    : 'text-[#111827] hover:bg-[#459AE4]/5 hover:text-[#459AE4]'
+                    ? "bg-[#459AE4]/8 text-[#459AE4]"
+                    : "text-[#111827] hover:bg-[#459AE4]/5 hover:text-[#459AE4]"
                 }`}
               >
                 {link.label}
               </Link>
-            )
+            );
           })}
 
           {!isAuthenticated ? (
@@ -427,5 +433,5 @@ export function Navbar() {
         </div>
       </nav>
     </header>
-  )
+  );
 }

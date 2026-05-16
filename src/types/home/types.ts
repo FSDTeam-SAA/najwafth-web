@@ -22,3 +22,21 @@ export type HomeCategoryItem = {
 export type HomeCategoriesApiResponse = {
   items: HomeCategoryItem[]
 }
+
+export type HomeReviewItem = {
+  id: string
+  name: string
+  role: string
+  review: string
+  rating: number
+}
+
+export type HomeReviewsApiResponse = {
+  items: HomeReviewItem[]
+}
+
+export type HomeAchievementsApiResponse = {
+  totalBooks: number
+  totalUsers: number
+  totalReviews: number
+}

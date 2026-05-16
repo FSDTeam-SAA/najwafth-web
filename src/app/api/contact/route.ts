@@ -9,6 +9,8 @@ type ContactPayload = {
 }
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const BACKEND_BASE_URL =
+  process.env.NEXT_PUBLIC_BACKEND_API_URL || 'http://localhost:5001/api/v1'
 
 function validate(payload: ContactPayload) {
   if (!payload.name?.trim()) return 'Name is required.'
@@ -31,44 +33,32 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: error }, { status: 400 })
     }
 
-    const configuredUrl = process.env.CONTACT_API_URL
+    const response = await fetch(`${BACKEND_BASE_URL}/user/contact-us`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: body.name?.trim(),
+        email: body.email?.trim(),
+        phone: body.phone?.trim(),
+        message: `Reason: ${body.reason?.trim()}\n\n${body.description?.trim()}`,
+      }),
+      cache: 'no-store',
+    })
 
-    if (configuredUrl) {
-      const response = await fetch(configuredUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: body.name?.trim(),
-          email: body.email?.trim(),
-          phone: body.phone?.trim(),
-          subject: body.reason?.trim(),
-          message: body.description?.trim(),
-        }),
-      })
+    const payload = await response.json().catch(() => null)
 
-      const payload = await response.json().catch(() => null)
-
-      if (!response.ok) {
-        return NextResponse.json(
-          { message: payload?.message || 'Failed to submit your message.' },
-          { status: response.status },
-        )
-      }
-
-      return NextResponse.json({
-        message: payload?.message || 'Your message has been submitted successfully.',
-      })
+    if (!response.ok) {
+      return NextResponse.json(
+        { message: payload?.message || 'Failed to submit your message.' },
+        { status: response.status },
+      )
     }
 
-    return NextResponse.json(
-      {
-        message:
-          'Contact API is not configured yet. Set CONTACT_API_URL in your environment to enable form submission.',
-      },
-      { status: 503 },
-    )
+    return NextResponse.json({
+      message: payload?.message || 'Your message has been submitted successfully.',
+    })
   } catch {
     return NextResponse.json(
       { message: 'Something went wrong while submitting your message.' },

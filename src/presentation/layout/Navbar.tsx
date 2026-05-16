@@ -8,6 +8,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { Menu, Search, ShoppingCart, X } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useTranslation } from "react-i18next";
+import { useQuery } from "@tanstack/react-query";
 
 import { Button } from "@/components/ui/button";
 
@@ -27,6 +28,12 @@ type SearchItem = {
   location: string;
 };
 
+type CartResponse = {
+  data?: {
+    items?: unknown[];
+  };
+};
+
 export function Navbar() {
   const { t } = useTranslation();
   const router = useRouter();
@@ -42,8 +49,32 @@ export function Navbar() {
   const searchContainerRef = useRef<HTMLDivElement | null>(null);
   const { data: session, status } = useSession();
   const isAuthenticated = status === "authenticated";
+  const token = session?.user?.accessToken;
   const avatarUrl =
     session?.user?.avatar || "https://i.pravatar.cc/120?u=books-user";
+
+  const { data: cartResponse } = useQuery<CartResponse>({
+    queryKey: ["cart", token],
+    queryFn: async () => {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/cart`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch cart");
+      }
+
+      return response.json();
+    },
+    enabled: !!token,
+  });
+
+  const cartItemsCount = cartResponse?.data?.items?.length || 0;
 
   const navLinks = [
     { href: "/", label: t("nav.home") },
@@ -205,7 +236,7 @@ export function Navbar() {
               }`}
               onClick={handleOpenSearch}
             >
-              <Search className="!h-6 !w-5 stroke-[2.3]" />
+              <Search className="!h-6 !w-6 stroke-[2.3]" />
               <span className="sr-only">{t("nav.searchPlaceholder")}</span>
             </Button>
 
@@ -284,14 +315,21 @@ export function Navbar() {
             <Search className="h-5 w-5 stroke-[2.3]" />
             <span className="sr-only">{t("nav.searchPlaceholder")}</span>
           </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-10 w-10 cursor-pointer rounded-full p-1"
-          >
-            <ShoppingCart className="h-7 w-7 stroke-[2.4]" />
-            <span className="sr-only">Cart</span>
-          </Button>
+          <Link href="/cart" className="relative">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-10 w-10 cursor-pointer rounded-full p-1"
+            >
+              <ShoppingCart className="!h-6 !w-6" />
+              <span className="sr-only">Cart</span>
+            </Button>
+            {cartItemsCount > 0 ? (
+              <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#459AE4] px-1 text-[11px] font-bold leading-none text-white">
+                {cartItemsCount}
+              </span>
+            ) : null}
+          </Link>
           {isAuthenticated ? (
             <Link href="/account" className="ml-1 hidden xl:block">
               <div className="h-10 w-10 overflow-hidden rounded-full border border-[#d8e4ef]">

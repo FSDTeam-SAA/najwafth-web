@@ -50,7 +50,7 @@ type CartResponse = {
 function ProductsDetails() {
   const params = useParams();
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const queryClient = useQueryClient();
   const id = params?.id; // URL থেকে ডাইনামিক ID নেওয়া হলো
   const TOKEN = session?.user?.accessToken;
@@ -155,10 +155,48 @@ function ProductsDetails() {
   });
 
   // লোডিং স্টেট হ্যান্ডেলার
-  if (isLoading) {
+  if (status === "loading" || isLoading || !TOKEN) {
     return (
-      <div className="flex justify-center items-center h-screen bg-white">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#5b93c5]"></div>
+      <div className="min-h-screen bg-gray-50 flex justify-center items-start py-0 md:py-10 px-0 sm:px-4 font-sans antialiased">
+        <div className="w-full max-w-6xl bg-white flex flex-col md:rounded-3xl md:border md:border-gray-100 overflow-hidden min-h-screen md:min-h-0 mx-auto">
+          <div className="flex items-center gap-4 py-5 px-4 md:px-6 border-b border-gray-100 sticky top-0 bg-white z-10">
+            <div className="h-8 w-8 animate-pulse rounded-full bg-[#e8eef4]" />
+            <div className="h-6 w-48 animate-pulse rounded bg-[#e8eef4]" />
+          </div>
+
+          <div className="grid flex-1 gap-8 p-5 md:grid-cols-[minmax(320px,0.95fr)_minmax(0,1.05fr)] md:p-8 lg:p-10">
+            <div className="mx-auto w-full max-w-[420px] self-start overflow-hidden rounded-2xl border border-gray-100 bg-[#f4f1eb] md:sticky md:top-24">
+              <div className="aspect-[3/4] w-full animate-pulse bg-[#e8eef4]" />
+            </div>
+
+            <div className="flex min-w-0 flex-col">
+              <div className="mb-3 flex items-start justify-between gap-3">
+                <div className="h-10 w-3/4 animate-pulse rounded bg-[#e8eef4]" />
+                <div className="h-8 w-16 animate-pulse rounded-lg bg-[#e8eef4]" />
+              </div>
+              <div className="mb-4 h-4 w-1/3 animate-pulse rounded bg-[#e8eef4]" />
+              <div className="mb-4 h-9 w-56 animate-pulse rounded-xl bg-[#e8eef4]" />
+              <div className="mb-8 h-9 w-24 animate-pulse rounded-full bg-[#e8eef4]" />
+
+              <div className="mb-8 space-y-3">
+                <div className="h-5 w-32 animate-pulse rounded bg-[#e8eef4]" />
+                <div className="h-4 w-full animate-pulse rounded bg-[#e8eef4]" />
+                <div className="h-4 w-11/12 animate-pulse rounded bg-[#e8eef4]" />
+                <div className="h-4 w-8/12 animate-pulse rounded bg-[#e8eef4]" />
+              </div>
+
+              <div className="mb-6 flex flex-col gap-4 border-t border-gray-100 pt-5 sm:flex-row sm:items-center sm:justify-between">
+                <div className="space-y-2">
+                  <div className="h-8 w-28 animate-pulse rounded bg-[#e8eef4]" />
+                  <div className="h-4 w-20 animate-pulse rounded bg-[#e8eef4]" />
+                </div>
+                <div className="h-11 w-36 animate-pulse rounded-xl bg-[#e8eef4]" />
+              </div>
+
+              <div className="h-14 w-full animate-pulse rounded-xl bg-[#e8eef4]" />
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -173,9 +211,8 @@ function ProductsDetails() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50/50 md:bg-gray-50 flex justify-center items-start py-0 md:py-10 px-0 sm:px-4 font-sans antialiased text-gray-900 select-none">
-      {/* স্ট্যান্ডার্ড কন্টেইনার ফ্রেম (মোবাইলে ফুল-উইথ এবং বড় স্ক্রিনে সর্বোচ্চ ১৬ ও ১০ রেশিওর স্ট্যান্ডার্ড কার্ড লুক) */}
-      <div className="w-full max-w-md md:max-w-3xl bg-white flex flex-col md:rounded-3xl md:shadow-md md:border md:border-gray-100 overflow-hidden min-h-screen md:min-h-0 mx-auto">
+    <div className="min-h-screen bg-gray-50 flex justify-center items-start py-0 md:py-10 px-0 sm:px-4 font-sans antialiased text-gray-900 select-none">
+      <div className="w-full max-w-6xl bg-white flex flex-col md:rounded-3xl md:shadow-md md:border md:border-gray-100 overflow-hidden min-h-screen md:min-h-0 mx-auto">
         {/* হেডার সেকশন */}
         <div className="flex items-center gap-4 py-5 px-4 md:px-6 border-b border-gray-100 sticky top-0 bg-white z-10">
           <button
@@ -190,19 +227,22 @@ function ProductsDetails() {
         </div>
 
         {/* মেইন কন্টেন্ট বডি */}
-        <div className="p-5 md:p-8 flex flex-col flex-1">
+        <div className="grid flex-1 gap-8 p-5 md:grid-cols-[minmax(320px,0.95fr)_minmax(0,1.05fr)] md:p-8 lg:p-10">
           {/* প্রোডাক্ট ইমেজ কার্ড */}
-          <div className="mx-auto w-full max-w-[340px] md:max-w-[380px] aspect-[3/4] rounded-2xl overflow-hidden mb-6 border border-gray-100 bg-[#f4f1eb]">
+          <div className="mx-auto w-full max-w-[420px] self-start overflow-hidden rounded-2xl border border-gray-100 bg-[#f4f1eb] md:sticky md:top-24">
+            <div className="aspect-[3/4] w-full">
             <img
               src={product.coverImage || "/images/placeholder.jpg"}
               alt={product.title}
               className="w-full h-full object-contain"
             />
+            </div>
           </div>
 
+          <div className="flex min-w-0 flex-col">
           {/* টাইটেল এবং রেটিং সেকশন */}
           <div className="flex justify-between items-start gap-3 mb-1">
-            <h2 className="text-2xl font-bold text-gray-900 tracking-tight leading-tight">
+            <h2 className="text-3xl font-bold text-gray-900 tracking-tight leading-tight md:text-4xl">
               {product.title}
             </h2>
             <div className="flex items-center gap-1 mt-1 shrink-0 bg-amber-50 px-2 py-0.5 rounded-lg border border-amber-100">
@@ -232,11 +272,11 @@ function ProductsDetails() {
           </div>
 
           {/* ডেসক্রিপশন সেকশন */}
-          <div className="mb-6 flex-1">
+          <div className="mb-8">
             <h3 className="text-base font-bold text-gray-900 mb-2 tracking-tight">
               Description
             </h3>
-            <p className="text-sm text-gray-500 leading-relaxed font-normal">
+            <p className="text-sm text-gray-500 leading-relaxed font-normal md:text-base">
               {isReadMore
                 ? product.description
                 : `${product.description.slice(0, 150)}${product.description.length > 150 ? "..." : ""}`}
@@ -252,7 +292,7 @@ function ProductsDetails() {
           </div>
 
           {/* প্রাইস এবং কোয়ান্টিটি কাউন্টার সেকশন */}
-          <div className="flex justify-between items-center mb-6 pt-4 border-t border-gray-50">
+          <div className="flex flex-col gap-4 mb-6 pt-5 border-t border-gray-100 sm:flex-row sm:justify-between sm:items-center">
             <div className="flex flex-col">
               <span className="text-2xl font-bold text-[#5b93c5] tracking-tight">
                 ৳{product.price.toFixed(2)}
@@ -305,6 +345,7 @@ function ProductsDetails() {
                 : "Out of Stock"}
             </span>
           </button>
+          </div>
         </div>
       </div>
     </div>

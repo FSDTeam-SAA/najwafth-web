@@ -11,10 +11,12 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useResetPassword } from "@/features/auth/hooks/useResetPassword";
 import { toast } from "sonner";
 import { useSession } from "next-auth/react";
+import { useTranslation } from "react-i18next";
 
 function ChangePasswordForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { t } = useTranslation();
 
   // URL থেকে email এবং resetToken সংগ্রহ করা
   const email = searchParams.get("email") || "";
@@ -40,12 +42,12 @@ function ChangePasswordForm() {
   e.preventDefault();
 
   if (formData.newPassword.length < 6) {
-    toast.error("Password must be at least 6 characters.");
+    toast.error(t("auth.passMin"));
     return;
   }
 
   if (formData.newPassword !== formData.confirmPassword) {
-    toast.error("Passwords do not match!");
+    toast.error(t("auth.passwordMismatch"));
     return;
   }
 
@@ -61,13 +63,13 @@ function ChangePasswordForm() {
     const response = await executeResetPassword(payload);
 
     if (response?.success) {
-      toast.success("Password changed successfully!");
+      toast.success(t("auth.passwordChanged"));
 
       router.push("/signin");
     }
   } catch (err: any) {
     toast.error(
-      err?.message || "Failed to reset password"
+      err?.message || t("auth.resetFailed")
     );
   }
 };
@@ -99,17 +101,17 @@ function ChangePasswordForm() {
           </div>
 
           <h2 className="text-3xl font-bold text-blue-500 text-center">
-            Create New Password
+            {t("auth.createNewPassword")}
           </h2>
           <p className="text-gray-500 text-sm mt-1 mb-6 text-center">
-            Enter your new password to reset it
+            {t("auth.resetSub")}
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* New Password */}
             <div>
               <Label className="text-blue-500 text-sm">
-                Create New Password
+                {t("auth.createNewPassword")}
               </Label>
               <div className="relative mt-1">
                 <Input
@@ -118,7 +120,7 @@ function ChangePasswordForm() {
                   value={formData.newPassword}
                   onChange={handleChange}
                   type={showPassword ? "text" : "password"}
-                  placeholder="Enter Password..."
+                  placeholder={t("auth.enterPassword")}
                   className="rounded-full border-gray-300 h-11 pr-10"
                 />
                 <button
@@ -134,7 +136,7 @@ function ChangePasswordForm() {
             {/* Confirm Password */}
             <div>
               <Label className="text-blue-500 text-sm">
-                Confirm New Password
+                {t("account.confirmNewPassword")}
               </Label>
               <div className="relative mt-1">
                 <Input
@@ -143,7 +145,7 @@ function ChangePasswordForm() {
                   value={formData.confirmPassword}
                   onChange={handleChange}
                   type={showConfirmPassword ? "text" : "password"}
-                  placeholder="Re-Enter Password..."
+                  placeholder={t("auth.reenterPassword")}
                   className="rounded-full border-gray-300 h-11 pr-10"
                 />
                 <button
@@ -165,10 +167,10 @@ function ChangePasswordForm() {
               {isLoading ? (
                 <>
                   <Loader2 className="animate-spin" size={18} />
-                  Updating...
+                  {t("account.updating")}
                 </>
               ) : (
-                "Update Password"
+                t("auth.updatePassword")
               )}
             </Button>
           </form>

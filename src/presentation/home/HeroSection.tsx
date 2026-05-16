@@ -3,34 +3,32 @@
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/components/ui/button'
 
 export function HeroSection() {
+  const { t } = useTranslation()
   const slides = [
     {
       image: '/images/hero-banner.png',
-      title: 'Discover Your Next Great Read',
-      description:
-        'Discover millions of books from local sellers worldwide. Same great reads, better impact.',
+      title: t('about.hero.s1.title'),
+      description: t('about.hero.s1.desc'),
     },
     {
       image: '/images/banner-2.png',
-      title: 'Explore Endless Reading Possibilities',
-      description:
-        'Browse handpicked books with seamless shopping and fast delivery.',
+      title: t('about.hero.s2.title'),
+      description: t('about.hero.s2.desc'),
     },
     {
       image: '/images/banner-3.png',
-      title: 'Your Personal Library Starts Here',
-      description:
-        'Shop bestselling books, timeless classics, and new arrivals in one place.',
+      title: t('about.hero.s3.title'),
+      description: t('about.hero.s3.desc'),
     },
     {
       image: '/images/banner-4.png',
-      title: 'Books That Inspire Every Journey',
-      description:
-        "From timeless classics to trending favourites discover books you'll love.",
+      title: t('about.hero.s4.title'),
+      description: t('about.hero.s4.desc'),
     },
   ]
   const [activeSlide, setActiveSlide] = useState(0)
@@ -57,7 +55,7 @@ export function HeroSection() {
         <div className="relative mx-auto grid w-full container gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12 lg:px-10 lg:py-20">
         <div className="flex flex-col justify-center">
           <div className="mb-8 inline-flex w-fit rounded-full border border-[#459AE4]/20 bg-white/80 px-4 py-2 text-sm text-[#5F83A2] shadow-sm">
-            Curated books from trusted local sellers
+            {t('home.curatedBooks')}
           </div>
 
           <div
@@ -76,7 +74,7 @@ export function HeroSection() {
           <div className="mt-10">
             <Link href="/featured-bookstores">
               <Button className="h-12 min-w-[220px] cursor-pointer rounded-xl bg-[linear-gradient(90deg,#5F83A2_0%,#5E92C0_100%)] px-6 text-base font-semibold shadow-[0_20px_45px_rgba(94,146,192,0.24)] hover:opacity-95 sm:h-14 sm:min-w-[284px] sm:rounded-2xl sm:text-xl">
-                Browse Books
+                {t('footer.browseBooks')}
               </Button>
             </Link>
           </div>

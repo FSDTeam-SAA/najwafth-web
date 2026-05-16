@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 // API Response এর জন্য টাইপ ডেফিনিশন
 interface OrderProduct {
@@ -42,8 +43,9 @@ interface Order {
 const OrderPage = () => {
   const { data: session } = useSession();
   const TOKEN = session?.user?.accessToken;
+  const { t } = useTranslation();
 
-  const categories = ["All", "Pending", "Processing", "Picked", "Delivered"];
+  const statuses = ["All", "Pending", "Processing", "Picked", "Delivered"];
   const [activeTab, setActiveTab] = useState("All");
 
   // API থেকে ডাটা ফেচ করা
@@ -58,13 +60,13 @@ const OrderPage = () => {
           },
         },
       );
-      if (!res.ok) throw new Error("Failed to fetch orders");
+      if (!res.ok) throw new Error(t("order.fetchFail"));
       return res.json();
     },
     enabled: !!TOKEN, 
   });
 
-  // API রেসপন্স থেকে orders অ্যারে নেওয়া
+  // API রেসপন্স থেকে orders অ্যারে নেওয়া
   const myOrders: Order[] = orderResponse?.data?.orders || [];
 
   // ফিল্টারিং লজিক
@@ -101,15 +103,15 @@ const OrderPage = () => {
     <div className="min-h-screen bg-gray-50 py-10 px-4 font-sans relative overflow-hidden">
       <div className="container mx-auto">
         <div className="text-center mb-10">
-          <h1 className="text-5xl font-serif text-[#1A1A1A]">My Orders</h1>
+          <h1 className="text-5xl font-serif text-[#1A1A1A]">{t("order.title")}</h1>
           <p className="text-gray-500 text-lg mt-2">
-            Manage & see my order list
+            {t("order.subtitle")}
           </p>
         </div>
 
         {/* ট্যাব ফিল্টার */}
         <div className="flex flex-wrap justify-center gap-3 mb-10">
-          {categories.map((tab) => (
+          {statuses.map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -119,7 +121,7 @@ const OrderPage = () => {
                   : "bg-white text-[#5F83A2] border-[#5F83A2] hover:bg-blue-50"
               }`}
             >
-              {tab}
+              {t(`order.${tab.toLowerCase()}`)}
             </button>
           ))}
         </div>
@@ -130,7 +132,7 @@ const OrderPage = () => {
             filteredOrders.map((order) => {
               // প্রথম প্রোডাক্টের ডাটা বের করা কার্ডে দেখানোর জন্য
               const firstItem = order.items?.[0];
-              const productTitle = firstItem?.product?.title || "Unknown Product";
+              const productTitle = firstItem?.product?.title || t("cart.untitled");
               const productImage = firstItem?.product?.coverImage || "/images/placeholder.jpg";
               const totalItemsCount = order.items?.length || 0;
 
@@ -143,13 +145,13 @@ const OrderPage = () => {
                   <div className="bg-white border border-gray-100 rounded-xl p-4 flex items-center justify-between shadow-sm hover:shadow-md transition-shadow">
                     <div className="flex items-center gap-4 text-left">
                       <div className="relative w-24 h-24 overflow-hidden rounded-lg bg-gray-100">
-                        {/* API থেকে আসা রিয়েল coverImage ব্যবহার করা হয়েছে */}
+                        {/* API থেকে আসা রিয়েল coverImage ব্যবহার করা হয়েছে */}
                         <Image
                           src={productImage}
                           alt={productTitle}
                           fill
                           className="object-cover"
-                          unoptimized // এক্সটার্নাল ইমেজ ডোমেইন কনফিগার করা না থাকলে এরর এড়াতে এটি ব্যবহার করতে পারেন
+                          unoptimized // এক্সটার্নাল ইমেজ ডোমেইন কনফিগার করা না থাকলে এরর এড়াতে এটি ব্যবহার করতে পারেন
                         />
                       </div>
 
@@ -158,11 +160,11 @@ const OrderPage = () => {
                           {productTitle}
                           {totalItemsCount > 1 && (
                             <span className="text-xs text-gray-400 block mt-1">
-                              + {totalItemsCount - 1} more item(s)
+                              + {totalItemsCount - 1} {t("order.moreItems")}
                             </span>
                           )}
                         </h3>
-                        <p className="text-gray-500 text-sm mt-1">Order ID: {order.orderId}</p>
+                        <p className="text-gray-500 text-sm mt-1">{t("order.orderId")}: {order.orderId}</p>
                         <p className="text-gray-400 text-xs flex items-center mt-1">
                           <span className="mr-1">📍</span> {order.address}
                         </p>
@@ -173,7 +175,7 @@ const OrderPage = () => {
                       <span
                         className={`text-[10px] uppercase font-bold px-3 py-1 rounded-full ${getStatusStyle(order.status)}`}
                       >
-                        {order.status}
+                        {t(`order.${order.status.toLowerCase()}`)}
                       </span>
 
                       <div className="flex items-center gap-2 group">
@@ -182,7 +184,7 @@ const OrderPage = () => {
                             ৳{order.totalAmount}
                           </p>
                           <p className="text-blue-300 text-[10px] mt-1">
-                            {totalItemsCount} {totalItemsCount > 1 ? "Items" : "Item"}
+                            {totalItemsCount} {totalItemsCount > 1 ? t("order.items") : t("order.item")}
                           </p>
                         </div>
                         <span className="text-[#3B82F6] font-bold text-2xl leading-none group-hover:translate-x-1 transition-transform">
@@ -196,7 +198,7 @@ const OrderPage = () => {
             })
           ) : (
             <div className="text-center py-20 text-gray-400 text-xl">
-              No orders found in this category.
+              {t("order.noOrders")}
             </div>
           )}
         </div>

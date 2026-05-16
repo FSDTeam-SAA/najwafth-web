@@ -32,9 +32,12 @@ const ProfileLayout = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Logout confirm handler
-  const handleLogoutConfirm = () => {
-    signOut();
+  const handleLogoutConfirm = async () => {
     setIsLogoutModalOpen(false);
+    await signOut({
+      callbackUrl: "/signin",
+      redirect: true,
+    });
   };
 
   // Fetching Profile Data

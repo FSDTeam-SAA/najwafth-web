@@ -10,6 +10,7 @@ type BackendBook = {
   title?: string
   author?: string
   price?: number
+  avgRating?: number
   coverImage?: string
   category?: {
     _id?: string
@@ -33,7 +34,18 @@ type BackendBooksPayload = {
   message?: string
 }
 
+function shuffleArray<T>(items: T[]) {
+  const arr = [...items]
+  for (let i = arr.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[arr[i], arr[j]] = [arr[j], arr[i]]
+  }
+  return arr
+}
+
 function mapBook(item: BackendBook, index: number) {
+  const ratingValue = Number(item?.avgRating ?? 0)
+
   return {
     id: item?._id || String(index + 1),
     categoryId: item?.category?._id || '',
@@ -41,7 +53,7 @@ function mapBook(item: BackendBook, index: number) {
     author: item?.author || 'Unknown Author',
     location: item?.shopId?.name || 'Bookstore',
     price: `£ ${Number(item?.price || 0).toFixed(2)}`,
-    rating: '4.8',
+    rating: ratingValue > 0 ? ratingValue.toFixed(1) : '0.0',
     image: item?.coverImage || '/images/book1.jpg',
     imagePosition: 'object-center',
   }
@@ -73,7 +85,7 @@ export async function GET(request: Request) {
           .filter(Boolean)
       : []
 
-    const sortBy = kind === 'popular' ? 'createdAt' : 'createdAt'
+    const sortBy = 'createdAt'
     const sortOrder = 'desc'
 
     const backendQuery = new URLSearchParams({
@@ -150,8 +162,9 @@ export async function GET(request: Request) {
         new Map(merged.map(item => [item._id || Math.random(), item])).values(),
       )
 
+      const processed = kind === 'popular' ? shuffleArray(deduped) : deduped
       const start = (page - 1) * limit
-      const paginated = deduped.slice(start, start + limit)
+      const paginated = processed.slice(start, start + limit)
       const total = deduped.length
       const totalPage = Math.max(1, Math.ceil(total / limit))
 
@@ -178,14 +191,15 @@ export async function GET(request: Request) {
     }
 
     const books = Array.isArray(payload?.data?.books) ? payload.data.books : []
+    const processedBooks = kind === 'popular' ? shuffleArray(books) : books
     const meta = payload?.data?.meta
 
     return NextResponse.json({
-      items: books.map(mapBook),
+      items: processedBooks.map(mapBook),
       meta: {
         page: Number(meta?.page || page),
         limit: Number(meta?.limit || limit),
-        total: Number(meta?.total || books.length),
+        total: Number(meta?.total || processedBooks.length),
         totalPage: Number(meta?.totalPage || 1),
       },
     })

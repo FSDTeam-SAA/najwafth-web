@@ -61,20 +61,22 @@ function SignUpFrom() {
   };
 
   return (
-    <div className="flex h-screen flex-col lg:flex-row">
-      {/* Left Side - Image */}
-      <div className="relative h-64 w-full lg:h-auto lg:w-1/2">
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden p-6 sm:p-10">
+      {/* Background Image */}
+      <div className="absolute inset-0">
         <Image
           src="/images/authImage.png"
           alt="Signup Image"
           fill
           className="object-cover"
+          priority
         />
+        <div className="absolute inset-0 bg-black/35" />
       </div>
 
-      {/* Right - Form */}
-      <div className="w-full lg:w-1/2 bg-[#F1F9FC] flex items-center justify-center p-6 sm:p-10 shadow-[0px_4px_5px_0px_#0000001A]">
-        <div className="w-full max-w-xl bg-[#F5FBFF] rounded-lg shadow-[0px_4px_5px_0px_#0000001A] border border-sky-100 p-8">
+      {/* Center Form */}
+      <div className="relative z-10 w-full max-w-xl">
+        <div className="w-full bg-[#F5FBFF]/95 rounded-lg shadow-[0px_18px_45px_0px_#00000033] border border-white/60 p-8 backdrop-blur-sm">
           {/* Logo */}
           <div className="flex justify-center mb-4">
             <Image

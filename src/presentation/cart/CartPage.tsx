@@ -112,7 +112,7 @@ const CartPage = () => {
       <div className="container mx-auto text-center">
         <h1 className="text-4xl font-serif text-gray-800">{t("cart.title")}</h1>
         <p className="text-gray-500 mt-2 mb-8 font-medium">
-          Manage & see my {t("cart.title")} list
+          {t("cart.subtitle")}
         </p>
 
         <div className="space-y-4">
@@ -155,7 +155,7 @@ const CartPage = () => {
                       <span className="mr-1">📍</span> {t("cart.storeLocation")}
                     </p>
                     <div className="flex items-center gap-1 mt-2 text-blue-500 font-bold text-lg">
-                      £{Number(item.product?.price || 0).toFixed(2)}
+                      ${Number(item.product?.price || 0).toFixed(2)}
                       <ChevronRight size={16} className="mt-0.5" />
                     </div>
                   </div>
@@ -210,7 +210,7 @@ const CartPage = () => {
             <div className="text-left">
               <p className="text-gray-500">{t("cart.totalItems")}: {cartItems.length}</p>
               <p className="text-2xl font-bold text-gray-800">
-                {t("cart.totalAmount")}: ৳{Number(totalAmount).toFixed(2)}
+                {t("cart.totalAmount")}: ${Number(totalAmount).toFixed(2)}
               </p>
             </div>
             <Link href="/checkout">

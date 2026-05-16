@@ -1,10 +1,11 @@
 "use client";
 
 import { useParams } from "next/navigation"; // URL থেকে ID নেওয়ার জন্য
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { Star } from "lucide-react";
 import React, { useState } from "react";
+import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 
 // API Response এর জন্য সঠিক টাইপ ডেফিনিশন
@@ -47,9 +48,10 @@ interface OrderDetailsData {
 
 const OrderDetails: React.FC = () => {
   const params = useParams();
+  const queryClient = useQueryClient();
   const id = params?.id; // URL params থেকে id নেওয়া হলো
 
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const TOKEN = session?.user?.accessToken;
   const { t } = useTranslation();
 
@@ -82,6 +84,73 @@ const OrderDetails: React.FC = () => {
   // API রেসপন্স থেকে মেইন ডাটা অবজেক্ট নেওয়া
   const orderInfo: OrderDetailsData = orderResponse?.data;
 
+  // রিভিউ পোস্ট করার জন্য useMutation ইন্টিগ্রেশন
+  const reviewMutation = useMutation({
+    mutationFn: async (reviewBody: {
+      book: string;
+      comment: string;
+      rating: number;
+    }) => {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/user/write-review`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${TOKEN}`,
+          },
+          body: JSON.stringify(reviewBody),
+        },
+      );
+
+      const result = await res.json().catch(() => null);
+
+      if (!res.ok) {
+        throw new Error(result?.message || "Failed to submit review");
+      }
+
+      return result;
+    },
+    onSuccess: (data) => {
+      toast.success(data?.message || "Review posted successfully!");
+      // ফিল্ডগুলো খালি করা
+      setRating(0);
+      setReviewText("");
+      // অর্ডার ডিটেইলস কুয়েরি রিফ্রেশ করা (যদি প্রয়োজন হয়)
+      queryClient.invalidateQueries({ queryKey: ["order-details", id, TOKEN] });
+    },
+    onError: (err: Error) => {
+      toast.error(err.message || "Something went wrong while posting review.");
+    },
+  });
+
+  // রিভিউ সাবমিট হ্যান্ডলার
+  const handleReviewSubmit = () => {
+    if (reviewMutation.isPending) return;
+    if (!rating) {
+      toast.error("Please select a rating star!");
+      return;
+    }
+    if (!reviewText.trim()) {
+      toast.error("Please write some comments before posting!");
+      return;
+    }
+    if (!orderInfo) return;
+    const bookId = orderInfo.items?.[0]?.product?._id;
+
+    if (!bookId) {
+      toast.error("Book not found for this order!");
+      return;
+    }
+
+    // আপনার চাহিদা অনুযায়ী রিকোয়েস্ট বডি সাজানো হলো
+    reviewMutation.mutate({
+      book: bookId,
+      comment: reviewText,
+      rating,
+    });
+  };
+
   // স্ট্যাটাস ট্র্যাকিং ডাইনামিক করার লজিক
   const getStatusSteps = (currentStatus: string = "") => {
     const statuses = ["pending", "processing", "picked", "delivered"];
@@ -111,10 +180,73 @@ const OrderDetails: React.FC = () => {
     ];
   };
 
-  if (isLoading)
+  if (status === "loading" || isLoading || !TOKEN)
     return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-500"></div>
+      <div className="min-h-screen bg-gray-50 py-10 px-4 font-sans">
+        <div className="container mx-auto rounded-2xl border border-gray-100 bg-white p-8">
+          <div className="mb-8 space-y-3">
+            <div className="h-10 w-56 animate-pulse rounded bg-[#e8eef4]" />
+            <div className="h-4 w-72 animate-pulse rounded bg-[#e8eef4]" />
+          </div>
+
+          <div className="mb-8 grid gap-6 lg:grid-cols-2">
+            {[1, 2, 3].map((item) => (
+              <div
+                key={item}
+                className="rounded-xl border border-gray-100 bg-white p-5"
+              >
+                <div className="mb-4 h-6 w-40 animate-pulse rounded bg-[#e8eef4]" />
+                <div className="space-y-3">
+                  <div className="h-4 w-full animate-pulse rounded bg-[#e8eef4]" />
+                  <div className="h-4 w-2/3 animate-pulse rounded bg-[#e8eef4]" />
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mb-8 rounded-xl border border-gray-100 p-6">
+            <div className="mb-6 h-6 w-36 animate-pulse rounded bg-[#e8eef4]" />
+            <div className="space-y-4">
+              {[1, 2].map((item) => (
+                <div
+                  key={item}
+                  className="flex items-center justify-between rounded-xl border border-gray-50 p-4"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="h-16 w-16 animate-pulse rounded-lg bg-[#e8eef4]" />
+                    <div className="space-y-2">
+                      <div className="h-5 w-44 animate-pulse rounded bg-[#e8eef4]" />
+                      <div className="h-3 w-24 animate-pulse rounded bg-[#e8eef4]" />
+                    </div>
+                  </div>
+                  <div className="h-6 w-20 animate-pulse rounded bg-[#e8eef4]" />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
+            <div className="rounded-xl border border-gray-100 p-6">
+              <div className="mb-8 h-5 w-32 animate-pulse rounded bg-[#e8eef4]" />
+              <div className="space-y-8">
+                {[1, 2, 3, 4].map((item) => (
+                  <div key={item} className="flex gap-4">
+                    <div className="h-6 w-6 animate-pulse rounded-full bg-[#e8eef4]" />
+                    <div className="space-y-2">
+                      <div className="h-4 w-28 animate-pulse rounded bg-[#e8eef4]" />
+                      <div className="h-3 w-48 animate-pulse rounded bg-[#e8eef4]" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="rounded-2xl border border-gray-100 p-8">
+              <div className="mb-6 h-12 w-40 animate-pulse rounded bg-[#e8eef4]" />
+              <div className="mb-6 h-9 w-56 animate-pulse rounded bg-[#e8eef4]" />
+              <div className="h-32 w-full animate-pulse rounded-xl bg-[#e8eef4]" />
+            </div>
+          </div>
+        </div>
       </div>
     );
 
@@ -131,7 +263,7 @@ const OrderDetails: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-4 font-sans relative overflow-hidden">
-      <div className="container mx-auto bg-white border border-gray-100 p-8 shadow-sm relative z-10">
+      <div className="container mx-auto rounded-2xl bg-white border border-gray-100 p-6 md:p-8 shadow-sm relative z-10">
         <div className="mb-8">
           <h1 className="text-4xl font-serif text-gray-800">{t("order.detailsTitle")}</h1>
           <p className="text-gray-500 mt-1">{t("order.detailsSub")}</p>
@@ -140,7 +272,7 @@ const OrderDetails: React.FC = () => {
         {/* Address and Summary Info */}
         <div className="flex flex-col lg:flex-row gap-6 mb-8">
           <div className="lg:w-1/2 flex flex-col sm:flex-row gap-4">
-            <div className="flex-1 border border-gray-100 rounded-xl p-5 bg-white shadow-sm">
+            <div className="flex-1 border border-gray-100 rounded-xl p-5 bg-[#fbfdff]">
               <h3 className="flex items-center gap-2 font-serif text-lg text-gray-700 mb-3">
                 <span className="text-blue-500 text-xl">📍</span> {t("order.deliveryAddress")}
               </h3>
@@ -148,7 +280,7 @@ const OrderDetails: React.FC = () => {
                 {orderInfo.address}
               </p>
             </div>
-            <div className="flex-1 border border-gray-100 rounded-xl p-5 bg-white shadow-sm">
+            <div className="flex-1 border border-gray-100 rounded-xl p-5 bg-[#fbfdff]">
               <h3 className="flex items-center gap-2 font-serif text-lg text-gray-700 mb-3">
                 <span className="text-blue-500 text-xl">📞</span> {t("order.contactInfo")}
               </h3>
@@ -175,7 +307,7 @@ const OrderDetails: React.FC = () => {
             </div>
           </div>
 
-          <div className="lg:w-1/2 border border-gray-100 rounded-xl p-5 bg-white shadow-sm">
+          <div className="lg:w-1/2 border border-gray-100 rounded-xl p-5 bg-[#fbfdff]">
             <h3 className="flex items-center gap-2 font-serif text-lg text-gray-700 mb-3">
               <span className="text-blue-500 text-xl">📋</span> {t("order.orderSummary")}
             </h3>
@@ -210,7 +342,7 @@ const OrderDetails: React.FC = () => {
         </div>
 
         {/* Items Section */}
-        <div className="border border-gray-100 rounded-xl p-6 mb-8">
+        <div className="border border-gray-100 rounded-xl p-6 mb-8 bg-white">
           <h3 className="flex items-center gap-2 font-serif text-gray-700 mb-6">
             <span className="text-blue-500 text-xl">🛒</span> Items (
             {orderInfo.items?.length || 0})
@@ -219,7 +351,7 @@ const OrderDetails: React.FC = () => {
             {orderInfo.items?.map((item, index) => (
               <div
                 key={index}
-                className="flex items-center justify-between border border-gray-50 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow"
+                className="flex items-center justify-between border border-gray-100 rounded-xl p-4 bg-[#fbfdff] transition-colors hover:bg-[#f7fbff]"
               >
                 <div className="flex gap-4 items-center">
                   <div className="relative w-16 h-16 rounded-lg overflow-hidden border border-gray-100 bg-gray-50">
@@ -258,37 +390,39 @@ const OrderDetails: React.FC = () => {
           </div>
         </div>
 
-        {/* {t("order.status")} Section */}
-        <div className="border border-gray-100 rounded-xl p-6 mb-8">
-          <h3 className="flex items-center gap-2 font-serif text-xs text-gray-700 mb-8 font-bold uppercase tracking-wider">
-            <span className="text-blue-500">⚙️</span> {t("order.status")}
-          </h3>
-          <div className="max-w-md">
-            {statusSteps.map((step, index) => (
-              <div key={index} className="relative flex gap-4 pb-8 last:pb-0">
-                {index !== statusSteps.length - 1 && (
-                  <div className="absolute left-[11px] top-6 w-[0.5px] h-full bg-blue-100"></div>
-                )}
-                <div
-                  className={`z-10 w-6 h-6 rounded-full flex items-center justify-center text-[10px] shadow-sm ${step.completed ? "bg-blue-500 text-white" : "bg-white border border-blue-100 text-blue-300"}`}
-                >
-                  {step.completed ? "✓" : ""}
-                </div>
-                <div className="-mt-0.5">
-                  <h4
-                    className={`text-sm font-bold ${step.completed ? "text-blue-600" : "text-blue-300"}`}
+        <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
+          {/* Order Status Section */}
+          <div className="border border-gray-100 rounded-xl p-6 mb-8 bg-white">
+            <h3 className="flex items-center gap-2 font-serif text-xs text-gray-700 mb-8 font-bold uppercase tracking-wider">
+              <span className="text-blue-500">⚙️</span> Order Status
+            </h3>
+            <div className="max-w-md">
+              {statusSteps.map((step, index) => (
+                <div key={index} className="relative flex gap-4 pb-8 last:pb-0">
+                  {index !== statusSteps.length - 1 && (
+                    <div className="absolute left-[11px] top-6 w-[0.5px] h-full bg-blue-100"></div>
+                  )}
+                  <div
+                    className={`z-10 w-6 h-6 rounded-full flex items-center justify-center text-[10px] ${step.completed ? "bg-blue-500 text-white" : "bg-white border border-blue-100 text-blue-300"}`}
                   >
-                    {step.title}
-                  </h4>
-                  <p className="text-xs text-blue-300/80">{step.desc}</p>
+                    {step.completed ? "✓" : ""}
+                  </div>
+                  <div className="-mt-0.5">
+                    <h4
+                      className={`text-sm font-bold ${step.completed ? "text-blue-600" : "text-blue-300"}`}
+                    >
+                      {step.title}
+                    </h4>
+                    <p className="text-xs text-blue-300/80">{step.desc}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
 
-        {isDelivered && (
-          <div className="border border-gray-200 bg-white rounded-2xl p-8 max-w-sm w-full ">
+          {/* রিভিউ সেকশন */}
+          {isDelivered && (
+          <div className="border border-gray-100 bg-[#fbfdff] rounded-2xl p-8 w-full mb-8">
             {/* ইউজার প্রোফাইল সেকশন */}
             <div className="flex items-center gap-3 mb-6">
               <div className="w-12 h-12 rounded-full bg-gray-200 overflow-hidden">
@@ -304,48 +438,45 @@ const OrderDetails: React.FC = () => {
             {/* ইন্টারেক্টিভ গোল্ডেন স্টার সিলেকশন */}
             <div className="flex gap-1.5 mb-6">
               {[1, 2, 3, 4, 5].map((s) => (
-                <Star
+                <button
                   key={s}
-                  size={24}
-                  fill={s <= rating ? "#FACC15" : "none"}
-                  color="#FACC15"
-                  className="cursor-pointer transition-colors"
+                  type="button"
+                  disabled={reviewMutation.isPending}
+                  className="flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-yellow-50 disabled:cursor-not-allowed disabled:opacity-60"
                   onClick={() => setRating(s)}
-                />
+                  aria-label={`Select ${s} star rating`}
+                >
+                  <Star
+                    size={26}
+                    fill={s <= rating ? "#FACC15" : "transparent"}
+                    color="#FACC15"
+                    className="pointer-events-none transition-colors"
+                  />
+                </button>
               ))}
             </div>
 
-            {/* রিভিউ টেক্সট এরিয়া */}
+            {/* রিভিউ টেক্সট এরিয়া */}
             <textarea
               className="w-full border border-gray-200 rounded-xl p-4 text-sm text-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-400 resize-none min-h-[120px]"
               placeholder={t("order.reviewPlaceholder")}
               value={reviewText}
               onChange={(e) => setReviewText(e.target.value)}
+              disabled={reviewMutation.isPending}
             />
 
-            {/* ক্যানসেল এবং পোস্ট বাটন */}
-            <div className="flex gap-3 mt-8">
+            {/* পোস্ট বাটন */}
+            <div className="mt-8">
               <button
-                onClick={() => {
-                  setRating(0);
-                  setReviewText("");
-                }}
-                className="flex-1 py-3 px-4 border border-blue-400 text-blue-400 rounded-xl font-semibold hover:bg-blue-50 transition-colors"
+                onClick={handleReviewSubmit}
+                className="flex w-full justify-center items-center py-3 px-4 bg-[#6392b9] text-white rounded-xl font-semibold hover:bg-[#537da1] transition-colors shadow-md disabled:opacity-70"
               >
-                {t("account.cancel")}
-              </button>
-              <button
-                className="flex-1 py-3 px-4 bg-[#6392b9] text-white rounded-xl font-semibold hover:bg-[#537da1] transition-colors shadow-md"
-                onClick={() => {
-                  console.log({ rating, reviewText });
-                  // আপনার রিভিউ সাবমিট API হ্যান্ডলার এখানে দিতে পারেন।
-                }}
-              >
-                {t("order.post")}
+                {reviewMutation.isPending ? "Posting..." : "Post"}
               </button>
             </div>
           </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

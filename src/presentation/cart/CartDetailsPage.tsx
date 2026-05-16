@@ -21,6 +21,16 @@ type ProductDetails = {
   category?: {
     name?: string;
   };
+  reviews?: {
+    _id?: string;
+    rating?: number;
+    comment?: string;
+    createdAt?: string;
+    user?: {
+      name?: string;
+    };
+  }[];
+  avgRating?: number;
 };
 
 type ProductResponse = {
@@ -41,6 +51,8 @@ type CartResponse = {
 const CartDetailsPage = ({ cartItemId }: { cartItemId: string }) => {
   const [isReviewOpen, setIsReviewOpen] = useState(false);
   const [orderCompleted] = useState(true); // Set to true to show the button
+  const [reviewRating, setReviewRating] = useState(0);
+  const [reviewComment, setReviewComment] = useState("");
   const { data: session, status } = useSession();
   const queryClient = useQueryClient();
   const TOKEN = session?.user?.accessToken;
@@ -99,6 +111,7 @@ const CartDetailsPage = ({ cartItemId }: { cartItemId: string }) => {
   const productDescription =
     product?.description ||
     "A dazzling novel about all the choices that go into a life well lived, from the internationally bestselling author of Reasons to Stay Alive and How To Stop Time. Somewhere out beyond the edge of the universe there is a library that contains an infinite number of books, each one the story of another reality...";
+  const productReviews = product?.reviews || [];
 
   const updateQuantityMutation = useMutation({
     mutationFn: async (quantity: number) => {
@@ -131,6 +144,58 @@ const CartDetailsPage = ({ cartItemId }: { cartItemId: string }) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["cart", TOKEN] });
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || "Something went wrong");
+    },
+  });
+
+  const reviewMutation = useMutation({
+    mutationFn: async () => {
+      if (!TOKEN) {
+        throw new Error("Please login to post a review");
+      }
+
+      if (!reviewRating) {
+        throw new Error("Please select a rating");
+      }
+
+      if (!reviewComment.trim()) {
+        throw new Error("Please write a comment");
+      }
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/user/write-review`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${TOKEN}`,
+          },
+          body: JSON.stringify({
+            book: cartItemId,
+            rating: reviewRating,
+            comment: reviewComment,
+          }),
+        },
+      );
+
+      const result = await res.json().catch(() => null);
+
+      if (!res.ok) {
+        throw new Error(result?.message || "Failed to post review");
+      }
+
+      return result;
+    },
+    onSuccess: () => {
+      toast.success("Review posted successfully");
+      setReviewRating(0);
+      setReviewComment("");
+      setIsReviewOpen(false);
+      queryClient.invalidateQueries({
+        queryKey: ["book-details", cartItemId, TOKEN],
+      });
     },
     onError: (error: Error) => {
       toast.error(error.message || "Something went wrong");
@@ -255,6 +320,46 @@ const CartDetailsPage = ({ cartItemId }: { cartItemId: string }) => {
             </div>
           </div>
         </div>
+
+        <div className="mt-10 border-t border-gray-100 pt-8">
+          <div className="mb-5 flex items-center justify-between gap-4">
+            <h4 className="font-serif text-2xl text-gray-800">
+              Customer Reviews
+            </h4>
+            <div className="flex items-center gap-1 text-yellow-400 font-bold">
+              <Star size={18} fill="currentColor" />
+              <span>{Number(product.avgRating || 0).toFixed(1)}</span>
+            </div>
+          </div>
+
+          {productReviews.length > 0 ? (
+            <div className="space-y-4">
+              {productReviews.map((review, index) => (
+                <div
+                  key={review._id || index}
+                  className="rounded-xl border border-gray-100 bg-gray-50/60 p-4"
+                >
+                  <div className="mb-2 flex items-center justify-between gap-3">
+                    <p className="font-semibold text-gray-800">
+                      {review.user?.name || "Anonymous"}
+                    </p>
+                    <div className="flex items-center gap-1 text-yellow-400 font-bold">
+                      <Star size={16} fill="currentColor" />
+                      <span>{review.rating || 0}</span>
+                    </div>
+                  </div>
+                  <p className="text-sm leading-relaxed text-gray-500">
+                    {review.comment || "No comment provided."}
+                  </p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-xl border border-dashed border-gray-200 bg-gray-50 p-6 text-center text-gray-400">
+              No reviews yet.
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Review Dialog/Modal - Design based on image_cc5b60.png */}
@@ -289,11 +394,21 @@ const CartDetailsPage = ({ cartItemId }: { cartItemId: string }) => {
             {/* Star Rating */}
             <div className="flex gap-2 mb-6">
               {[1, 2, 3, 4, 5].map((star) => (
-                <Star
+                <button
                   key={star}
-                  size={28}
-                  className="text-yellow-400 cursor-pointer"
-                />
+                  type="button"
+                  disabled={reviewMutation.isPending}
+                  className="flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-yellow-50 disabled:cursor-not-allowed disabled:opacity-60"
+                  onClick={() => setReviewRating(star)}
+                  aria-label={`Select ${star} star rating`}
+                >
+                  <Star
+                    size={28}
+                    fill={star <= reviewRating ? "#FACC15" : "transparent"}
+                    color="#FACC15"
+                    className="pointer-events-none transition-colors"
+                  />
+                </button>
               ))}
             </div>
 
@@ -302,18 +417,30 @@ const CartDetailsPage = ({ cartItemId }: { cartItemId: string }) => {
               className="w-full border border-gray-200 rounded-xl p-4 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-100 resize-none mb-8"
               rows={4}
               placeholder="Write a short review to help fellow books lovers..."
+              value={reviewComment}
+              onChange={(event) => setReviewComment(event.target.value)}
+              disabled={reviewMutation.isPending}
             ></textarea>
 
             {/* Actions */}
             <div className="flex gap-4">
               <button
-                onClick={() => setIsReviewOpen(false)}
+                onClick={() => {
+                  setIsReviewOpen(false);
+                  setReviewRating(0);
+                  setReviewComment("");
+                }}
+                disabled={reviewMutation.isPending}
                 className="flex-1 py-3 px-6 border-2 border-blue-400 text-blue-500 rounded-xl font-semibold hover:bg-blue-50 transition-colors"
               >
                 Cancel
               </button>
-              <button className="flex-1 py-3 px-6 bg-[#6392b9] text-white rounded-xl font-semibold hover:bg-[#537da1] transition-colors">
-                Post
+              <button
+                onClick={() => reviewMutation.mutate()}
+                disabled={reviewMutation.isPending}
+                className="flex-1 py-3 px-6 bg-[#6392b9] text-white rounded-xl font-semibold hover:bg-[#537da1] transition-colors disabled:opacity-70"
+              >
+                {reviewMutation.isPending ? "Posting..." : "Post"}
               </button>
             </div>
           </div>

@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { AlertTriangle, Shapes } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -19,6 +20,7 @@ export function ExploreCategoriesSection({
   isLoading: boolean
   error?: string
 }) {
+  const { t } = useTranslation()
   const effectiveCategories = categories
   const [romance, fiction, classic, fantasy, adventure, mystery] =
     effectiveCategories
@@ -54,7 +56,7 @@ export function ExploreCategoriesSection({
             <StateMessageCard
               tone="error"
               icon={AlertTriangle}
-              title="Unable to load categories"
+              title={t("home.categoriesLoadError")}
               description={error}
             />
           </div>
@@ -64,8 +66,8 @@ export function ExploreCategoriesSection({
           <div>
             <StateMessageCard
               icon={Shapes}
-              title="No categories found"
-              description="There are no categories available at the moment."
+              title={t("home.noCategories")}
+              description={t("home.noCategoriesDesc")}
             />
           </div>
         ) : null}
@@ -82,11 +84,11 @@ export function ExploreCategoriesSection({
               />
               <Card className="flex min-h-[286px] flex-col items-center justify-center rounded-[18px] border border-[#dce3ea] bg-[#EEF3F6] px-8 text-center shadow-[0_1px_2px_-1px_rgba(0,0,0,0.10),0_1px_3px_0_rgba(0,0,0,0.10)]">
                 <h2 className="font-display max-w-[20ch] text-4xl leading-[1.25] text-[#264d73] sm:text-[48px]">
-                  Explore our Top Categories
+                  {t("home.exploreTopCategories")}
                 </h2>
                 <Link href="/categories" className="mt-10">
                   <Button className="h-[58px] cursor-pointer min-w-[224px] rounded-xl bg-[linear-gradient(90deg,#5F83A2_0%,#5E92C0_100%)] text-[18px] font-semibold shadow-none hover:opacity-95">
-                    Explore all
+                    {t("home.exploreAll")}
                   </Button>
                 </Link>
               </Card>

@@ -2,7 +2,6 @@
 
 import React, { useState, useRef } from "react";
 import {
-  User,
   Lock,
   History,
   Info,
@@ -22,10 +21,12 @@ import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
+import { useTranslation } from "react-i18next";
 
 const ProfileLayout = () => {
   const [activeTab, setActiveTab] = useState("Edit Profile");
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const { t } = useTranslation();
   const { data: session, status } = useSession();
   const TOKEN = session?.user?.accessToken;
 
@@ -65,13 +66,13 @@ const ProfileLayout = () => {
 
   // গ্রুপ ১: যারা ডান পাশে কন্টেন্ট দেখাবে (Tab System)
   const tabItems = [
-    { id: "Edit Profile", icon: <SquarePen size={22} />, label: "Edit Profile" },
+    { id: "Edit Profile", icon: <SquarePen size={22} />, label: t("account.editProfile") },
     {
       id: "Change Password",
       icon: <Lock size={22} />,
-      label: "Change Password",
+      label: t("account.changePassword"),
     },
-    { id: "Language", icon: <Globe size={22} />, label: "Language" },
+    { id: "Language", icon: <Globe size={22} />, label: t("account.language") },
   ];
 
   // গ্রুপ ২: যারা অন্য পেজে রিডাইরেক্ট করবে (Redirect System)
@@ -79,25 +80,25 @@ const ProfileLayout = () => {
     {
       id: "Order History",
       icon: <History size={22} />,
-      label: "Order History",
+      label: t("account.orderHistory"),
       href: "/order",
     },
     {
       id: "About Us",
       icon: <Info size={22} />,
-      label: "About Us",
+      label: t("nav.aboutUs"),
       href: "/about-us",
     },
     {
       id: "Privacy Policy",
       icon: <ShieldCheck size={22} />,
-      label: "Privacy Policy",
+      label: t("account.privacyPolicy"),
       href: "/privacy-policy",
     },
     {
       id: "Terms & Conditions",
       icon: <FileText size={22} />,
-      label: "Terms & Conditions",
+      label: t("account.terms"),
       href: "/t&c",
     },
   ];
@@ -114,9 +115,9 @@ const ProfileLayout = () => {
       <div className="container mx-auto">
         <div className="text-center mb-10">
           <h1 className="text-4xl font-serif text-gray-800 font-bold">
-            My Profile
+            {t("account.title")}
           </h1>
-          <p className="text-gray-500 mt-2 text-lg">Manage your Profile</p>
+          <p className="text-gray-500 mt-2 text-lg">{t("account.subtitle")}</p>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-6 bg-white p-4 rounded border border-gray-100 shadow-[0px_0px_4px_0px_#00000040]">
@@ -242,7 +243,7 @@ const ProfileLayout = () => {
                       size={22}
                       className="text-gray-400 group-hover:text-red-500"
                     />
-                    <span className="text-lg font-semibold">Log Out</span>
+                    <span className="text-lg font-semibold">{t("account.logout")}</span>
                   </div>
                   <ChevronRight
                     size={20}

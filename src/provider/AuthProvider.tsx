@@ -3,6 +3,7 @@ import React from "react";
 import { SessionProvider } from "next-auth/react";
 import { Toaster } from "sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import I18nProvider from "@/provider/I18nProvider";
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [queryClient] = React.useState(
@@ -20,7 +21,9 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <SessionProvider>{children}</SessionProvider>
+      <I18nProvider>
+        <SessionProvider>{children}</SessionProvider>
+      </I18nProvider>
       <Toaster position="top-right" richColors />
     </QueryClientProvider>
   );

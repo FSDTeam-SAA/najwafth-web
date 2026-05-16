@@ -9,8 +9,10 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";
 
 const ChangePassword = () => {
+  const { t } = useTranslation();
   const [show, setShow] = useState({
     current: false,
     new: false,
@@ -27,7 +29,6 @@ const ChangePassword = () => {
       newPassword: string;
       confirmPassword: string;
     }) => {
-      // টোকেন চেক
       if (!TOKEN) throw new Error("Unauthorized! Please login again.");
 
       const res = await fetch(
@@ -54,11 +55,12 @@ const ChangePassword = () => {
     onSuccess: () => {
       toast.success("Password changed successfully");
       router.push("/signin");
-      // পাসওয়ার্ড চেঞ্জ হলে ফর্ম রিসেট করার লজিক এখানে দিতে পারেন
     },
 
-    onError: (error: any) => {
-      toast.error(error.message || "Something went wrong");
+    onError: (error: unknown) => {
+      const message =
+        error instanceof Error ? error.message : "Something went wrong";
+      toast.error(message);
     },
   });
 
@@ -70,7 +72,6 @@ const ChangePassword = () => {
     const newPassword = form.get("newPassword") as string;
     const confirmPassword = form.get("confirmPassword") as string;
 
-    // সিম্পল ক্লায়েন্ট সাইড ভ্যালিডেশন
     if (newPassword !== confirmPassword) {
       return toast.error("New passwords do not match!");
     }
@@ -82,39 +83,32 @@ const ChangePassword = () => {
     });
   };
 
-  // ইনপুট এবং লেবেলের জন্য বড় টেক্সট স্টাইল
-  const inputStyles =
-    "pr-10 h-[50px] bg-slate-50/50 text-lg border-gray-200 focus-visible:ring-blue-400 transition-all";
   const labelStyles = "text-base font-medium text-[#1E1E1E] leading-[150%]";
 
   const requirements = [
-    {
-      text: "Minimum 8-12 characters (recommend 12+ for stronger security).",
-      met: true,
-    },
-    { text: "At least one uppercase letter must.", met: true },
-    { text: "At least one lowercase letter must.", met: true },
-    { text: "At least one number must (0-9).", met: true },
-    { text: "At least special character (! @ # $ % ^ & * etc.).", met: false },
-    { text: "No spaces allowed.", met: false },
+    { text: t("account.req1"), met: true },
+    { text: t("account.req2"), met: true },
+    { text: t("account.req3"), met: true },
+    { text: t("account.req4"), met: true },
+    { text: t("account.req5"), met: false },
+    { text: t("account.req6"), met: false },
   ];
 
   return (
     <div className="w-full">
       <div className="mb-8 pb-4 border-b border-slate-100">
         <h2 className="text-3xl font-bold text-slate-900 font-serif">
-          Change Password
+          {t("account.changePasswordTitle")}
         </h2>
         <p className="text-slate-500 text-base mt-1">
-          Update your password to keep your account secure.
+          {t("account.changePasswordSub")}
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Current Password */}
           <div className="grid gap-2">
-            <Label className={labelStyles}>Current Password</Label>
+            <Label className={labelStyles}>{t("account.currentPassword")}</Label>
             <div className="relative">
               <Input
                 name="currentPassword"
@@ -132,9 +126,8 @@ const ChangePassword = () => {
             </div>
           </div>
 
-          {/* New Password */}
           <div className="grid gap-2">
-            <Label className={labelStyles}>New Password</Label>
+            <Label className={labelStyles}>{t("account.newPassword")}</Label>
             <div className="relative">
               <Input
                 name="newPassword"
@@ -153,9 +146,8 @@ const ChangePassword = () => {
           </div>
         </div>
 
-        {/* Confirm Password */}
         <div className="grid gap-2">
-          <Label className={labelStyles}>Confirm New Password</Label>
+          <Label className={labelStyles}>{t("account.confirmNewPassword")}</Label>
           <div className="relative">
             <Input
               name="confirmPassword"
@@ -173,9 +165,8 @@ const ChangePassword = () => {
           </div>
         </div>
 
-        {/* Requirements - টেক্সট সাইজ বড় করা হয়েছে */}
         <div className="space-y-3 mt-6 bg-slate-50 p-4 rounded-xl border border-slate-100">
-          <p className="font-bold text-gray-700 mb-2">Password Requirements:</p>
+          <p className="font-bold text-gray-700 mb-2">{t("account.passwordRequirements")}</p>
           {requirements.map((req, index) => (
             <div key={index} className="flex items-center gap-3 text-base">
               {req.met ? (
@@ -194,14 +185,15 @@ const ChangePassword = () => {
           ))}
         </div>
 
-        {/* Buttons */}
         <div className="flex justify-end gap-4 pt-6">
-         <Button
+          <Button
             type="submit"
             disabled={changepasswordMutation.isPending}
             className="h-[55px] px-5 bg-[#5F83A2] hover:bg-[#5e7e9a] text-white font-bold text-base rounded transition-all min-w-[200px] cursor-pointer"
           >
-            {changepasswordMutation.isPending ? "Updating..." : "Save Changes"}
+            {changepasswordMutation.isPending
+              ? t("account.updating")
+              : t("account.saveChanges")}
           </Button>
         </div>
       </form>

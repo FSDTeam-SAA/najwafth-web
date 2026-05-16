@@ -1,5 +1,6 @@
 import { ProductListingSection } from './ProductListingSection'
 import type { ProductItem } from './homeData'
+import { useTranslation } from 'react-i18next'
 
 export function PopularBooksSection({
   products,
@@ -10,10 +11,12 @@ export function PopularBooksSection({
   isLoading: boolean
   error?: string
 }) {
+  const { t } = useTranslation()
+
   return (
     <ProductListingSection
-      title="Popular Books"
-      description="Bestsellers and trending reads across all our stores."
+      title={t("home.popularTitle")}
+      description={t("home.popularDesc")}
       products={products.slice(0, 8)}
       isLoading={isLoading}
       error={error}

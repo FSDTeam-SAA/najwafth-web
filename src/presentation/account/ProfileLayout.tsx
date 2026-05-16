@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 import React, { useState, useRef } from "react";
 import {
@@ -9,7 +9,6 @@ import {
   ShieldCheck,
   FileText,
   Globe,
-  Bell,
   LogOut,
   ChevronRight,
   Pencil,
@@ -161,16 +160,16 @@ const ProfileLayout = () => {
                     onClick={() => setActiveTab(item.id)}
                     className={`w-full flex items-center justify-between px-5 py-4 rounded transition-all ${
                       activeTab === item.id
-                        ? "text-blue-400 bg-blue-50/50"
-                        : "text-gray-600 hover:bg-gray-50"
+                        ? 'text-blue-400 bg-blue-50/50'
+                        : 'text-gray-600 hover:bg-gray-50'
                     }`}
                   >
                     <div className="flex items-center gap-4">
                       <span
                         className={
                           activeTab === item.id
-                            ? "text-blue-400"
-                            : "text-gray-400"
+                            ? 'text-blue-400'
+                            : 'text-gray-400'
                         }
                       >
                         {item.icon}
@@ -183,8 +182,8 @@ const ProfileLayout = () => {
                       size={20}
                       className={
                         activeTab === item.id
-                          ? "text-blue-400"
-                          : "text-gray-300"
+                          ? 'text-blue-400'
+                          : 'text-gray-300'
                       }
                     />
                   </button>
@@ -267,7 +266,7 @@ const ProfileLayout = () => {
         onConfirm={handleLogoutConfirm}
       />
     </div>
-  );
-};
+  )
+}
 
-export default ProfileLayout;
+export default ProfileLayout

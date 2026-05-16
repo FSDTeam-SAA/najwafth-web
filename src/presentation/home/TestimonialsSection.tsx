@@ -31,7 +31,7 @@ export function TestimonialsSection() {
             What Clients Say
           </h2>
           <p className="mt-4 text-base text-[#333333] sm:text-lg">
-            Lorem Ipsum has been the industry&apos;s standard dummy
+            Hear what our clients say about working with us
           </p>
         </div>
 

@@ -4,9 +4,27 @@ import React from "react";
 import { Trash2, Plus, Minus, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
+
+type CartItem = {
+  _id: string;
+  quantity: number;
+  product?: {
+    _id: string;
+    title: string;
+    price: number;
+    stock: boolean;
+  };
+};
+
+type CartResponse = {
+  data?: {
+    items?: CartItem[];
+    totalAmount?: number;
+  };
+};
 
 const CartPage = () => {
   const { data: session } = useSession();
@@ -31,7 +49,52 @@ const CartPage = () => {
     enabled: !!TOKEN,
   });
 
-  const cartItems = cartResponse?.data || [];
+  const cartData = (cartResponse as CartResponse | undefined)?.data;
+  const cartItems = cartData?.items || [];
+  const totalAmount = cartData?.totalAmount || 0;
+
+  const updateQuantityMutation = useMutation({
+    mutationFn: async ({
+      product,
+      quantity,
+    }: {
+      product: string;
+      quantity: number;
+    }) => {
+      if (!TOKEN) {
+        throw new Error("Please login to update cart");
+      }
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/cart/update`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${TOKEN}`,
+          },
+          body: JSON.stringify({
+            product,
+            quantity,
+          }),
+        },
+      );
+
+      const result = await res.json().catch(() => null);
+
+      if (!res.ok) {
+        throw new Error(result?.message || "Failed to update cart");
+      }
+
+      return result;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["cart", TOKEN] });
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || "Something went wrong");
+    },
+  });
 
   // লোডিং স্টেট
   if (isLoading) {
@@ -44,7 +107,7 @@ const CartPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-4 relative overflow-hidden">
-      <div className="container mx-auto text-center max-w-4xl">
+      <div className="container mx-auto text-center">
         <h1 className="text-4xl font-serif text-gray-800">My Cart</h1>
         <p className="text-gray-500 mt-2 mb-8 font-medium">
           Manage & see my My Cart list
@@ -52,9 +115,9 @@ const CartPage = () => {
 
         <div className="space-y-4">
           {cartItems.length > 0 ? (
-            cartItems.map((item: any, index: number) => (
+            cartItems.map((item, index: number) => (
               <div
-                key={item.id || index}
+                key={item._id || index}
                 className="bg-white border border-gray-100 rounded-xl p-4 flex flex-col md:flex-row items-center justify-between shadow-sm relative mb-5 transition-all hover:shadow-md"
               >
                 {/* ২. ডিলিট বাটন (Link এর বাইরে রাখা হয়েছে যাতে ক্লিক করলে পেজ চেঞ্জ না হয়) */}
@@ -68,45 +131,65 @@ const CartPage = () => {
                   <Trash2 size={18} />
                 </button>
 
-                <div className="flex items-center gap-4 text-left w-full">
+                <Link
+                  href={`/cart/${item.product?._id || item._id}`}
+                  className="flex items-center gap-4 text-left w-full"
+                >
                   <div className="relative w-20 h-20 shrink-0">
                     <Image
                       fill
-                      src={item.img || "/images/orderImage.jpg"}
-                      alt={item.title}
+                      src="/images/orderImage.jpg"
+                      alt={item.product?.title || "Cart item"}
                       className="rounded-lg object-cover bg-gray-200"
                     />
                   </div>
 
                   <div className="flex-1">
-                    <Link href={`/cart/${item?.id}`}>
-                      <h3 className="font-serif text-lg text-gray-800 hover:text-blue-500 transition-colors">
-                        {item.title}
-                      </h3>
-                    </Link>
-                    <p className="text-gray-500 text-sm">{item.author}</p>
+                    <h3 className="font-serif text-lg text-gray-800 hover:text-blue-500 transition-colors">
+                      {item.product?.title || "Untitled"}
+                    </h3>
+                    <p className="text-gray-500 text-sm">Unknown Author</p>
                     <p className="text-gray-400 text-xs flex items-center mt-1">
-                      <span className="mr-1">📍</span>{" "}
-                      {item.location || "Store Location"}
+                      <span className="mr-1">📍</span> Store Location
                     </p>
                     <div className="flex items-center gap-1 mt-2 text-blue-500 font-bold text-lg">
-                      ${item.price}
+                      £{Number(item.product?.price || 0).toFixed(2)}
                       <ChevronRight size={16} className="mt-0.5" />
                     </div>
                   </div>
-                </div>
+                </Link>
 
                 {/* ৩. কোয়ান্টিটি সিলেক্টর (Link এর বাইরে জেনুইন বাটন হিসেবে) */}
                 <div className="flex items-center gap-4 mt-4 md:mt-0 z-10">
-                  <div className="flex items-center gap-3 border border-blue-100 rounded-lg px-3 py-1.5 bg-white shadow-sm">
-                    <button className="text-blue-300 hover:text-blue-500 p-1">
-                      <Minus size={18} />
+                  <div className="flex items-center gap-4 border border-blue-100 rounded-xl px-4  bg-white shadow-sm">
+                    <button
+                      className="flex h-10 w-10 items-center justify-center rounded-lg text-blue-300 hover:bg-blue-50 hover:text-blue-500"
+                      disabled={updateQuantityMutation.isPending}
+                      onClick={() => {
+                        if (!item.product?._id) return;
+                        updateQuantityMutation.mutate({
+                          product: item.product._id,
+                          quantity: (item.quantity || 1) - 1,
+                        });
+                      }}
+                    >
+                      <Minus size={22} />
                     </button>
-                    <span className="font-bold text-gray-700 min-w-6 text-center text-lg">
+                    <span className="font-bold text-gray-700 min-w-8 text-center text-xl">
                       {item.quantity || 1}
                     </span>
-                    <button className="text-blue-300 hover:text-blue-500 p-1">
-                      <Plus size={18} />
+                    <button
+                      className="flex h-10 w-10 items-center justify-center rounded-lg text-blue-300 hover:bg-blue-50 hover:text-blue-500"
+                      disabled={updateQuantityMutation.isPending}
+                      onClick={() => {
+                        if (!item.product?._id) return;
+                        updateQuantityMutation.mutate({
+                          product: item.product._id,
+                          quantity: (item.quantity || 1) + 1,
+                        });
+                      }}
+                    >
+                      <Plus size={22} />
                     </button>
                   </div>
                 </div>
@@ -121,14 +204,18 @@ const CartPage = () => {
 
         {/* ৪. চেকআউট সামারি (অতিরিক্ত সুবিধা) */}
         {cartItems.length > 0 && (
-          <div className="mt-10 p-6 bg-white rounded-xl shadow-sm border border-gray-100 flex justify-between items-center">
+          <div className="mt-10 p-6 bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col gap-5 sm:flex-row sm:justify-between sm:items-center">
             <div className="text-left">
               <p className="text-gray-500">Total Items: {cartItems.length}</p>
-              <p className="text-2xl font-bold text-gray-800">Total: $120.00</p>
+              <p className="text-2xl font-bold text-gray-800">
+                Total Amount: ৳{Number(totalAmount).toFixed(2)}
+              </p>
             </div>
-            <button className="bg-blue-500 hover:bg-blue-600 text-white px-10 py-3 rounded-xl font-bold text-lg transition-all shadow-lg shadow-blue-100">
-              Checkout Now
-            </button>
+            <Link href="/checkout">
+              <button className="w-full sm:w-auto bg-blue-500 hover:bg-blue-600 text-white px-10 py-3 rounded-xl font-bold text-lg transition-all shadow-lg shadow-blue-100">
+                Check Out
+              </button>
+            </Link>
           </div>
         )}
       </div>

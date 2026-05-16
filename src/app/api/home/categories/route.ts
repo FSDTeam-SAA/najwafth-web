@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
 
-const BACKEND_BASE_URL = process.env.BACKEND_BASE_URL || 'http://localhost:5000/api/v1'
-const BACKEND_TOKEN =
-  process.env.BACKEND_API_TOKEN ||
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OWY4NTEwMjE3NGFlZWE2YTYzMDNmMTgiLCJlbWFpbCI6ImpvaG4xQGV4YW1wbGUuY29tIiwicm9sZSI6InNlbGxlciIsImlhdCI6MTc3ODczMzAzMiwiZXhwIjoxNzc4ODE5NDMyfQ.4Jt9z6PNkJn6Xhp1WQeGpMwqeAnuIUxsIBPr4GaExJ4'
+const BACKEND_BASE_URL =
+  process.env.NEXT_PUBLIC_BACKEND_API_URL || 'http://localhost:5001/api/v1'
 
 const fallbackPositions = [
   'object-[35%_34%]',
@@ -24,21 +24,31 @@ type BackendCategory = {
 
 export async function GET() {
   try {
-    const response = await fetch(
-      `${BACKEND_BASE_URL}/category?parent=null`,
-      {
-        headers: {
-          Authorization: `Bearer ${BACKEND_TOKEN}`,
-        },
-        cache: 'no-store',
+    const session = await getServerSession(authOptions)
+    const token = session?.user?.accessToken
+
+    if (!token) {
+      return NextResponse.json(
+        { message: 'Unauthorized: No valid session' },
+        { status: 401 },
+      )
+    }
+
+    const response = await fetch(`${BACKEND_BASE_URL}/category?parent=null`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
       },
-    )
+      cache: 'no-store',
+    })
 
     const payload = await response.json().catch(() => null)
 
     if (!response.ok) {
       return NextResponse.json(
-        { message: payload?.message || 'Failed to fetch categories from backend' },
+        {
+          message:
+            payload?.message || 'Failed to fetch categories from backend',
+        },
         { status: response.status },
       )
     }
@@ -46,12 +56,14 @@ export async function GET() {
     const categories = Array.isArray(payload?.data) ? payload.data : []
 
     return NextResponse.json({
-      items: categories.slice(0, 6).map((item: BackendCategory, index: number) => ({
-        id: item?._id || String(index + 1),
-        title: item?.name || 'Category',
-        image: item?.image?.url || '/images/book1.jpg',
-        imagePosition: fallbackPositions[index % fallbackPositions.length],
-      })),
+      items: categories
+        .slice(0, 6)
+        .map((item: BackendCategory, index: number) => ({
+          id: item?._id || String(index + 1),
+          title: item?.name || 'Category',
+          image: item?.image?.url || '/images/book1.jpg',
+          imagePosition: fallbackPositions[index % fallbackPositions.length],
+        })),
     })
   } catch {
     return NextResponse.json(

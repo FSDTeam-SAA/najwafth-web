@@ -11,6 +11,7 @@ import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 
 import { Button } from "@/components/ui/button";
+import { resolveAvatarUrl } from "@/lib/avatar";
 
 const HOME_SECTION_ROUTES = ["/", "/popular-books", "/featured-bookstores"];
 
@@ -50,8 +51,10 @@ export function Navbar() {
   const { data: session, status } = useSession();
   const isAuthenticated = status === "authenticated";
   const token = session?.user?.accessToken;
-  const avatarUrl =
-    session?.user?.avatar || "https://i.pravatar.cc/120?u=books-user";
+  const avatarUrl = resolveAvatarUrl(
+    session?.user?.avatar,
+    "https://i.pravatar.cc/120?u=books-user",
+  );
 
   const { data: cartResponse } = useQuery<CartResponse>({
     queryKey: ["cart", token],
@@ -148,6 +151,10 @@ export function Navbar() {
     return () => controller.abort();
   }, [debouncedSearch]);
 
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [pathname]);
+
   function handleSearchSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const value = searchText.trim();
@@ -188,6 +195,10 @@ export function Navbar() {
       setSearchResults([]);
       setIsSearching(false);
     }
+  }
+
+  function handleMobileNavClick() {
+    setIsMobileMenuOpen(false);
   }
 
   return (
@@ -338,6 +349,7 @@ export function Navbar() {
                   alt="Profile"
                   width={40}
                   height={40}
+                  unoptimized
                   className="h-full w-full object-cover"
                 />
               </div>
@@ -445,6 +457,7 @@ export function Navbar() {
               <Link
                 key={`${link.href}-mobile`}
                 href={link.href}
+                onClick={handleMobileNavClick}
                 className={`rounded-lg px-3 py-2 text-[15px] transition-colors ${
                   active
                     ? "bg-[#459AE4]/8 text-[#459AE4]"
@@ -456,8 +469,22 @@ export function Navbar() {
             );
           })}
 
+          {isAuthenticated ? (
+            <Link
+              href="/account"
+              onClick={handleMobileNavClick}
+              className={`rounded-lg px-3 py-2 text-[15px] transition-colors ${
+                isLinkActive("/account", pathname)
+                  ? "bg-[#459AE4]/8 text-[#459AE4]"
+                  : "text-[#111827] hover:bg-[#459AE4]/5 hover:text-[#459AE4]"
+              }`}
+            >
+              Account
+            </Link>
+          ) : null}
+
           {!isAuthenticated ? (
-            <Link href="/signin" className="sm:hidden">
+            <Link href="/signin" onClick={handleMobileNavClick} className="sm:hidden">
               <Button className="cursor-pointer mt-2 w-full rounded-xl text-[14px]">
                 {t("nav.signIn")}
               </Button>

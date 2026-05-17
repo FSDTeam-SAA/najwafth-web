@@ -149,7 +149,7 @@ export function ContactPage() {
               <form className="relative grid gap-4" onSubmit={onSubmit}>
                 <Field label={t('contact.name')} placeholder={t('contact.enterName')} value={form.name} onChange={value => onChange('name', value)} error={isSubmitted ? fieldErrors.name : ''} />
                 <Field label={t('contact.emailAddress')} placeholder={t('contact.enterEmail')} value={form.email} onChange={value => onChange('email', value)} error={isSubmitted ? fieldErrors.email : ''} />
-                <Field label={t('account.phoneNumber')} placeholder='+123456' value={form.phone} onChange={value => onChange('phone', value)} />
+                <Field label={t('account.phoneNumber')} placeholder='+123456' value={form.phone} onChange={value => onChange('phone', value)} type="tel" inputMode="tel" autoComplete="tel" />
                 <Field label={t('contact.reason')} placeholder={t('contact.reason')} value={form.reason} onChange={value => onChange('reason', value)} error={isSubmitted ? fieldErrors.reason : ''} />
                 <Field label={t('contact.description')} placeholder={t('contact.messagePlaceholder')} textarea value={form.description} onChange={value => onChange('description', value)} error={isSubmitted ? fieldErrors.description : ''} />
 
@@ -173,6 +173,9 @@ function Field({
   onChange,
   error,
   textarea = false,
+  type = 'text',
+  inputMode,
+  autoComplete,
 }: {
   label: string
   placeholder: string
@@ -180,6 +183,9 @@ function Field({
   onChange: (value: string) => void
   error?: string
   textarea?: boolean
+  type?: React.HTMLInputTypeAttribute
+  inputMode?: React.HTMLAttributes<HTMLInputElement>['inputMode']
+  autoComplete?: string
 }) {
   return (
     <label className="grid gap-1.5">
@@ -194,6 +200,9 @@ function Field({
         />
       ) : (
         <input
+          type={type}
+          inputMode={inputMode}
+          autoComplete={autoComplete}
           placeholder={placeholder}
           value={value}
           onChange={event => onChange(event.target.value)}

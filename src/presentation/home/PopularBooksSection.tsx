@@ -21,7 +21,6 @@ export function PopularBooksSection({
       isLoading={isLoading}
       error={error}
       viewAllHref="/all-books"
-      topLeafClassName="pointer-events-none absolute right-[10%] top-20 h-auto w-[210px] opacity-45"
     />
   )
 }

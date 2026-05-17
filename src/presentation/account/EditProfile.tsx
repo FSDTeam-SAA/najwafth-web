@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useTranslation } from "react-i18next";
+import { resolveAvatarUrl } from "@/lib/avatar";
 
 const EditProfile = ({
   initialData,
@@ -58,7 +59,7 @@ const EditProfile = ({
       setLoading(false);
       queryClient.invalidateQueries({ queryKey: ["profileData"] });
       
-      const newAvatar = data?.data?.avatar?.url || data?.data?.avatar;
+      const newAvatar = resolveAvatarUrl(data?.data?.avatar, "");
       const newName = data?.data?.name;
       
       if (newAvatar || newName) {

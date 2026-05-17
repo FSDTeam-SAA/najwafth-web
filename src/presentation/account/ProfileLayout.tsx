@@ -22,6 +22,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
+import { resolveAvatarUrl } from "@/lib/avatar";
 
 const ProfileLayout = () => {
   const [activeTab, setActiveTab] = useState("Edit Profile");
@@ -64,6 +65,10 @@ const ProfileLayout = () => {
   });
 
   const userData = profileResponse?.data;
+  const profileAvatarUrl = resolveAvatarUrl(
+    previewImage || userData?.avatar || session?.user?.avatar,
+    "https://i.pravatar.cc/150?u=default",
+  );
 
   // গ্রুপ ১: যারা ডান পাশে কন্টেন্ট দেখাবে (Tab System)
   const tabItems = [
@@ -130,12 +135,9 @@ const ProfileLayout = () => {
                   <Image
                     width={112}
                     height={112}
-                    src={
-                      previewImage ||
-                      (typeof userData?.avatar === 'string' ? userData.avatar : userData?.avatar?.url) ||
-                      "https://i.pravatar.cc/150?u=default"
-                    }
+                    src={profileAvatarUrl}
                     alt="Profile"
+                    unoptimized
                     className="w-28 h-28 rounded-full border-4 border-white object-cover shadow-lg bg-slate-100"
                   />
                   <button

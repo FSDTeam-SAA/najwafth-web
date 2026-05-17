@@ -48,7 +48,7 @@ const SuccessPage = () => {
             <Wallet size={18} className="text-blue-500" /> {t("order.payment")}
           </h3>
           <div className="bg-gray-50 rounded-xl p-6 flex justify-center">
-             <h2 className="text-blue-600 font-black text-3xl italic tracking-tighter">stripe</h2>
+             <h2 className="text-[#5F83A2] font-black text-3xl italic tracking-tighter">Stripe</h2>
           </div>
         </div>
       </div>

@@ -108,8 +108,54 @@ const CheckoutPage = () => {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-500"></div>
+      <div className="bg-gray-50 py-10 px-4">
+        <div className="max-w-4xl mx-auto bg-white border border-gray-100 rounded-xl p-10 shadow-sm">
+          <div className="mb-10 space-y-3">
+            <div className="h-10 w-48 animate-pulse rounded bg-[#e8eef4]" />
+            <div className="h-4 w-72 max-w-full animate-pulse rounded bg-[#e8eef4]" />
+          </div>
+
+          <div className="mb-10 grid grid-cols-1 gap-4 md:grid-cols-3">
+            {[1, 2, 3].map((item) => (
+              <div key={`checkout-input-skeleton-${item}`} className="space-y-2">
+                <div className="h-5 w-32 animate-pulse rounded bg-[#e8eef4]" />
+                <div className="h-11 w-full animate-pulse rounded-lg bg-[#e8eef4]" />
+              </div>
+            ))}
+          </div>
+
+          <div className="mb-10">
+            <div className="mb-6 h-6 w-44 animate-pulse rounded bg-[#e8eef4]" />
+            <div className="space-y-3 border-b border-gray-100 py-4">
+              {[1, 2, 3].map((item) => (
+                <div
+                  key={`checkout-summary-skeleton-${item}`}
+                  className="flex justify-between gap-4"
+                >
+                  <div className="h-4 w-44 animate-pulse rounded bg-[#e8eef4]" />
+                  <div className="h-4 w-20 animate-pulse rounded bg-[#e8eef4]" />
+                </div>
+              ))}
+              <div className="flex justify-between gap-4">
+                <div className="h-4 w-24 animate-pulse rounded bg-[#e8eef4]" />
+                <div className="h-4 w-24 animate-pulse rounded bg-[#e8eef4]" />
+              </div>
+            </div>
+            <div className="flex justify-between gap-4 py-4">
+              <div className="h-6 w-20 animate-pulse rounded bg-[#e8eef4]" />
+              <div className="h-6 w-28 animate-pulse rounded bg-[#e8eef4]" />
+            </div>
+          </div>
+
+          <div className="mb-10">
+            <div className="mb-6 h-6 w-32 animate-pulse rounded bg-[#e8eef4]" />
+            <div className="flex items-center justify-center rounded-xl bg-gray-50 p-8">
+              <div className="h-10 w-32 animate-pulse rounded bg-[#e8eef4]" />
+            </div>
+          </div>
+
+          <div className="h-14 w-full animate-pulse rounded-lg bg-[#e8eef4]" />
+        </div>
       </div>
     );
   }
@@ -203,8 +249,8 @@ const CheckoutPage = () => {
             <Wallet size={18} className="text-blue-500" /> {t("order.payment")}
           </h3>
           <div className="bg-gray-50 rounded-xl p-8 flex justify-center items-center">
-            <h2 className="text-blue-600 font-black text-4xl italic tracking-tighter">
-              stripe
+            <h2 className="text-[#5F83A2] font-black text-4xl italic tracking-tighter">
+              Stripe
             </h2>
           </div>
         </div>
@@ -212,7 +258,7 @@ const CheckoutPage = () => {
         <button
           disabled={createOrderMutation.isPending || cartItems.length === 0}
           onClick={() => createOrderMutation.mutate()}
-          className="w-full bg-blue-500 disabled:bg-gray-400 disabled:shadow-none text-white rounded-lg py-4 font-bold flex items-center justify-center gap-2 shadow-lg shadow-blue-200"
+          className="w-full bg-[linear-gradient(90deg,#5F83A2_0%,#5E92C0_100%)] disabled:bg-none disabled:bg-gray-400 disabled:shadow-none text-white rounded-lg py-4 font-bold flex items-center justify-center gap-2 shadow-lg shadow-[#5F83A2]/20 hover:opacity-95 disabled:hover:opacity-100"
         >
           <ShoppingCart size={18} />{" "}
           {createOrderMutation.isPending ? t("cart.placingOrder") : t("cart.placeOrder")}

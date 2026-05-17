@@ -78,7 +78,7 @@ const CartDetailsPage = ({ cartItemId }: { cartItemId: string }) => {
     enabled: !!TOKEN && !!cartItemId,
   });
 
-  const { data: cartResponse } = useQuery<CartResponse>({
+  const { data: cartResponse, isLoading: isCartLoading } = useQuery<CartResponse>({
     queryKey: ["cart", TOKEN],
     queryFn: async () => {
       const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/cart`, {
@@ -149,6 +149,7 @@ const CartDetailsPage = ({ cartItemId }: { cartItemId: string }) => {
       toast.error(error.message || "Something went wrong");
     },
   });
+  const isQuantityUpdating = updateQuantityMutation.isPending;
 
   const reviewMutation = useMutation({
     mutationFn: async () => {
@@ -202,10 +203,81 @@ const CartDetailsPage = ({ cartItemId }: { cartItemId: string }) => {
     },
   });
 
-  if (status === "loading" || isLoading) {
+  const handleDecrement = () => {
+    if (isQuantityUpdating || cartQuantity <= 1) return;
+    updateQuantityMutation.mutate(cartQuantity - 1);
+  };
+
+  const handleIncrement = () => {
+    if (isQuantityUpdating) return;
+    updateQuantityMutation.mutate(cartQuantity + 1);
+  };
+
+  if (status === "loading" || isLoading || isCartLoading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-500"></div>
+      <div className="min-h-screen bg-gray-50 py-20 px-4">
+        <div className="container mx-auto border border-gray-100 bg-white p-10 shadow-sm">
+          <div className="mb-8 flex items-start justify-between gap-4">
+            <div className="space-y-3">
+              <div className="h-10 w-48 animate-pulse rounded bg-[#e8eef4]" />
+              <div className="h-4 w-64 animate-pulse rounded bg-[#e8eef4]" />
+            </div>
+            <div className="h-9 w-32 animate-pulse rounded-full bg-[#e8eef4]" />
+          </div>
+
+          <div className="flex flex-col gap-8 md:flex-row">
+            <div className="md:w-1/2">
+              <div className="h-[400px] w-full animate-pulse rounded-xl bg-[#e8eef4]" />
+            </div>
+
+            <div className="flex flex-col justify-start md:w-1/2">
+              <div className="mb-6 flex items-start justify-between gap-4">
+                <div className="space-y-3">
+                  <div className="h-9 w-64 max-w-full animate-pulse rounded bg-[#e8eef4]" />
+                  <div className="h-4 w-36 animate-pulse rounded bg-[#e8eef4]" />
+                  <div className="h-4 w-56 animate-pulse rounded bg-[#e8eef4]" />
+                </div>
+                <div className="h-7 w-16 animate-pulse rounded bg-[#e8eef4]" />
+              </div>
+
+              <div className="mb-8 space-y-3">
+                <div className="h-9 w-32 animate-pulse rounded bg-[#e8eef4]" />
+                <div className="h-4 w-20 animate-pulse rounded bg-[#e8eef4]" />
+                <div className="h-4 w-28 animate-pulse rounded bg-[#e8eef4]" />
+              </div>
+
+              <div className="mb-8 h-14 w-48 animate-pulse rounded-xl bg-[#e8eef4]" />
+
+              <div className="space-y-3">
+                <div className="h-6 w-36 animate-pulse rounded bg-[#e8eef4]" />
+                <div className="h-4 w-full animate-pulse rounded bg-[#e8eef4]" />
+                <div className="h-4 w-11/12 animate-pulse rounded bg-[#e8eef4]" />
+                <div className="h-4 w-8/12 animate-pulse rounded bg-[#e8eef4]" />
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-10 border-t border-gray-100 pt-8">
+            <div className="mb-5 flex items-center justify-between gap-4">
+              <div className="h-8 w-48 animate-pulse rounded bg-[#e8eef4]" />
+              <div className="h-6 w-14 animate-pulse rounded bg-[#e8eef4]" />
+            </div>
+            <div className="space-y-4">
+              {[1, 2].map((item) => (
+                <div
+                  key={`cart-details-review-skeleton-${item}`}
+                  className="rounded-xl border border-gray-100 bg-gray-50/60 p-4"
+                >
+                  <div className="mb-3 flex items-center justify-between gap-3">
+                    <div className="h-5 w-32 animate-pulse rounded bg-[#e8eef4]" />
+                    <div className="h-5 w-10 animate-pulse rounded bg-[#e8eef4]" />
+                  </div>
+                  <div className="h-4 w-full animate-pulse rounded bg-[#e8eef4]" />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -252,7 +324,7 @@ const CartDetailsPage = ({ cartItemId }: { cartItemId: string }) => {
               width={400}
               height={400}
               src={productImage}
-              className="w-full h-100 object-cover rounded-xl shadow-lg"
+              className="w-full h-100 object-cover rounded-xl shadow"
               alt={productTitle}
             />
           </div>
@@ -289,23 +361,27 @@ const CartDetailsPage = ({ cartItemId }: { cartItemId: string }) => {
             </div>
 
             <div className="flex items-center gap-4 mt-8 w-full">
-              <div className="flex items-center gap-5 border border-blue-400 rounded-xl px-5 py-1.5 bg-white justify-between">
+              <div className="flex items-center gap-4 rounded-xl border border-[#dce8f2] bg-[#eef4fa] p-1.5 shadow-sm">
                 <button
-                  className="flex h-12 w-12 items-center justify-center rounded-lg text-gray-400 hover:bg-blue-50 hover:text-blue-500"
-                  disabled={updateQuantityMutation.isPending}
-                  onClick={() => updateQuantityMutation.mutate(cartQuantity - 1)}
+                  type="button"
+                  className="flex h-10 w-10 items-center justify-center rounded-lg bg-white text-[#5F83A2] shadow-sm transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:text-gray-300 disabled:shadow-none"
+                  disabled={isQuantityUpdating || cartQuantity <= 1}
+                  onClick={handleDecrement}
+                  aria-label="Decrease quantity"
                 >
-                  <Minus size={24} />
+                  <Minus size={18} strokeWidth={3} />
                 </button>
-                <span className="min-w-10 text-center text-2xl font-bold">
+                <span className="min-w-10 text-center text-xl font-bold text-gray-800">
                   {cartQuantity}
                 </span>
                 <button
-                  className="flex h-12 w-12 items-center justify-center rounded-lg text-gray-400 hover:bg-blue-50 hover:text-blue-500"
-                  disabled={updateQuantityMutation.isPending}
-                  onClick={() => updateQuantityMutation.mutate(cartQuantity + 1)}
+                  type="button"
+                  className="flex h-10 w-10 items-center justify-center rounded-lg bg-white text-[#5F83A2] shadow-sm transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:text-gray-300 disabled:shadow-none"
+                  disabled={isQuantityUpdating}
+                  onClick={handleIncrement}
+                  aria-label="Increase quantity"
                 >
-                  <Plus size={24} />
+                  <Plus size={18} strokeWidth={3} />
                 </button>
               </div>
             </div>
@@ -384,7 +460,7 @@ const CartDetailsPage = ({ cartItemId }: { cartItemId: string }) => {
               height={400}
                 src="https://i.pravatar.cc/150?u=madiha"
                 alt="Profile"
-                className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm"
+                className="w-12 h-12 rounded-full object-cover border-2 border-white"
               />
               <span className="font-semibold text-gray-800 text-lg">
                 Madiha Lata

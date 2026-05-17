@@ -41,7 +41,7 @@ interface Order {
 }
 
 const OrderPage = () => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const TOKEN = session?.user?.accessToken;
   const { t } = useTranslation();
 
@@ -92,10 +92,50 @@ const OrderPage = () => {
     }
   };
 
-  if (isLoading)
+  if (status === "loading" || isLoading)
     return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-500"></div>
+      <div className="min-h-screen bg-gray-50 py-10 px-4 font-sans">
+        <div className="container mx-auto">
+          <div className="mb-10 flex flex-col items-center">
+            <div className="h-12 w-56 animate-pulse rounded bg-[#e8eef4]" />
+            <div className="mt-4 h-5 w-72 max-w-full animate-pulse rounded bg-[#e8eef4]" />
+          </div>
+
+          <div className="mb-10 flex flex-wrap justify-center gap-3">
+            {statuses.map((tab) => (
+              <div
+                key={`order-tab-skeleton-${tab}`}
+                className="h-10 w-24 animate-pulse rounded-md bg-[#e8eef4]"
+              />
+            ))}
+          </div>
+
+          <div className="space-y-4">
+            {[1, 2, 3, 4].map((item) => (
+              <div
+                key={`order-card-skeleton-${item}`}
+                className="flex items-center justify-between rounded-xl border border-gray-100 bg-white p-4 shadow-sm"
+              >
+                <div className="flex min-w-0 items-center gap-4">
+                  <div className="h-24 w-24 shrink-0 animate-pulse rounded-lg bg-[#e8eef4]" />
+                  <div className="min-w-0 space-y-3">
+                    <div className="h-5 w-52 max-w-[52vw] animate-pulse rounded bg-[#e8eef4]" />
+                    <div className="h-4 w-36 animate-pulse rounded bg-[#e8eef4]" />
+                    <div className="h-3 w-64 max-w-[46vw] animate-pulse rounded bg-[#e8eef4]" />
+                  </div>
+                </div>
+
+                <div className="ml-4 flex h-20 shrink-0 flex-col items-end justify-between">
+                  <div className="h-6 w-20 animate-pulse rounded-full bg-[#e8eef4]" />
+                  <div className="space-y-2">
+                    <div className="h-6 w-24 animate-pulse rounded bg-[#e8eef4]" />
+                    <div className="ml-auto h-3 w-14 animate-pulse rounded bg-[#e8eef4]" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     );
 

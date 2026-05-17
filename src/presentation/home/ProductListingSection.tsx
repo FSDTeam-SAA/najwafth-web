@@ -7,6 +7,7 @@ import { BookProductCard } from './BookProductCard'
 import { StateMessageCard } from './StateMessageCard'
 import type { ProductItem } from './homeData'
 
+
 type ProductListingSectionProps = {
   title: string
   description: string

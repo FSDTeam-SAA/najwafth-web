@@ -34,10 +34,18 @@ interface Order {
   customer: {
     _id: string;
     email: string;
+    name?: string;
   };
   address: string;
   createdAt: string;
   updatedAt: string;
+}
+
+interface OrderPagination {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
 }
 
 const OrderPage = () => {
@@ -47,13 +55,15 @@ const OrderPage = () => {
 
   const statuses = ["All", "Pending", "Processing", "Picked", "Delivered"];
   const [activeTab, setActiveTab] = useState("All");
+  const [currentPage, setCurrentPage] = useState(1);
+  const limit = 10;
 
   // API থেকে ডাটা ফেচ করা
   const { data: orderResponse, isLoading } = useQuery({
-    queryKey: ["my-order", TOKEN],
+    queryKey: ["my-order", TOKEN, currentPage],
     queryFn: async () => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/order/my-orders?page=1&limit=10`,
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/order/my-orders?page=${currentPage}&limit=${limit}`,
         {
           headers: {
             Authorization: `Bearer ${TOKEN}`,
@@ -68,6 +78,14 @@ const OrderPage = () => {
 
   // API রেসপন্স থেকে orders অ্যারে নেওয়া
   const myOrders: Order[] = orderResponse?.data?.orders || [];
+  const pagination: OrderPagination = orderResponse?.data?.pagination || {
+    total: myOrders.length,
+    page: currentPage,
+    limit,
+    totalPages: 1,
+  };
+  const totalPages = Math.max(1, pagination.totalPages || 1);
+  const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
 
   // ফিল্টারিং লজিক
   const filteredOrders =
@@ -154,7 +172,10 @@ const OrderPage = () => {
           {statuses.map((tab) => (
             <button
               key={tab}
-              onClick={() => setActiveTab(tab)}
+              onClick={() => {
+                setActiveTab(tab);
+                setCurrentPage(1);
+              }}
               className={`px-6 py-2 rounded-md border text-sm font-medium transition-all ${
                 activeTab === tab
                   ? "bg-[#5F83A2] text-white border-[#5F83A2] shadow-md"
@@ -175,6 +196,10 @@ const OrderPage = () => {
               const productTitle = firstItem?.product?.title || t("cart.untitled");
               const productImage = firstItem?.product?.coverImage || "/images/placeholder.jpg";
               const totalItemsCount = order.items?.length || 0;
+              const totalQuantity = order.items?.reduce(
+                (sum, item) => sum + (item.quantity || 0),
+                0,
+              ) || 0;
 
               return (
                 <Link
@@ -224,7 +249,7 @@ const OrderPage = () => {
                             ৳{order.totalAmount}
                           </p>
                           <p className="text-blue-300 text-[10px] mt-1">
-                            {totalItemsCount} {totalItemsCount > 1 ? t("order.items") : t("order.item")}
+                            {totalQuantity} {totalQuantity > 1 ? t("order.items") : t("order.item")}
                           </p>
                         </div>
                         <span className="text-[#3B82F6] font-bold text-2xl leading-none group-hover:translate-x-1 transition-transform">
@@ -242,6 +267,54 @@ const OrderPage = () => {
             </div>
           )}
         </div>
+
+        {pagination.totalPages > 1 && (
+          <div className="mt-10 flex flex-col items-center justify-between gap-4 rounded-xl border border-gray-100 bg-white p-4 shadow-sm sm:flex-row">
+            <p className="text-sm font-medium text-gray-500">
+              {t("home.pageOf", {
+                page: pagination.page,
+                total: pagination.totalPages,
+              })}
+            </p>
+
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              <button
+                type="button"
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
+                className="rounded-lg border border-[#dce8f2] px-4 py-2 text-sm font-semibold text-[#5F83A2] transition-colors hover:bg-[#eef4fa] disabled:cursor-not-allowed disabled:border-gray-100 disabled:text-gray-300 disabled:hover:bg-white"
+              >
+                {t("home.previous")}
+              </button>
+
+              {pageNumbers.map((page) => (
+                <button
+                  key={`order-page-${page}`}
+                  type="button"
+                  onClick={() => setCurrentPage(page)}
+                  className={`h-10 w-10 rounded-lg border text-sm font-bold transition-colors ${
+                    currentPage === page
+                      ? "border-[#5F83A2] bg-[#5F83A2] text-white"
+                      : "border-[#dce8f2] bg-white text-[#5F83A2] hover:bg-[#eef4fa]"
+                  }`}
+                >
+                  {page}
+                </button>
+              ))}
+
+              <button
+                type="button"
+                disabled={currentPage === totalPages}
+                onClick={() =>
+                  setCurrentPage((page) => Math.min(totalPages, page + 1))
+                }
+                className="rounded-lg border border-[#dce8f2] px-4 py-2 text-sm font-semibold text-[#5F83A2] transition-colors hover:bg-[#eef4fa] disabled:cursor-not-allowed disabled:border-gray-100 disabled:text-gray-300 disabled:hover:bg-white"
+              >
+                {t("home.next")}
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

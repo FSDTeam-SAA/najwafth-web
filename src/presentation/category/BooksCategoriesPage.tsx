@@ -188,7 +188,7 @@ export function BooksCategoriesPage() {
               Books Categories
             </h1>
             <p className="mx-auto mt-4 max-w-[558px] text-[24px] leading-[1.45] text-[#111111]">
-              Discover unique collections from our top categories
+              Discover unique collections from my top categories
             </p>
           </div>
 

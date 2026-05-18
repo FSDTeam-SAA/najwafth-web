@@ -53,15 +53,15 @@ export function Footer() {
             <div className="mt-6 space-y-3 text-[13px] text-white/85">
               <div className="flex items-start gap-3">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0" />
-                <span>LilienstraBe 120, 10115 Berlin</span>
+                <span>Dijon, France</span>
               </div>
               <div className="flex items-center gap-3">
                 <Mail className="h-4 w-4 shrink-0" />
-                <span>bz@mail.com</span>
+                <span>booksonwheels21000@gmail.com</span>
               </div>
               <div className="flex items-center gap-3">
                 <Phone className="h-4 w-4 shrink-0" />
-                <span>+1234 567 889</span>
+                <span>07.60.16.72.24</span>
               </div>
             </div>
           </div>

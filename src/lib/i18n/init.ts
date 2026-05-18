@@ -7,28 +7,13 @@ import { resources } from './resources'
 import type { AppLanguage } from './resources'
 
 const fallbackLanguage: AppLanguage = 'en-GB'
-const availableLanguages = Object.keys(resources) as AppLanguage[]
-
-const getInitialLanguage = (): AppLanguage => {
-  if (typeof window === 'undefined') return fallbackLanguage
-
-  try {
-    const storedLanguage = JSON.parse(
-      window.localStorage.getItem('app-language') || '{}',
-    )?.state?.language
-
-    return availableLanguages.includes(storedLanguage)
-      ? storedLanguage
-      : fallbackLanguage
-  } catch {
-    return fallbackLanguage
-  }
-}
 
 if (!i18n.isInitialized) {
   i18n.use(initReactI18next).init({
     resources,
-    lng: getInitialLanguage(),
+    // Keep the first client render identical to server render.
+    // Persisted language is applied after mount by I18nProvider.
+    lng: fallbackLanguage,
     fallbackLng: fallbackLanguage,
     interpolation: {
       escapeValue: false,

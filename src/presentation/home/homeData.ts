@@ -31,23 +31,26 @@ export const bookstoreProducts: ProductItem[] = Array.from(
   }),
 )
 
-export const popularBooks: ProductItem[] = Array.from({ length: 8 }, (_, index) => ({
-  id: index + 1,
-  title: 'The Great Gatsby',
-  author: 'F. Scott Fitzgerald',
-  location: '123 Library, Book City',
-  price: '$ 12.99',
-  rating: '4.8',
-  image: '/images/book1.jpg',
-  imagePosition:
-    index % 4 === 0
-      ? 'object-[35%_24%]'
-      : index % 4 === 1
-        ? 'object-[56%_36%]'
-        : index % 4 === 2
-          ? 'object-[50%_58%]'
-          : 'object-[62%_72%]',
-}))
+export const popularBooks: ProductItem[] = Array.from(
+  { length: 8 },
+  (_, index) => ({
+    id: index + 1,
+    title: 'The Great Gatsby',
+    author: 'F. Scott Fitzgerald',
+    location: '123 Library, Book City',
+    price: '$ 12.99',
+    rating: '4.8',
+    image: '/images/book1.jpg',
+    imagePosition:
+      index % 4 === 0
+        ? 'object-[35%_24%]'
+        : index % 4 === 1
+          ? 'object-[56%_36%]'
+          : index % 4 === 2
+            ? 'object-[50%_58%]'
+            : 'object-[62%_72%]',
+  }),
+)
 
 export const featuredBookstoresCatalog: ProductItem[] = Array.from(
   { length: 16 },
@@ -130,6 +133,6 @@ export const testimonials = [
 
 export const footerColumns = {
   quickLinks: ['Home', 'Browse Books', 'Categories', 'Order'],
-  menu: ['About us', 'Privacy Policy', 'Terms & Conditions', 'Choose Language'],
-  support: ['Contact Us'],
+  menu: ['About me', 'Privacy Policy', 'Terms & Conditions', 'Choose Language'],
+  support: ['Contact Me'],
 }

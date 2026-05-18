@@ -27,7 +27,7 @@ export default function AllBooksPage() {
     <div className="bg-[#FAFAFA]">
       <ProductListingSection
         title="All Books"
-        description="Explore our full catalog of books from independent bookstores."
+        description="Explore my full catalog of books from independent bookstores."
         products={query.data?.items || []}
         isLoading={query.isLoading}
         error={query.error?.message}

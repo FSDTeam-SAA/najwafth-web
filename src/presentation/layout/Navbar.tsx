@@ -412,7 +412,7 @@ export function Navbar() {
             </form>
 
             {showSearchDropdown && searchText.trim().length > 0 ? (
-              <div className="absolute left-0 top-[calc(100%+6px)] z-50 w-full overflow-hidden rounded-xl border border-[#dbe7f3] bg-white shadow-xl">
+              <div className="absolute left-0 top-[calc(100%+6px)] z-50 w-full overflow-hidden rounded-xl border border-[#dbe7f3] bg-[#FAFAFA] shadow-xl">
                 {isSearching ? (
                   <p className="px-4 py-3 text-sm text-[#6B7280]">{t("nav.searching")}</p>
                 ) : searchResults.length > 0 ? (
@@ -446,7 +446,7 @@ export function Navbar() {
       ) : null}
 
       <nav
-        className={`overflow-hidden border-t border-black/6 transition-[max-height,opacity] duration-200 xl:hidden ${
+        className={`overflow-hidden border-t border-black/6 bg-[#FAFAFA] transition-[max-height,opacity] duration-200 xl:hidden ${
           isMobileMenuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
         }`}
       >

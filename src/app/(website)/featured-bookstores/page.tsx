@@ -27,7 +27,7 @@ export default function FeaturedBookstoresPage() {
     <div className="bg-[#FAFAFA]">
       <ProductListingSection
         title="Featured Bookstores"
-        description="Discover unique collections from our top-rated local sellers."
+        description="Discover unique collections from my top-rated local sellers."
         products={query.data?.items || []}
         isLoading={query.isLoading}
         error={query.error?.message}

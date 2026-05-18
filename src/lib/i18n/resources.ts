@@ -6,7 +6,7 @@ export const resources = {
         categories: 'Categories',
         order: 'Order',
         contact: 'Contact',
-        aboutUs: 'About Us',
+        aboutUs: 'About Me',
         signIn: 'Sign in',
         searchPlaceholder: 'Search books, authors, stores...',
         searching: 'Searching...',
@@ -65,24 +65,36 @@ export const resources = {
         createOrderFail: 'Failed to create order',
         orderCreated: 'Order created successfully',
         orderConfirmed: 'Order Confirmed',
-        orderConfirmedSub: 'Thank you. Your order has been placed successfully and is now pending confirmation.',
+        orderConfirmedSub:
+          'Thank you. Your order has been placed successfully and is now pending confirmation.',
         placingOrder: 'Placing Order...',
         placeOrder: 'Place Order',
       },
 
-
       about: {
         hero: {
-          s1: { title: 'Discover Your Next Great Read', desc: 'Discover millions of books from local sellers worldwide. Same great reads, better impact.' },
-          s2: { title: 'Explore Endless Reading Possibilities', desc: 'Browse handpicked books with seamless shopping and fast delivery.' },
-          s3: { title: 'Your Personal Library Starts Here', desc: 'Shop bestselling books, timeless classics, and new arrivals in one place.' },
-          s4: { title: 'Books That Inspire Every Journey', desc: "From timeless classics to trending favourites discover books you'll love." },
+          s1: {
+            title: 'Discover Your Next Great Read',
+            desc: 'Discover millions of books from local sellers worldwide. Same great reads, better impact.',
+          },
+          s2: {
+            title: 'Explore Endless Reading Possibilities',
+            desc: 'Browse handpicked books with seamless shopping and fast delivery.',
+          },
+          s3: {
+            title: 'Your Personal Library Starts Here',
+            desc: 'Shop bestselling books, timeless classics, and new arrivals in one place.',
+          },
+          s4: {
+            title: 'Books That Inspire Every Journey',
+            desc: "From timeless classics to trending favourites discover books you'll love.",
+          },
         },
-        seeStory: 'See our story',
+        seeStory: 'See my story',
         whoWeAre: 'Who We Are',
-        p1: "We're a passionate team dedicated to connecting readers with independent bookstores across the country. Founded in 2020, our platform has become the bridge between book lovers and local businesses.",
+        p1: "I'm dedicated to connecting readers with independent bookstores across the country. Founded in 2020, my platform has become a bridge between book lovers and local businesses.",
         p2: 'Every purchase you make helps keep independent bookstores thriving in your community. We believe in the power of local businesses and the magic of discovering your next favorite book.',
-        whyChooseUs: 'Why Choose Us',
+        whyChooseUs: 'Why Choose Me',
         reasons: {
           discover: {
             title: 'Discover Books',
@@ -118,9 +130,10 @@ export const resources = {
       home: {
         curatedBooks: 'Curated books from trusted local sellers',
         featuredTitle: 'Featured Bookstores',
-        featuredDesc: 'Discover unique collections from our top-rated local sellers.',
+        featuredDesc:
+          'Discover unique collections from my top-rated local sellers.',
         popularTitle: 'Popular Books',
-        popularDesc: 'Bestsellers and trending reads across all our stores.',
+        popularDesc: 'Bestsellers and trending reads across all my stores.',
         viewAll: 'View all',
         somethingWrong: 'Something went wrong',
         noBooksFound: 'No books found',
@@ -131,25 +144,27 @@ export const resources = {
         categoriesLoadError: 'Unable to load categories',
         noCategories: 'No categories found',
         noCategoriesDesc: 'There are no categories available at the moment.',
-        exploreTopCategories: 'Explore our Top Categories',
+        exploreTopCategories: 'Explore my Top Categories',
         exploreAll: 'Explore all',
         achievementTitle: 'Achievement',
         sellsBooks: 'Sells Books',
         customers: 'Customers',
         reviews: 'Reviews',
-        whatClientsSay: 'What Clients Say',
-        hearClients: 'Hear what our clients say about working with us',
+        whatClientsSay: 'What My Clients Say',
+        hearClients: 'Hear what my clients say about working with me',
         noClientReviews: 'No client reviews available right now.',
       },
 
       contact: {
-        title: 'Contact Us',
-        subtitle: "Have a question about books, orders, delivery, or bookstore support? We're here to help! Send us a message and our team will get back to you soon.",
-        emailUs: 'Email Us',
-        callUs: 'Call Us',
-        ourLocation: 'Our Location',
+        title: 'Contact Me',
+        subtitle:
+          "Have a question about books, orders, delivery, or bookstore support? I'm here to help! Send me a message and I'll get back to you soon.",
+        emailUs: 'Email Me',
+        callUs: 'Call Me',
+        ourLocation: 'My Location',
         email: 'Email',
-        platformText: 'Your trusted platform for discovering books from independent bookstores.',
+        platformText:
+          'Your trusted platform for discovering books from independent bookstores.',
         contactInfo: 'Contact Information',
         name: 'Name',
         emailAddress: 'Email Address',
@@ -174,20 +189,68 @@ export const resources = {
         termsSub: 'See all Terms & Conditions',
         lastUpdated: 'Last updated: May 9, 2026',
         privacy: {
-          s1: { title: 'Information We Collect', content: 'We collect information that you provide directly to us, including your name, email address, phone number, shipping address, and payment information when you create an account or place an order.' },
-          s2: { title: 'How We Use Your Information', content: 'We use the information we collect to process your orders, communicate with you about your purchases, send you marketing communications (with your consent), and improve our services.' },
-          s3: { title: 'Information Sharing', content: 'We do not sell or rent your personal information to third parties. We may share your information with service providers who assist us in operating our website and conducting our business.' },
-          s4: { title: 'Data Security', content: 'We implement appropriate security measures to protect your personal information from unauthorized access, alteration, disclosure, or destruction.' },
-          s5: { title: 'Your Rights', content: 'You have the right to access, update, or delete your personal information at any time. You can manage your account settings or contact us directly for assistance.' },
-          s6: { title: 'Contact Us', content: 'If you have any questions about this Privacy Policy, please contact us at privacy@bookstore.com' },
+          s1: {
+            title: 'Information I Collect',
+            content:
+              'I collect information that you provide directly to me, including your name, email address, phone number, shipping address, and payment information when you create an account or place an order.',
+          },
+          s2: {
+            title: 'How I Use Your Information',
+            content:
+              'I use the information I collect to process your orders, communicate with you about your purchases, send you marketing communications (with your consent), and improve my services.',
+          },
+          s3: {
+            title: 'Information Sharing',
+            content:
+              'I do not sell or rent your personal information to third parties. I may share your information with service providers who assist me in operating my website and conducting my business.',
+          },
+          s4: {
+            title: 'Data Security',
+            content:
+              'We implement appropriate security measures to protect your personal information from unauthorized access, alteration, disclosure, or destruction.',
+          },
+          s5: {
+            title: 'Your Rights',
+            content:
+              'You have the right to access, update, or delete your personal information at any time. You can manage your account settings or contact me directly for assistance.',
+          },
+          s6: {
+            title: 'Contact Me',
+            content:
+              'If you have any questions about this Privacy Policy, please contact me at privacy@bookstore.com',
+          },
         },
         terms: {
-          s1: { title: 'Acceptance of Terms', content: 'By accessing and using this website, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to these terms, please do not use our services.' },
-          s2: { title: 'Use of Service', content: "You agree to use our service only for lawful purposes and in a way that does not infringe the rights of, restrict or inhibit anyone else's use and enjoyment of the website." },
-          s3: { title: 'Account Registration', content: 'To access certain features, you may be required to create an account. You are responsible for maintaining the confidentiality of your account credentials and for all activities under your account.' },
-          s4: { title: 'Orders and Payment', content: 'All orders are subject to availability and confirmation of the order price. We reserve the right to refuse any order. Payment must be made in full before shipment of goods.' },
-          s5: { title: 'Modifications to Terms', content: 'We reserve the right to modify these terms at any time. Your continued use of the website after changes constitutes acceptance of the modified terms.' },
-          s6: { title: 'Contact Information', content: 'For any questions regarding these terms and conditions, please contact us at support@bookstore.com' },
+          s1: {
+            title: 'Acceptance of Terms',
+            content:
+              'By accessing and using this website, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to these terms, please do not use my services.',
+          },
+          s2: {
+            title: 'Use of Service',
+            content:
+              "You agree to use my service only for lawful purposes and in a way that does not infringe the rights of, restrict or inhibit anyone else's use and enjoyment of the website.",
+          },
+          s3: {
+            title: 'Account Registration',
+            content:
+              'To access certain features, you may be required to create an account. You are responsible for maintaining the confidentiality of your account credentials and for all activities under your account.',
+          },
+          s4: {
+            title: 'Orders and Payment',
+            content:
+              'All orders are subject to availability and confirmation of the order price. I reserve the right to refuse any order. Payment must be made in full before shipment of goods.',
+          },
+          s5: {
+            title: 'Modifications to Terms',
+            content:
+              'I reserve the right to modify these terms at any time. Your continued use of the website after changes constitutes acceptance of the modified terms.',
+          },
+          s6: {
+            title: 'Contact Information',
+            content:
+              'For any questions regarding these terms and conditions, please contact me at support@bookstore.com',
+          },
         },
       },
       footer: {
@@ -195,7 +258,7 @@ export const resources = {
         menu: 'Menu',
         support: 'Support',
         browseBooks: 'Browse Books',
-        contactUs: 'Contact Us',
+        contactUs: 'Contact Me',
         aboutText:
           'Your curated marketplace for independent bookstores and passionate readers.',
         rights: 'All rights reserved.',
@@ -215,7 +278,7 @@ export const resources = {
         saveChanges: 'Save Changes',
         english: 'English',
         unitedKingdom: 'United Kingdom',
-        france: 'France',
+        france: 'Français',
         logoutModalTitle: 'Are You Sure?',
         logoutModalText: 'Are you sure you want to log out?',
         cancel: 'Cancel',
@@ -224,7 +287,7 @@ export const resources = {
         fullName: 'Full Name',
         phoneNumber: 'Phone Number',
         bio: 'Bio',
-        bioPlaceholder: 'Tell us something about you',
+        bioPlaceholder: 'Tell me something about you',
         gender: 'Gender',
         selectGender: 'Select gender',
         male: 'Male',
@@ -260,7 +323,7 @@ export const resources = {
         categories: 'Catégories',
         order: 'Commande',
         contact: 'Contact',
-        aboutUs: 'À propos',
+        aboutUs: 'À propos de moi',
         signIn: 'Se connecter',
         searchPlaceholder: 'Rechercher des livres, auteurs, librairies...',
         searching: 'Recherche...',
@@ -294,7 +357,8 @@ export const resources = {
         payment: 'Paiement',
         quantity: 'Quantité',
         fetchDetailFail: 'Échec de la récupération des détails de la commande',
-        detailNotFound: 'Impossible de charger les détails de la commande ou commande introuvable.',
+        detailNotFound:
+          'Impossible de charger les détails de la commande ou commande introuvable.',
         stepPending: 'Commande reçue par la librairie',
         stepProcessing: 'La librairie prépare votre commande',
         stepPicked: 'Le livreur a récupéré la commande',
@@ -319,24 +383,36 @@ export const resources = {
         createOrderFail: 'Échec de la création de la commande',
         orderCreated: 'Commande créée avec succès',
         orderConfirmed: 'Commande confirmée',
-        orderConfirmedSub: 'Merci. Votre commande a été passée avec succès et attend maintenant confirmation.',
+        orderConfirmedSub:
+          'Merci. Votre commande a été passée avec succès et attend maintenant confirmation.',
         placingOrder: 'Commande en cours...',
         placeOrder: 'Passer la commande',
       },
 
-
       about: {
         hero: {
-          s1: { title: 'Découvrez votre prochaine grande lecture', desc: 'Découvrez des millions de livres de vendeurs locaux dans le monde entier. Les mêmes belles lectures, avec un meilleur impact.' },
-          s2: { title: 'Explorez des possibilités de lecture infinies', desc: 'Parcourez des sélections soignées avec un achat fluide et une livraison rapide.' },
-          s3: { title: 'Votre bibliothèque personnelle commence ici', desc: 'Achetez des best-sellers, des classiques intemporels et des nouveautés au même endroit.' },
-          s4: { title: 'Des livres qui inspirent chaque parcours', desc: 'Des classiques intemporels aux tendances du moment, découvrez les livres que vous allez adorer.' },
+          s1: {
+            title: 'Découvrez votre prochaine grande lecture',
+            desc: 'Découvrez des millions de livres de vendeurs locaux dans le monde entier. Les mêmes belles lectures, avec un meilleur impact.',
+          },
+          s2: {
+            title: 'Explorez des possibilités de lecture infinies',
+            desc: 'Parcourez des sélections soignées avec un achat fluide et une livraison rapide.',
+          },
+          s3: {
+            title: 'Votre bibliothèque personnelle commence ici',
+            desc: 'Achetez des best-sellers, des classiques intemporels et des nouveautés au même endroit.',
+          },
+          s4: {
+            title: 'Des livres qui inspirent chaque parcours',
+            desc: 'Des classiques intemporels aux tendances du moment, découvrez les livres que vous allez adorer.',
+          },
         },
         seeStory: 'Découvrez notre histoire',
         whoWeAre: 'Qui sommes-nous',
         p1: 'Nous sommes une équipe passionnée qui relie les lecteurs aux librairies indépendantes du pays. Fondée en 2020, notre plateforme est devenue le pont entre les amoureux des livres et les commerces locaux.',
         p2: 'Chaque achat aide les librairies indépendantes à prospérer dans votre communauté. Nous croyons au pouvoir des commerces locaux et à la magie de trouver votre prochain livre préféré.',
-        whyChooseUs: 'Pourquoi nous choisir',
+        whyChooseUs: 'Pourquoi me choisir',
         reasons: {
           discover: {
             title: 'Découvrir des livres',
@@ -370,11 +446,14 @@ export const resources = {
         loginSuccess: 'Connexion réussie !',
       },
       home: {
-        curatedBooks: 'Des livres soigneusement sélectionnés auprès de vendeurs locaux de confiance',
+        curatedBooks:
+          'Des livres soigneusement sélectionnés auprès de vendeurs locaux de confiance',
         featuredTitle: 'Librairies en vedette',
-        featuredDesc: 'Découvrez des collections uniques de nos meilleurs vendeurs locaux.',
+        featuredDesc:
+          'Découvrez des collections uniques de nos meilleurs vendeurs locaux.',
         popularTitle: 'Livres populaires',
-        popularDesc: 'Les meilleures ventes et tendances de toutes nos librairies.',
+        popularDesc:
+          'Les meilleures ventes et tendances de toutes nos librairies.',
         viewAll: 'Voir tout',
         somethingWrong: 'Une erreur est survenue',
         noBooksFound: 'Aucun livre trouvé',
@@ -391,19 +470,21 @@ export const resources = {
         sellsBooks: 'Livres vendus',
         customers: 'Clients',
         reviews: 'Avis',
-        whatClientsSay: 'Ce que disent nos clients',
+        whatClientsSay: 'Ce que disent mes clients',
         hearClients: 'Découvrez ce que nos clients disent de leur expérience',
         noClientReviews: 'Aucun avis client disponible pour le moment.',
       },
 
       contact: {
         title: 'Contactez-nous',
-        subtitle: 'Vous avez une question sur les livres, les commandes, la livraison ou l’assistance ? Nous sommes là pour vous aider. Envoyez-nous un message et notre équipe vous répondra rapidement.',
+        subtitle:
+          'Vous avez une question sur les livres, les commandes, la livraison ou l’assistance ? Nous sommes là pour vous aider. Envoyez-nous un message et notre équipe vous répondra rapidement.',
         emailUs: 'Envoyez-nous un e-mail',
         callUs: 'Appelez-nous',
         ourLocation: 'Notre adresse',
         email: 'E-mail',
-        platformText: 'Votre plateforme de confiance pour découvrir des livres de librairies indépendantes.',
+        platformText:
+          'Votre plateforme de confiance pour découvrir des livres de librairies indépendantes.',
         contactInfo: 'Coordonnées',
         name: 'Nom',
         emailAddress: 'Adresse e-mail',
@@ -428,20 +509,68 @@ export const resources = {
         termsSub: 'Voir toutes les conditions générales',
         lastUpdated: 'Dernière mise à jour : 9 mai 2026',
         privacy: {
-          s1: { title: 'Informations collectées', content: 'Nous collectons les informations que vous nous fournissez directement, y compris votre nom, adresse e-mail, numéro de téléphone, adresse de livraison et informations de paiement lorsque vous créez un compte ou passez une commande.' },
-          s2: { title: 'Utilisation de vos informations', content: 'Nous utilisons les informations collectées pour traiter vos commandes, communiquer avec vous à propos de vos achats, vous envoyer des communications marketing (avec votre consentement) et améliorer nos services.' },
-          s3: { title: 'Partage des informations', content: 'Nous ne vendons ni ne louons vos informations personnelles à des tiers. Nous pouvons les partager avec des prestataires qui nous aident à exploiter notre site et nos activités.' },
-          s4: { title: 'Sécurité des données', content: 'Nous mettons en œuvre des mesures de sécurité appropriées pour protéger vos informations personnelles contre tout accès, modification, divulgation ou destruction non autorisés.' },
-          s5: { title: 'Vos droits', content: 'Vous avez le droit d’accéder, de mettre à jour ou de supprimer vos informations personnelles à tout moment. Vous pouvez gérer les paramètres de votre compte ou nous contacter directement pour obtenir de l’aide.' },
-          s6: { title: 'Contactez-nous', content: 'Si vous avez des questions sur cette politique de confidentialité, veuillez nous contacter à privacy@bookstore.com' },
+          s1: {
+            title: 'Informations collectées',
+            content:
+              'Nous collectons les informations que vous nous fournissez directement, y compris votre nom, adresse e-mail, numéro de téléphone, adresse de livraison et informations de paiement lorsque vous créez un compte ou passez une commande.',
+          },
+          s2: {
+            title: 'Utilisation de vos informations',
+            content:
+              'Nous utilisons les informations collectées pour traiter vos commandes, communiquer avec vous à propos de vos achats, vous envoyer des communications marketing (avec votre consentement) et améliorer nos services.',
+          },
+          s3: {
+            title: 'Partage des informations',
+            content:
+              'Nous ne vendons ni ne louons vos informations personnelles à des tiers. Nous pouvons les partager avec des prestataires qui nous aident à exploiter notre site et nos activités.',
+          },
+          s4: {
+            title: 'Sécurité des données',
+            content:
+              'Nous mettons en œuvre des mesures de sécurité appropriées pour protéger vos informations personnelles contre tout accès, modification, divulgation ou destruction non autorisés.',
+          },
+          s5: {
+            title: 'Vos droits',
+            content:
+              'Vous avez le droit d’accéder, de mettre à jour ou de supprimer vos informations personnelles à tout moment. Vous pouvez gérer les paramètres de votre compte ou nous contacter directement pour obtenir de l’aide.',
+          },
+          s6: {
+            title: 'Contactez-nous',
+            content:
+              'Si vous avez des questions sur cette politique de confidentialité, veuillez nous contacter à privacy@bookstore.com',
+          },
         },
         terms: {
-          s1: { title: 'Acceptation des conditions', content: 'En accédant à ce site et en l’utilisant, vous acceptez d’être lié par les termes de cet accord. Si vous n’acceptez pas ces termes, veuillez ne pas utiliser nos services.' },
-          s2: { title: 'Utilisation du service', content: 'Vous acceptez d’utiliser notre service uniquement à des fins légales et d’une manière qui ne porte pas atteinte aux droits d’autrui ni ne limite l’utilisation du site par quiconque.' },
-          s3: { title: 'Création de compte', content: 'Pour accéder à certaines fonctionnalités, vous pouvez être amené à créer un compte. Vous êtes responsable de la confidentialité de vos identifiants et de toutes les activités effectuées sous votre compte.' },
-          s4: { title: 'Commandes et paiement', content: 'Toutes les commandes sont soumises à disponibilité et confirmation du prix. Nous nous réservons le droit de refuser toute commande. Le paiement doit être effectué intégralement avant l’expédition.' },
-          s5: { title: 'Modifications des conditions', content: 'Nous nous réservons le droit de modifier ces conditions à tout moment. Votre utilisation continue du site après modifications constitue votre acceptation des nouvelles conditions.' },
-          s6: { title: 'Informations de contact', content: 'Pour toute question concernant ces conditions, veuillez nous contacter à support@bookstore.com' },
+          s1: {
+            title: 'Acceptation des conditions',
+            content:
+              'En accédant à ce site et en l’utilisant, vous acceptez d’être lié par les termes de cet accord. Si vous n’acceptez pas ces termes, veuillez ne pas utiliser nos services.',
+          },
+          s2: {
+            title: 'Utilisation du service',
+            content:
+              'Vous acceptez d’utiliser notre service uniquement à des fins légales et d’une manière qui ne porte pas atteinte aux droits d’autrui ni ne limite l’utilisation du site par quiconque.',
+          },
+          s3: {
+            title: 'Création de compte',
+            content:
+              'Pour accéder à certaines fonctionnalités, vous pouvez être amené à créer un compte. Vous êtes responsable de la confidentialité de vos identifiants et de toutes les activités effectuées sous votre compte.',
+          },
+          s4: {
+            title: 'Commandes et paiement',
+            content:
+              'Toutes les commandes sont soumises à disponibilité et confirmation du prix. Nous nous réservons le droit de refuser toute commande. Le paiement doit être effectué intégralement avant l’expédition.',
+          },
+          s5: {
+            title: 'Modifications des conditions',
+            content:
+              'Nous nous réservons le droit de modifier ces conditions à tout moment. Votre utilisation continue du site après modifications constitue votre acceptation des nouvelles conditions.',
+          },
+          s6: {
+            title: 'Informations de contact',
+            content:
+              'Pour toute question concernant ces conditions, veuillez nous contacter à support@bookstore.com',
+          },
         },
       },
       footer: {
@@ -469,7 +598,7 @@ export const resources = {
         saveChanges: 'Enregistrer les modifications',
         english: 'Anglais',
         unitedKingdom: 'Royaume-Uni',
-        france: 'France',
+        france: 'Français',
         logoutModalTitle: 'Êtes-vous sûr ?',
         logoutModalText: 'Voulez-vous vraiment vous déconnecter ?',
         cancel: 'Annuler',
@@ -490,7 +619,8 @@ export const resources = {
         address: 'Adresse',
         addressPlaceholder: 'Votre adresse',
         saving: 'Enregistrement...',
-        imageReady: 'Image "{{name}}" prête. Cliquez sur Enregistrer les modifications.',
+        imageReady:
+          'Image "{{name}}" prête. Cliquez sur Enregistrer les modifications.',
         profileUpdated: 'Profil mis à jour avec succès',
         changePasswordTitle: 'Changer le mot de passe',
         changePasswordSub:

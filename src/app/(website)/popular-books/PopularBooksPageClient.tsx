@@ -34,7 +34,7 @@ export default function PopularBooksPageClient({
         description={
           search
             ? `Showing books that match "${search}".`
-            : 'Bestsellers and trending reads across all our stores.'
+            : 'Bestsellers and trending reads across all my stores.'
         }
         products={query.data?.items || []}
         isLoading={query.isLoading}

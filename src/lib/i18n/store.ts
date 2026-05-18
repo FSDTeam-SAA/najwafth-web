@@ -3,7 +3,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
-import { resources } from './resources'
 import type { AppLanguage } from './resources'
 
 type LanguageState = {
@@ -12,28 +11,12 @@ type LanguageState = {
 }
 
 const fallbackLanguage: AppLanguage = 'en-GB'
-const availableLanguages = Object.keys(resources) as AppLanguage[]
-
-const getInitialLanguage = (): AppLanguage => {
-  if (typeof window === 'undefined') return fallbackLanguage
-
-  try {
-    const storedLanguage = JSON.parse(
-      window.localStorage.getItem('app-language') || '{}',
-    )?.state?.language
-
-    return availableLanguages.includes(storedLanguage)
-      ? storedLanguage
-      : fallbackLanguage
-  } catch {
-    return fallbackLanguage
-  }
-}
 
 export const useLanguageStore = create<LanguageState>()(
   persist(
     set => ({
-      language: getInitialLanguage(),
+      // Use a stable initial value to avoid hydration mismatches.
+      language: fallbackLanguage,
       setLanguage: language => set({ language }),
     }),
     {

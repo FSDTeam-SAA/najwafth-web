@@ -27,15 +27,15 @@ export function ContactPage() {
   const [isSubmitted, setIsSubmitted] = useState(false)
 
   const contactHighlights = [
-    { title: t('contact.emailUs'), value: 'info@talewash.ma', icon: Mail },
-    { title: t('contact.callUs'), value: 'Phone (212)662730053', icon: Phone },
-    { title: t('contact.ourLocation'), value: 'Linienstraße 120, 10115 Berlin', icon: MapPin },
+    { title: t('contact.emailUs'), value: 'booksonwheels21000@gmail.com', icon: Mail },
+    { title: t('contact.callUs'), value: '07.60.16.72.24', icon: Phone },
+    { title: t('contact.ourLocation'), value: 'Dijon, France', icon: MapPin },
   ]
 
   const contactDetails = [
-    { label: t('account.address'), value: '123 Library, Book City', icon: MapPin },
-    { label: t('contact.email'), value: 'bz@gmail.com', icon: Mail },
-    { label: t('account.phoneNumber'), value: '+1234 567 889', icon: Phone },
+    { label: t('account.address'), value: 'Dijon, France', icon: MapPin },
+    { label: t('contact.email'), value: 'booksonwheels21000@gmail.com', icon: Mail },
+    { label: t('account.phoneNumber'), value: '07.60.16.72.24', icon: Phone },
   ]
 
   const fieldErrors = useMemo(() => {

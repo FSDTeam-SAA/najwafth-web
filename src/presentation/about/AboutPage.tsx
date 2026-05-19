@@ -17,7 +17,7 @@ export function AboutPage() {
   const slides = useMemo(
     () => [
       {
-        image: '/images/hero-banner.png',
+        image: '/images/banner-home-1.png',
         title: t('about.hero.s1.title'),
         description: t('about.hero.s1.desc'),
       },

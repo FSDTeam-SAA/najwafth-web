@@ -26,7 +26,7 @@ export function HeroSection() {
       description: t('about.hero.s3.desc'),
     },
     {
-      image: '/images/banner-4.png',
+      image: '/images/banner-4-v2.png',
       title: t('about.hero.s4.title'),
       description: t('about.hero.s4.desc'),
     },
@@ -116,6 +116,7 @@ export function HeroSection() {
                   src={slide.image}
                   alt={slide.title}
                   fill
+                  unoptimized
                   priority={index === 0}
                   className={`object-cover transition-opacity duration-700 ease-in-out ${
                     index === activeSlide ? 'opacity-100' : 'opacity-0'

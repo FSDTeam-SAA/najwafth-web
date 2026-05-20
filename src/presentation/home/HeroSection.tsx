@@ -36,7 +36,7 @@ export function HeroSection() {
   useEffect(() => {
     const timer = window.setInterval(() => {
       setActiveSlide(prev => (prev + 1) % slides.length)
-    }, 4000)
+    }, 5000)
 
     return () => window.clearInterval(timer)
   }, [slides.length])
@@ -118,7 +118,7 @@ export function HeroSection() {
                   fill
                   unoptimized
                   priority={index === 0}
-                  className={`object-cover transition-opacity duration-700 ease-in-out ${
+                  className={`${slide.image === '/images/banner-4-v2.png' ? 'object-contain object-center' : 'object-cover'} transition-opacity duration-700 ease-in-out ${
                     index === activeSlide ? 'opacity-100' : 'opacity-0'
                   }`}
                 />

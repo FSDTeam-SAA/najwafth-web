@@ -45,7 +45,7 @@ export function AboutPage() {
   useEffect(() => {
     const timer = window.setInterval(() => {
       setActiveSlide(prev => (prev - 1 + slides.length) % slides.length)
-    }, 4000)
+    }, 5000)
 
     return () => window.clearInterval(timer)
   }, [slides.length])
@@ -122,7 +122,7 @@ export function AboutPage() {
                     fill
                     unoptimized
                     priority={index === 0}
-                    className={`object-cover transition-opacity duration-700 ease-in-out ${
+                    className={`${slide.image === '/images/banner-4-v2.png' ? 'object-contain object-center' : 'object-cover'} transition-opacity duration-700 ease-in-out ${
                       index === activeSlide ? 'opacity-100' : 'opacity-0'
                     }`}
                   />
@@ -146,7 +146,6 @@ export function AboutPage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-10">
           <div className="mx-auto max-w-[420px] text-center">
             <h2 className="font-display text-4xl leading-[1.2] text-[#111111] sm:text-6xl">{t('nav.aboutUs')}</h2>
-            <p className="mt-3 text-[24px] text-[#1f2937]">{t('about.seeStory')}</p>
           </div>
 
           <div className="mt-12 grid items-center gap-10 lg:grid-cols-[0.88fr_1.12fr]">

@@ -91,10 +91,10 @@ export const resources = {
           },
         },
         seeStory: 'See my story',
-        whoWeAre: 'Who We Are',
+        whoWeAre: 'Who I am?',
         p1: "I'm dedicated to connecting readers with independent bookstores across the country. Founded in 2020, my platform has become a bridge between book lovers and local businesses.",
-        p2: 'Every purchase you make helps keep independent bookstores thriving in your community. We believe in the power of local businesses and the magic of discovering your next favorite book.',
-        whyChooseUs: 'Why Choose Me',
+        p2: 'Every purchase you make helps keep independent bookstores thriving in your community. I believe in the power of local businesses and the magic of discovering your next favorite book.',
+        whyChooseUs: 'Why Choose Me?',
         reasons: {
           discover: {
             title: 'Discover Books',
@@ -408,11 +408,11 @@ export const resources = {
             desc: 'Des classiques intemporels aux tendances du moment, découvrez les livres que vous allez adorer.',
           },
         },
-        seeStory: 'Découvrez notre histoire',
-        whoWeAre: 'Qui sommes-nous',
-        p1: 'Nous sommes une équipe passionnée qui relie les lecteurs aux librairies indépendantes du pays. Fondée en 2020, notre plateforme est devenue le pont entre les amoureux des livres et les commerces locaux.',
-        p2: 'Chaque achat aide les librairies indépendantes à prospérer dans votre communauté. Nous croyons au pouvoir des commerces locaux et à la magie de trouver votre prochain livre préféré.',
-        whyChooseUs: 'Pourquoi me choisir',
+        seeStory: 'Découvrez mon histoire',
+        whoWeAre: 'Qui suis-je ?',
+        p1: "Salut, je suis Najwa, la fondatrice de Books on Wheels. J'ai créé ce projet avec une idée simple : permettre aux gens de commander leurs livres dans leurs librairies locales et de les recevoir rapidement chez eux, sans passer par les grandes plateformes.",
+        p2: "Parce qu'au final, beaucoup commandent sur Amazon, Fnac ou Cultura surtout pour la rapidité et la praticité. Alors je me suis dit : pourquoi ne pas créer un Uber Eats du livre ? Books on Wheels est un service de livraison rapide pensé pour les librairies locales et les lecteurs qui veulent continuer à acheter autrement.",
+        whyChooseUs: 'Pourquoi me choisir ?',
         reasons: {
           discover: {
             title: 'Découvrir des livres',
@@ -471,17 +471,17 @@ export const resources = {
         customers: 'Clients',
         reviews: 'Avis',
         whatClientsSay: 'Ce que disent mes clients',
-        hearClients: 'Découvrez ce que nos clients disent de leur expérience',
+        hearClients: 'Découvrez ce que mes clients disent de leur expérience',
         noClientReviews: 'Aucun avis client disponible pour le moment.',
       },
 
       contact: {
-        title: 'Contactez-nous',
+        title: 'Contactez-moi',
         subtitle:
-          'Vous avez une question sur les livres, les commandes, la livraison ou l’assistance ? Nous sommes là pour vous aider. Envoyez-nous un message et notre équipe vous répondra rapidement.',
-        emailUs: 'Envoyez-nous un e-mail',
-        callUs: 'Appelez-nous',
-        ourLocation: 'Notre adresse',
+          "Vous avez une question sur les livres, les commandes, la livraison ou l'assistance ? Je suis là pour vous aider. Envoyez-moi un message et je vous répondrai rapidement.",
+        emailUs: 'Envoyez-moi un e-mail',
+        callUs: 'Appelez-moi',
+        ourLocation: 'Mon adresse',
         email: 'E-mail',
         platformText:
           'Votre plateforme de confiance pour découvrir des livres de librairies indépendantes.',

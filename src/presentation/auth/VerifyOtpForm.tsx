@@ -138,7 +138,7 @@ function VerifyOtpForm() {
           <div className="flex items-center justify-between text-xs text-gray-500 mb-5 px-1">
             <p className="flex items-center gap-1">⏱ 00:59</p>
             <p>
-              Didn&apos;t get a code?{" "}
+              {t("auth.didntGetCode")}{" "}
               <button className="text-blue-500 font-semibold cursor-pointer hover:underline bg-transparent border-none">
                 {t("auth.resend")}
               </button>

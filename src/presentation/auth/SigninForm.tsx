@@ -164,7 +164,7 @@ function SigninForm() {
 
             {/* Signup */}
             <p className="text-center text-xs text-gray-500 mt-2">
-              Don&apos;t have an account?{" "}
+              {t("auth.noAccount")}{" "}
               <Link href="/signup">
                 <span className="text-[#459AE4] font-semibold hover:underline">
                   {t("auth.signUp", { defaultValue: "Sign Up" })}

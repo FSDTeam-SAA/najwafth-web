@@ -59,10 +59,10 @@ export function Footer() {
                 <Mail className="h-4 w-4 shrink-0" />
                 <span>booksonwheels21000@gmail.com</span>
               </div>
-              <div className="flex items-center gap-3">
+              {/* <div className="flex items-center gap-3">
                 <Phone className="h-4 w-4 shrink-0" />
                 <span>07.60.16.72.24</span>
-              </div>
+              </div> */}
             </div>
           </div>
 

@@ -91,9 +91,9 @@ export const resources = {
           },
         },
         seeStory: 'See my story',
-        whoWeAre: 'Who I am?',
-        p1: "I'm dedicated to connecting readers with independent bookstores across the country. Founded in 2020, my platform has become a bridge between book lovers and local businesses.",
-        p2: 'Every purchase you make helps keep independent bookstores thriving in your community. I believe in the power of local businesses and the magic of discovering your next favorite book.',
+        whoWeAre: 'Who am I ?',
+        p1: "Hi, I’m Najwa, the founder of Books on Wheels. I created this project with a simple idea: allow people to order their books in their local bookstores and receive them quickly at home, without going through the big platforms.",
+        p2: 'Because in the end, many order on Amazon, Fnac or Cultura especially for speed and practicality. So I thought: why not create an Uber Eats of the book? Books on Wheels is a fast delivery service designed for local bookstores and readers who want to keep buying differently.',
         whyChooseUs: 'Why Choose Me?',
         reasons: {
           discover: {
@@ -213,73 +213,285 @@ export const resources = {
       },
       policy: {
         privacyTitle: 'Privacy Policy',
-        privacySub: 'See all Privacy Policy',
+        privacySub:
+          'How Books on Wheels collects, uses, protects, and shares personal data.',
         termsTitle: 'Terms & Conditions',
-        termsSub: 'See all Terms & Conditions',
-        lastUpdated: 'Last updated: May 9, 2026',
+        termsSub:
+          'General Terms of Use and General Terms of Sale for Books on Wheels.',
+        documentLabel: 'Legal document',
+        contents: 'Contents',
+        sections: 'sections',
+        contactEmail: 'booksonwheels21000@gmail.com',
+        lastUpdated: 'Last updated: June 30, 2026',
         privacy: {
-          s1: {
-            title: 'Information I Collect',
-            content:
-              'I collect information that you provide directly to me, including your name, email address, phone number, shipping address, and payment information when you create an account or place an order.',
+          sections: [
+            {
+              title: 'Introduction',
+              content: [
+                'Books on Wheels places particular importance on the protection of personal data and respect for privacy.',
+                'This Privacy Policy explains what data is collected, why it is collected, and how it is used.',
+              ],
+            },
+            {
+              title: 'Data collected',
+              content: ['Books on Wheels may collect the following information:'],
+              items: [
+                'First and last name',
+                'Email address',
+                'Phone number',
+                'Delivery address',
+                'Order information',
+                'Navigation data',
+                'Login data',
+                'Payment information via secure providers',
+              ],
+            },
+            {
+              title: 'Use of data',
+              content: ['The collected data is used to:'],
+              items: [
+                'Manage orders',
+                'Ensure deliveries',
+                'Improve the service',
+                'Respond to user requests',
+                'Send information related to the service',
+                'Ensure the security of the Platform',
+              ],
+            },
+            {
+              title: 'Data sharing',
+              content: ['Some data may be shared with:'],
+              items: [
+                'Partner bookstores',
+                'Couriers',
+                'Payment providers',
+                'Technical service providers necessary for the operation of the service',
+              ],
+            },
+            {
+              title: 'Data retention',
+              content: [
+                'The data is kept for the duration necessary for the operation of the service and compliance with legal obligations.',
+              ],
+            },
+            {
+              title: 'Security',
+              content: [
+                'Books on Wheels implements reasonable measures to protect personal data against unauthorized access, loss, or disclosure.',
+                'However, since no system is completely secure, Books on Wheels cannot guarantee absolute security.',
+              ],
+            },
+            {
+              title: 'Cookies',
+              content: ['The Platform may use cookies to:'],
+              items: [
+                'Improve the user experience',
+                'Analyze the use of the site',
+                'Measure audience traffic',
+              ],
+            },
+            {
+              title: 'User rights',
+              content: [
+                'In accordance with the GDPR, the user has the following rights:',
+              ],
+              items: [
+                'Right of access',
+                'Right to rectification',
+                'Right to erasure',
+                'Right to object',
+                'Right to restriction',
+                'Right to portability',
+              ],
+            },
+            {
+              title: 'Policy changes',
+              content: [
+                'Books on Wheels may modify this Privacy Policy at any time.',
+                'The most recent version will be available on the Platform.',
+              ],
+            },
+          ],
+          legal: {
+            title: 'Legal Notices',
+            items: [
+              { label: 'Site publisher', value: 'Books on Wheels' },
+              { label: 'Legal status', value: 'Micro-enterprise' },
+              { label: 'Manager', value: 'EL FATTAHI Najwa' },
+              { label: 'Address', value: 'Dijon, 21000' },
+              { label: 'Email', value: 'booksonwheels21000@gmail.com' },
+              { label: 'SIRET', value: '10654519700019' },
+            ],
           },
-          s2: {
-            title: 'How I Use Your Information',
-            content:
-              'I use the information I collect to process your orders, communicate with you about your purchases, send you marketing communications (with your consent), and improve my services.',
-          },
-          s3: {
-            title: 'Information Sharing',
-            content:
-              'I do not sell or rent your personal information to third parties. I may share your information with service providers who assist me in operating my website and conducting my business.',
-          },
-          s4: {
-            title: 'Data Security',
-            content:
-              'We implement appropriate security measures to protect your personal information from unauthorized access, alteration, disclosure, or destruction.',
-          },
-          s5: {
-            title: 'Your Rights',
-            content:
-              'You have the right to access, update, or delete your personal information at any time. You can manage your account settings or contact me directly for assistance.',
-          },
-          s6: {
-            title: 'Contact Me',
-            content:
-              'If you have any questions about this Privacy Policy, please contact me at privacy@bookstore.com',
-          },
+          contactTitle: 'Contact',
+          contactText: 'For any questions regarding these documents:',
         },
         terms: {
-          s1: {
-            title: 'Acceptance of Terms',
-            content:
-              'By accessing and using this website, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to these terms, please do not use my services.',
-          },
-          s2: {
-            title: 'Use of Service',
-            content:
-              "You agree to use my service only for lawful purposes and in a way that does not infringe the rights of, restrict or inhibit anyone else's use and enjoyment of the website.",
-          },
-          s3: {
-            title: 'Account Registration',
-            content:
-              'To access certain features, you may be required to create an account. You are responsible for maintaining the confidentiality of your account credentials and for all activities under your account.',
-          },
-          s4: {
-            title: 'Orders and Payment',
-            content:
-              'All orders are subject to availability and confirmation of the order price. I reserve the right to refuse any order. Payment must be made in full before shipment of goods.',
-          },
-          s5: {
-            title: 'Modifications to Terms',
-            content:
-              'I reserve the right to modify these terms at any time. Your continued use of the website after changes constitutes acceptance of the modified terms.',
-          },
-          s6: {
-            title: 'Contact Information',
-            content:
-              'For any questions regarding these terms and conditions, please contact me at support@bookstore.com',
-          },
+          groups: [
+            {
+              title: 'General Terms of Use (TOU)',
+              sections: [
+                {
+                  title: 'Presentation of the platform',
+                  content: [
+                    'The Books on Wheels website and/or application (hereinafter referred to as “the Platform”) is a service that allows connections between customers wishing to order books, partner bookstores, and independent couriers in charge of deliveries.',
+                    'Books on Wheels acts as a technical and logistical intermediary.',
+                  ],
+                },
+                {
+                  title: 'Acceptance of terms',
+                  content: [
+                    'Use of the Platform implies full and complete acceptance of these Terms of Use.',
+                    'Any user acknowledges having read these terms before using the service.',
+                  ],
+                },
+                {
+                  title: 'Service access',
+                  content: [
+                    'The Platform is accessible to adults with the necessary legal capacity.',
+                    'Books on Wheels reserves the right to suspend or limit access to the service for any user who does not comply with these conditions.',
+                  ],
+                },
+                {
+                  title: 'Operation of the service',
+                  content: [
+                    'The customer can order books from partner bookstores via the Platform.',
+                    'Once the order is validated, the bookstore prepares the order, an independent courier collects it, and the order is delivered to the customer.',
+                    'Delivery times are given for information purposes only. Books on Wheels does not guarantee a fixed delivery time.',
+                  ],
+                },
+                {
+                  title: 'Responsibilities',
+                  content: [
+                    'Partner bookstores are solely responsible for the products sold, the conformity of the books, the displayed stock, and the preparation of orders.',
+                    'Couriers are independent workers responsible for their delivery services and carry out their activity under their own responsibility.',
+                    'Books on Wheels acts exclusively as a matchmaking platform. Its liability shall not be engaged in the event of delivery delay, preparation error, product unavailability, indirect damage, temporary service interruption, or force majeure.',
+                    'The liability of Books on Wheels is in any event limited to the amount of the relevant order.',
+                  ],
+                },
+                {
+                  title: 'User behavior',
+                  content: ['Users commit to:'],
+                  items: [
+                    'Provide accurate information',
+                    'Use the Platform legally',
+                    'Not disrupt the operation of the service',
+                    'Respect other users',
+                  ],
+                },
+                {
+                  title: 'Intellectual property',
+                  content: [
+                    'All content on the Platform (logo, name, design, text, graphic elements, etc.) is protected by intellectual property law.',
+                    'Any reproduction or use without permission is prohibited.',
+                  ],
+                },
+                {
+                  title: 'Modification of the terms',
+                  content: [
+                    'Books on Wheels may modify these Terms of Use at any time.',
+                    'Users will be informed of updates via the Platform.',
+                  ],
+                },
+                {
+                  title: 'Applicable law',
+                  content: [
+                    'These terms are subject to French law.',
+                    'In the event of a dispute, the competent courts shall be those within the jurisdiction of the registered office of Books on Wheels.',
+                  ],
+                },
+              ],
+            },
+            {
+              title: 'General Terms of Sale (GTS)',
+              sections: [
+                {
+                  title: 'Purpose',
+                  content: [
+                    'These General Terms and Conditions of Sale define the ordering, payment, and delivery methods offered by Books on Wheels.',
+                  ],
+                },
+                {
+                  title: 'Services offered',
+                  content: ['Books on Wheels offers:'],
+                  items: [
+                    'A matchmaking service with partner bookstores',
+                    'A delivery service via independent couriers',
+                  ],
+                },
+                {
+                  title: 'Orders',
+                  content: [
+                    'Any order placed via the Platform implies acceptance of these General Terms of Sale.',
+                    'An order is considered validated after payment has been confirmed.',
+                    'Books on Wheels reserves the right to refuse an order in the event of a technical problem, suspicion of fraud, or product unavailability.',
+                  ],
+                },
+                {
+                  title: 'Prices',
+                  content: [
+                    'Prices are displayed in euros including tax. The total amount may include the price of the book, delivery fees, and any service fees.',
+                    'Books on Wheels reserves the right to change its prices at any time.',
+                  ],
+                },
+                {
+                  title: 'Payment',
+                  content: [
+                    'Payment is made via the methods offered on the Platform.',
+                    'The customer guarantees that they have the necessary authorization to use the chosen payment method.',
+                    'If payment is refused, the order may be cancelled.',
+                  ],
+                },
+                {
+                  title: 'Delivery',
+                  content: [
+                    'Delivery times are estimates.',
+                    'Books on Wheels uses reasonable means to ensure fast deliveries, without an absolute guarantee of delivery time.',
+                    'The customer must provide a correct and accessible address.',
+                    'In the event of the customer’s absence or an incorrect address, the order may be cancelled without a full refund of delivery costs.',
+                  ],
+                },
+                {
+                  title: 'Claims',
+                  content: [
+                    'Any complaint must be sent within 48 hours after receipt of the order.',
+                    'Evidence may be requested, including photos or a description of the problem.',
+                  ],
+                },
+                {
+                  title: 'Refunds',
+                  content: [
+                    'Possible refunds are assessed on a case-by-case basis.',
+                    'Delivery costs may not be refunded once the delivery service has been carried out.',
+                    'Books on Wheels reserves the right to refuse a refund in the event of abuse or fraud.',
+                  ],
+                },
+                {
+                  title: 'Limitation of liability',
+                  content: [
+                    'Books on Wheels cannot be held responsible for indirect damages related to the use of the service.',
+                    'The maximum liability of Books on Wheels is limited to the amount paid by the customer for the relevant order.',
+                  ],
+                },
+                {
+                  title: 'Force majeure',
+                  content: ['Books on Wheels cannot be held responsible for any delay or impossibility of delivery caused by an event beyond its control, including:'],
+                  items: [
+                    'Bad weather',
+                    'Accidents',
+                    'Strikes',
+                    'Technical problems',
+                    'Traffic',
+                    'Force majeure',
+                  ],
+                },
+                {
+                  title: 'Applicable law',
+                  content: ['These General Terms of Sale are subject to French law.'],
+                },
+              ],
+            },
+          ],
         },
       },
       footer: {
@@ -562,73 +774,285 @@ export const resources = {
       },
       policy: {
         privacyTitle: 'Politique de confidentialité',
-        privacySub: 'Voir toute la politique de confidentialité',
+        privacySub:
+          'Comment Books on Wheels collecte, utilise, protège et partage les données personnelles.',
         termsTitle: 'Conditions générales',
-        termsSub: 'Voir toutes les conditions générales',
-        lastUpdated: 'Dernière mise à jour : 9 mai 2026',
+        termsSub:
+          'Conditions Générales d’Utilisation et Conditions Générales de Vente de Books on Wheels.',
+        documentLabel: 'Document légal',
+        contents: 'Sommaire',
+        sections: 'sections',
+        contactEmail: 'booksonwheels21000@gmail.com',
+        lastUpdated: 'Dernière mise à jour : 30 juin 2026',
         privacy: {
-          s1: {
-            title: 'Informations collectées',
-            content:
-              'Nous collectons les informations que vous nous fournissez directement, y compris votre nom, adresse e-mail, numéro de téléphone, adresse de livraison et informations de paiement lorsque vous créez un compte ou passez une commande.',
+          sections: [
+            {
+              title: 'Introduction',
+              content: [
+                'Books on Wheels accorde une importance particulière à la protection des données personnelles et au respect de la vie privée.',
+                'La présente Politique de Confidentialité explique quelles données sont collectées, pourquoi elles sont collectées et comment elles sont utilisées.',
+              ],
+            },
+            {
+              title: 'Données collectées',
+              content: ['Books on Wheels peut collecter les informations suivantes :'],
+              items: [
+                'Nom et prénom',
+                'Adresse e-mail',
+                'Numéro de téléphone',
+                'Adresse de livraison',
+                'Informations de commande',
+                'Données de navigation',
+                'Données de connexion',
+                'Informations de paiement via des prestataires sécurisés',
+              ],
+            },
+            {
+              title: 'Utilisation des données',
+              content: ['Les données collectées sont utilisées afin de :'],
+              items: [
+                'Gérer les commandes',
+                'Assurer les livraisons',
+                'Améliorer le service',
+                'Répondre aux demandes utilisateurs',
+                'Envoyer des informations liées au service',
+                'Assurer la sécurité de la Plateforme',
+              ],
+            },
+            {
+              title: 'Partage des données',
+              content: ['Certaines données peuvent être partagées avec :'],
+              items: [
+                'Les librairies partenaires',
+                'Les coursiers',
+                'Les prestataires de paiement',
+                'Les prestataires techniques nécessaires au fonctionnement du service',
+              ],
+            },
+            {
+              title: 'Conservation des données',
+              content: [
+                'Les données sont conservées pendant la durée nécessaire au fonctionnement du service et au respect des obligations légales.',
+              ],
+            },
+            {
+              title: 'Sécurité',
+              content: [
+                'Books on Wheels met en œuvre des mesures raisonnables pour protéger les données personnelles contre les accès non autorisés, pertes ou divulgations.',
+                'Toutefois, aucun système n’étant totalement sécurisé, Books on Wheels ne peut garantir une sécurité absolue.',
+              ],
+            },
+            {
+              title: 'Cookies',
+              content: ['La Plateforme peut utiliser des cookies afin :'],
+              items: [
+                'D’améliorer l’expérience utilisateur',
+                'D’analyser l’utilisation du site',
+                'De mesurer l’audience',
+              ],
+            },
+            {
+              title: 'Droits des utilisateurs',
+              content: [
+                'Conformément au RGPD, l’utilisateur dispose des droits suivants :',
+              ],
+              items: [
+                'Droit d’accès',
+                'Droit de rectification',
+                'Droit d’effacement',
+                'Droit d’opposition',
+                'Droit à la limitation',
+                'Droit à la portabilité',
+              ],
+            },
+            {
+              title: 'Modification de la politique',
+              content: [
+                'Books on Wheels peut modifier la présente Politique de Confidentialité à tout moment.',
+                'La version la plus récente sera disponible sur la Plateforme.',
+              ],
+            },
+          ],
+          legal: {
+            title: 'Mentions légales',
+            items: [
+              { label: 'Éditeur du site', value: 'Books on Wheels' },
+              { label: 'Statut juridique', value: 'Micro-entreprise' },
+              { label: 'Responsable', value: 'EL FATTAHI Najwa' },
+              { label: 'Adresse', value: 'Dijon, 21000' },
+              { label: 'E-mail', value: 'booksonwheels21000@gmail.com' },
+              { label: 'SIRET', value: '10654519700019' },
+            ],
           },
-          s2: {
-            title: 'Utilisation de vos informations',
-            content:
-              'Nous utilisons les informations collectées pour traiter vos commandes, communiquer avec vous à propos de vos achats, vous envoyer des communications marketing (avec votre consentement) et améliorer nos services.',
-          },
-          s3: {
-            title: 'Partage des informations',
-            content:
-              'Nous ne vendons ni ne louons vos informations personnelles à des tiers. Nous pouvons les partager avec des prestataires qui nous aident à exploiter notre site et nos activités.',
-          },
-          s4: {
-            title: 'Sécurité des données',
-            content:
-              'Nous mettons en œuvre des mesures de sécurité appropriées pour protéger vos informations personnelles contre tout accès, modification, divulgation ou destruction non autorisés.',
-          },
-          s5: {
-            title: 'Vos droits',
-            content:
-              'Vous avez le droit d’accéder, de mettre à jour ou de supprimer vos informations personnelles à tout moment. Vous pouvez gérer les paramètres de votre compte ou nous contacter directement pour obtenir de l’aide.',
-          },
-          s6: {
-            title: 'Contactez-nous',
-            content:
-              'Si vous avez des questions sur cette politique de confidentialité, veuillez nous contacter à privacy@bookstore.com',
-          },
+          contactTitle: 'Contact',
+          contactText: 'Pour toute question concernant ces documents :',
         },
         terms: {
-          s1: {
-            title: 'Acceptation des conditions',
-            content:
-              'En accédant à ce site et en l’utilisant, vous acceptez d’être lié par les termes de cet accord. Si vous n’acceptez pas ces termes, veuillez ne pas utiliser nos services.',
-          },
-          s2: {
-            title: 'Utilisation du service',
-            content:
-              'Vous acceptez d’utiliser notre service uniquement à des fins légales et d’une manière qui ne porte pas atteinte aux droits d’autrui ni ne limite l’utilisation du site par quiconque.',
-          },
-          s3: {
-            title: 'Création de compte',
-            content:
-              'Pour accéder à certaines fonctionnalités, vous pouvez être amené à créer un compte. Vous êtes responsable de la confidentialité de vos identifiants et de toutes les activités effectuées sous votre compte.',
-          },
-          s4: {
-            title: 'Commandes et paiement',
-            content:
-              'Toutes les commandes sont soumises à disponibilité et confirmation du prix. Nous nous réservons le droit de refuser toute commande. Le paiement doit être effectué intégralement avant l’expédition.',
-          },
-          s5: {
-            title: 'Modifications des conditions',
-            content:
-              'Nous nous réservons le droit de modifier ces conditions à tout moment. Votre utilisation continue du site après modifications constitue votre acceptation des nouvelles conditions.',
-          },
-          s6: {
-            title: 'Informations de contact',
-            content:
-              'Pour toute question concernant ces conditions, veuillez nous contacter à support@bookstore.com',
-          },
+          groups: [
+            {
+              title: 'Conditions Générales d’Utilisation (CGU)',
+              sections: [
+                {
+                  title: 'Présentation de la plateforme',
+                  content: [
+                    'Le site et/ou l’application Books on Wheels (ci-après « la Plateforme ») est un service permettant la mise en relation entre des clients souhaitant commander des livres, des librairies partenaires et des coursiers indépendants chargés des livraisons.',
+                    'Books on Wheels agit en qualité d’intermédiaire technique et logistique.',
+                  ],
+                },
+                {
+                  title: 'Acceptation des conditions',
+                  content: [
+                    'L’utilisation de la Plateforme implique l’acceptation pleine et entière des présentes Conditions Générales d’Utilisation.',
+                    'Tout utilisateur reconnaît avoir pris connaissance des présentes conditions avant toute utilisation du service.',
+                  ],
+                },
+                {
+                  title: 'Accès au service',
+                  content: [
+                    'La Plateforme est accessible aux personnes majeures disposant de la capacité juridique nécessaire.',
+                    'Books on Wheels se réserve le droit de suspendre ou limiter l’accès au service à tout utilisateur ne respectant pas les présentes conditions.',
+                  ],
+                },
+                {
+                  title: 'Fonctionnement du service',
+                  content: [
+                    'Le client peut commander des livres auprès des librairies partenaires via la Plateforme.',
+                    'Une fois la commande validée, la librairie prépare la commande, un coursier indépendant la récupère, puis la commande est livrée au client.',
+                    'Les délais de livraison sont donnés à titre indicatif. Books on Wheels ne garantit pas un délai fixe de livraison.',
+                  ],
+                },
+                {
+                  title: 'Responsabilités',
+                  content: [
+                    'Les librairies partenaires sont seules responsables des produits vendus, de la conformité des livres, des stocks affichés et de la préparation des commandes.',
+                    'Les coursiers sont des travailleurs indépendants responsables de leurs prestations de livraison et exercent leur activité sous leur propre responsabilité.',
+                    'Books on Wheels agit exclusivement comme plateforme de mise en relation. Sa responsabilité ne pourra être engagée en cas de retard de livraison, d’erreur de préparation, d’indisponibilité d’un produit, de dommages indirects, d’interruption temporaire du service ou de force majeure.',
+                    'La responsabilité de Books on Wheels est en tout état de cause limitée au montant de la commande concernée.',
+                  ],
+                },
+                {
+                  title: 'Comportement des utilisateurs',
+                  content: ['Les utilisateurs s’engagent à :'],
+                  items: [
+                    'Fournir des informations exactes',
+                    'Utiliser la Plateforme de manière légale',
+                    'Ne pas perturber le fonctionnement du service',
+                    'Respecter les autres utilisateurs',
+                  ],
+                },
+                {
+                  title: 'Propriété intellectuelle',
+                  content: [
+                    'Tous les contenus présents sur la Plateforme (logo, nom, design, textes, éléments graphiques, etc.) sont protégés par le droit de la propriété intellectuelle.',
+                    'Toute reproduction ou utilisation sans autorisation est interdite.',
+                  ],
+                },
+                {
+                  title: 'Modification des conditions',
+                  content: [
+                    'Books on Wheels peut modifier les présentes CGU à tout moment.',
+                    'Les utilisateurs seront informés des mises à jour via la Plateforme.',
+                  ],
+                },
+                {
+                  title: 'Droit applicable',
+                  content: [
+                    'Les présentes conditions sont soumises au droit français.',
+                    'En cas de litige, les tribunaux compétents seront ceux du ressort du siège social de Books on Wheels.',
+                  ],
+                },
+              ],
+            },
+            {
+              title: 'Conditions Générales de Vente (CGV)',
+              sections: [
+                {
+                  title: 'Objet',
+                  content: [
+                    'Les présentes Conditions Générales de Vente définissent les modalités de commande, paiement et livraison proposées par Books on Wheels.',
+                  ],
+                },
+                {
+                  title: 'Services proposés',
+                  content: ['Books on Wheels propose :'],
+                  items: [
+                    'Un service de mise en relation avec des librairies partenaires',
+                    'Un service de livraison via des coursiers indépendants',
+                  ],
+                },
+                {
+                  title: 'Commandes',
+                  content: [
+                    'Toute commande passée via la Plateforme implique l’acceptation des présentes CGV.',
+                    'Une commande est considérée comme validée après confirmation du paiement.',
+                    'Books on Wheels se réserve le droit de refuser une commande en cas de problème technique, suspicion de fraude ou indisponibilité du produit.',
+                  ],
+                },
+                {
+                  title: 'Prix',
+                  content: [
+                    'Les prix affichés sont indiqués en euros TTC. Le montant total peut inclure le prix du livre, des frais de livraison et des frais de service éventuels.',
+                    'Books on Wheels se réserve le droit de modifier ses tarifs à tout moment.',
+                  ],
+                },
+                {
+                  title: 'Paiement',
+                  content: [
+                    'Le paiement s’effectue via les moyens proposés sur la Plateforme.',
+                    'Le client garantit disposer des autorisations nécessaires pour utiliser le moyen de paiement choisi.',
+                    'En cas de refus de paiement, la commande pourra être annulée.',
+                  ],
+                },
+                {
+                  title: 'Livraison',
+                  content: [
+                    'Les délais de livraison sont estimatifs.',
+                    'Books on Wheels met en œuvre des moyens raisonnables pour assurer des livraisons rapides, sans garantie absolue de délai.',
+                    'Le client doit fournir une adresse correcte et accessible.',
+                    'En cas d’absence du client ou d’adresse incorrecte, la commande pourra être annulée sans remboursement intégral des frais de livraison.',
+                  ],
+                },
+                {
+                  title: 'Réclamations',
+                  content: [
+                    'Toute réclamation doit être adressée dans un délai de 48 heures après réception de la commande.',
+                    'Des preuves pourront être demandées (photos, description du problème, etc.).',
+                  ],
+                },
+                {
+                  title: 'Remboursements',
+                  content: [
+                    'Les remboursements éventuels sont évalués au cas par cas.',
+                    'Les frais de livraison peuvent ne pas être remboursés lorsque la prestation de livraison a été effectuée.',
+                    'Books on Wheels se réserve le droit de refuser un remboursement en cas d’abus ou de fraude.',
+                  ],
+                },
+                {
+                  title: 'Limitation de responsabilité',
+                  content: [
+                    'Books on Wheels ne pourra être tenu responsable des dommages indirects liés à l’utilisation du service.',
+                    'La responsabilité maximale de Books on Wheels est limitée au montant payé par le client pour la commande concernée.',
+                  ],
+                },
+                {
+                  title: 'Force majeure',
+                  content: ['Books on Wheels ne pourra être tenu responsable d’un retard ou d’une impossibilité de livraison causé par un événement indépendant de sa volonté :'],
+                  items: [
+                    'Intempéries',
+                    'Accidents',
+                    'Grèves',
+                    'Problèmes techniques',
+                    'Circulation',
+                    'Force majeure',
+                  ],
+                },
+                {
+                  title: 'Droit applicable',
+                  content: ['Les présentes CGV sont soumises au droit français.'],
+                },
+              ],
+            },
+          ],
         },
       },
       footer: {

@@ -7,16 +7,19 @@ import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/components/ui/button'
 
+const AUTO_SLIDE_INTERVAL_MS = 8000
+const MANUAL_NAV_PAUSE_MS = 12000
+
 export function HeroSection() {
   const { t } = useTranslation()
   const slides = [
     {
-      image: '/images/banner-home-1.png',
+      image: '/images/banner-home-1-clean.png',
       title: t('about.hero.s1.title'),
-      description: t('about.hero.s1.desc'),
+      description: t('about.hero.s1.desc').replace(' worldwide', ''),
     },
     {
-      image: '/images/banner-2.png',
+      image: '/images/banner-2-updated.png',
       title: t('about.hero.s2.title'),
       description: t('about.hero.s2.desc'),
     },
@@ -32,14 +35,28 @@ export function HeroSection() {
     },
   ]
   const [activeSlide, setActiveSlide] = useState(0)
+  const [isAutoPaused, setIsAutoPaused] = useState(false)
 
   useEffect(() => {
+    if (isAutoPaused) {
+      const pauseTimer = window.setTimeout(() => {
+        setIsAutoPaused(false)
+      }, MANUAL_NAV_PAUSE_MS)
+
+      return () => window.clearTimeout(pauseTimer)
+    }
+
     const timer = window.setInterval(() => {
       setActiveSlide(prev => (prev + 1) % slides.length)
-    }, 5000)
+    }, AUTO_SLIDE_INTERVAL_MS)
 
     return () => window.clearInterval(timer)
-  }, [slides.length])
+  }, [isAutoPaused, slides.length])
+
+  const handleSlideNavigation = (index: number) => {
+    setActiveSlide(index)
+    setIsAutoPaused(true)
+  }
 
   return (
     <section className="relative overflow-hidden border-b border-black/6">
@@ -87,7 +104,7 @@ export function HeroSection() {
                 <button
                   key={index}
                   type="button"
-                  onClick={() => setActiveSlide(index)}
+                  onClick={() => handleSlideNavigation(index)}
                   className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border border-[#459AE4] bg-white"
                   aria-label={`Go to slide ${index + 1}`}
                 >
@@ -97,7 +114,7 @@ export function HeroSection() {
                 <button
                   key={index}
                   type="button"
-                  onClick={() => setActiveSlide(index)}
+                  onClick={() => handleSlideNavigation(index)}
                   className="h-3.5 w-3.5 cursor-pointer rounded-full border border-[#459AE4]/50 bg-[#459AE4]/35"
                   aria-label={`Go to slide ${index + 1}`}
                 />

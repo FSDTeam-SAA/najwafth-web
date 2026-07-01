@@ -24,7 +24,7 @@ const EditProfile = ({
   onImageSelect,
 }: {
   initialData?: Record<string, unknown>;
-  fileRef?: React.RefObject<HTMLInputElement | null>;
+  fileRef?: React.RefObject<HTMLInputElement>;
   onImageSelect?: (url: string) => void;
 }) => {
   const { t } = useTranslation();
@@ -54,7 +54,7 @@ const EditProfile = ({
       }
       return res.json();
     },
-    onSuccess: async (data) => {
+    onSuccess: async (data: any) => {
       toast.success(t("account.profileUpdated"));
       setLoading(false);
       queryClient.invalidateQueries({ queryKey: ["profileData"] });

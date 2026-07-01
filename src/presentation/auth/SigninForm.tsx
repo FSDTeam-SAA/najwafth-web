@@ -30,11 +30,17 @@ function SigninForm() {
 
     try {
       setIsLoading(true);
+      const params = new URLSearchParams(window.location.search);
+      const callbackUrl = params.get("callbackUrl") || "/";
+      const redirectUrl = callbackUrl.startsWith(window.location.origin)
+        ? callbackUrl.replace(window.location.origin, "")
+        : "/";
 
       const res = await signIn("credentials", {
         email: formData.email,
         password: formData.password,
         redirect: false,
+        callbackUrl: redirectUrl,
       });
 
       if (res?.error) {
@@ -42,7 +48,7 @@ function SigninForm() {
       }
 
       toast.success(t("auth.loginSuccess", { defaultValue: "Login Successfully!" }));
-      router.push("/");
+      router.replace(redirectUrl);
       router.refresh();
     } catch (err: any) {
       toast.error(err.message);

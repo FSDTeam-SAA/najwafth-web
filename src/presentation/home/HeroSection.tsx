@@ -14,7 +14,7 @@ export function HeroSection() {
   const { t } = useTranslation()
   const slides = [
     {
-      image: '/images/banner-home-1-clean.png',
+      image: '/images/newcarosal.png',
       title: t('about.hero.s1.title'),
       description: t('about.hero.s1.desc').replace(' worldwide', ''),
     },
@@ -24,7 +24,7 @@ export function HeroSection() {
       description: t('about.hero.s2.desc'),
     },
     {
-      image: '/images/banner-3.png',
+      image: '/images/y.png',
       title: t('about.hero.s3.title'),
       description: t('about.hero.s3.desc'),
     },

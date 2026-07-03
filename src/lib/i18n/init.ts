@@ -6,7 +6,7 @@ import { initReactI18next } from 'react-i18next'
 import { resources } from './resources'
 import type { AppLanguage } from './resources'
 
-const fallbackLanguage: AppLanguage = 'en-GB'
+const fallbackLanguage: AppLanguage = 'fr-FR'
 
 function syncResources() {
   for (const [language, namespaces] of Object.entries(resources)) {

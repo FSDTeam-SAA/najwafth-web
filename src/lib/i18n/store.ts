@@ -10,7 +10,7 @@ type LanguageState = {
   setLanguage: (language: AppLanguage) => void
 }
 
-const fallbackLanguage: AppLanguage = 'en-GB'
+const fallbackLanguage: AppLanguage = 'fr-FR'
 
 export const useLanguageStore = create<LanguageState>()(
   persist(
@@ -20,7 +20,7 @@ export const useLanguageStore = create<LanguageState>()(
       setLanguage: language => set({ language }),
     }),
     {
-      name: 'app-language',
+      name: 'app-language-v2',
     },
   ),
 )

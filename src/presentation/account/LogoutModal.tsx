@@ -27,7 +27,7 @@ const LogoutModal: React.FC<LogoutModalProps> = ({
     } else {
       // সরাসরি সাইন আউট এবং রিডাইরেক্ট
       await signOut({
-        callbackUrl: "/signin", // এখানে আপনার সাইন-ইন পেজের পাথ দিন
+        callbackUrl: "/",
         redirect: true,
       });
     }

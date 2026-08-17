@@ -24,7 +24,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       <I18nProvider>
         <SessionProvider>{children}</SessionProvider>
       </I18nProvider>
-      <Toaster position="top-right" richColors />
+      <Toaster position="bottom-left" richColors />
     </QueryClientProvider>
   );
 };

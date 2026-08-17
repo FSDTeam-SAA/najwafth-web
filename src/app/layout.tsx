@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils'
 import AuthProvider from '@/provider/AuthProvider'
 
 export const metadata: Metadata = {
-  title: 'Books and Shack',
+  title: 'Books On Wheels',
   description: 'Discover millions of books from trusted local bookstores.',
   icons: {
     icon: [

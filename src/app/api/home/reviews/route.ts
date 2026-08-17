@@ -1,7 +1,4 @@
 import { NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-
-import { authOptions } from '@/lib/auth'
 
 const BACKEND_BASE_URL =
   process.env.NEXT_PUBLIC_BACKEND_API_URL || 'http://localhost:5001/api/v1'
@@ -34,13 +31,6 @@ type BackendBooksPayload = {
 
 export async function GET() {
   try {
-    const session = await getServerSession(authOptions)
-    const token = session?.user?.accessToken
-
-    if (!token) {
-      return NextResponse.json({ items: [] })
-    }
-
     const query = new URLSearchParams({
       page: '1',
       limit: '24',
@@ -49,9 +39,6 @@ export async function GET() {
     })
 
     const response = await fetch(`${BACKEND_BASE_URL}/books?${query.toString()}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
       cache: 'no-store',
     })
 

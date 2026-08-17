@@ -10,6 +10,10 @@ const authRoutes = [
   "/reset-password",
 ];
 
+// Browsing the website is public. Only pages that need a user's account data
+// should require an authenticated session.
+const protectedRoutes = ["/account", "/cart", "/checkout", "/order", "/success"];
+
 export async function middleware(request: NextRequest) {
   const token = await getToken({
     req: request,
@@ -21,8 +25,11 @@ export async function middleware(request: NextRequest) {
   const isAuthRoute = authRoutes.some(
     (route) => pathname === route || pathname.startsWith(`${route}/`),
   );
+  const isProtectedRoute = protectedRoutes.some(
+    (route) => pathname === route || pathname.startsWith(`${route}/`),
+  );
 
-  if (!token && !isAuthRoute) {
+  if (!token && isProtectedRoute) {
     const signinUrl = new URL("/signin", request.url);
     signinUrl.searchParams.set("callbackUrl", request.nextUrl.href);
     return NextResponse.redirect(signinUrl);

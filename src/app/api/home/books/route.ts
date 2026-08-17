@@ -1,6 +1,4 @@
 import { NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
 
 const BACKEND_BASE_URL =
   process.env.NEXT_PUBLIC_BACKEND_API_URL || 'http://localhost:5001/api/v1'
@@ -61,16 +59,6 @@ function mapBook(item: BackendBook, index: number) {
 
 export async function GET(request: Request) {
   try {
-    const session = await getServerSession(authOptions)
-    const token = session?.user?.accessToken
-
-    if (!token) {
-      return NextResponse.json(
-        { message: 'Unauthorized: No valid session' },
-        { status: 401 },
-      )
-    }
-
     const { searchParams } = new URL(request.url)
 
     const kind = searchParams.get('kind') || 'featured'
@@ -104,9 +92,6 @@ export async function GET(request: Request) {
         query.set('category', categoryId)
       }
       const res = await fetch(`${BACKEND_BASE_URL}/books?${query.toString()}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
         cache: 'no-store',
       })
       const data = (await res
@@ -131,9 +116,6 @@ export async function GET(request: Request) {
           const res = await fetch(
             `${BACKEND_BASE_URL}/books?${query.toString()}`,
             {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
               cache: 'no-store',
             },
           )

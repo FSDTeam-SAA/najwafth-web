@@ -1,6 +1,7 @@
 "use client";
 
 import { AchievementSection } from "@/presentation/home/AchievementSection";
+import { BecomeSellerSection } from "@/presentation/home/BecomeSellerSection";
 import { ExploreCategoriesSection } from "@/presentation/home/ExploreCategoriesSection";
 import { FeaturedProducts } from "@/presentation/home/FeaturedProducts";
 import { HeroSection } from "@/presentation/home/HeroSection";
@@ -35,6 +36,7 @@ export default function WebsiteHomePage() {
         isLoading={categoriesQuery.isLoading}
         error={categoriesQuery.error?.message}
       />
+      <BecomeSellerSection />
       <AchievementSection />
       <TestimonialsSection />
     </div>

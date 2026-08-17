@@ -50,7 +50,7 @@ type CartResponse = {
 function ProductsDetails() {
   const params = useParams();
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const queryClient = useQueryClient();
   const id = params?.id; // URL থেকে ডাইনামিক ID নেওয়া হলো
   const TOKEN = session?.user?.accessToken;
@@ -68,20 +68,15 @@ function ProductsDetails() {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["books-details", id, TOKEN],
+    queryKey: ["books-details", id],
     queryFn: async () => {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/books/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${TOKEN}`,
-          },
-        },
       );
       if (!res.ok) throw new Error("Failed to fetch book details");
       return res.json();
     },
-    enabled: !!id && !!TOKEN, // ID এবং টোকেন থাকলেই কেবল API কল হবে
+    enabled: !!id,
   });
 
   const { data: cartResponse } = useQuery<CartResponse>({
@@ -155,7 +150,7 @@ function ProductsDetails() {
   });
 
   // লোডিং স্টেট হ্যান্ডেলার
-  if (status === "loading" || isLoading || !TOKEN) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex justify-center items-start py-0 md:py-10 px-0 sm:px-4 font-sans antialiased">
         <div className="w-full max-w-6xl bg-white flex flex-col md:rounded-3xl md:border md:border-gray-100 overflow-hidden min-h-screen md:min-h-0 mx-auto">

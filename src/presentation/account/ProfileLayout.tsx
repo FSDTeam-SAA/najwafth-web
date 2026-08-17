@@ -38,7 +38,7 @@ const ProfileLayout = () => {
   const handleLogoutConfirm = async () => {
     setIsLogoutModalOpen(false);
     await signOut({
-      callbackUrl: "/signin",
+      callbackUrl: "/",
       redirect: true,
     });
   };

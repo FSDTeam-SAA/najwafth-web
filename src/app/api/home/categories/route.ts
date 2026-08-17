@@ -1,6 +1,4 @@
 import { NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
 
 const BACKEND_BASE_URL =
   process.env.NEXT_PUBLIC_BACKEND_API_URL || 'http://localhost:5001/api/v1'
@@ -24,20 +22,7 @@ type BackendCategory = {
 
 export async function GET() {
   try {
-    const session = await getServerSession(authOptions)
-    const token = session?.user?.accessToken
-
-    if (!token) {
-      return NextResponse.json(
-        { message: 'Unauthorized: No valid session' },
-        { status: 401 },
-      )
-    }
-
     const response = await fetch(`${BACKEND_BASE_URL}/category?parent=null`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
       cache: 'no-store',
     })
 

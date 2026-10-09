@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { Mail, MapPin } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -32,7 +32,6 @@ export function ContactPage() {
       value: "booksonwheels21000@gmail.com",
       icon: Mail,
     },
-    { title: t("contact.callUs"), value: "", icon: Phone },
     { title: t("contact.ourLocation"), value: "Dijon, France", icon: MapPin },
   ];
 
@@ -120,7 +119,7 @@ export function ContactPage() {
           </p>
         </div>
 
-        <div className="mt-12 grid gap-5 lg:grid-cols-3">
+        <div className="mt-12 grid gap-5 lg:grid-cols-2">
           {contactHighlights.map((item) => {
             const Icon = item.icon;
             return (

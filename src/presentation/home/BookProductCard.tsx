@@ -105,7 +105,7 @@ export function BookProductCard({ product }: { product: ProductItem }) {
             alt={product.title}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 25vw"
-            className={`object-cover ${product.imagePosition}`}
+            className="object-contain object-center"
           />
         </div>
       </div>

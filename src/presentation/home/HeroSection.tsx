@@ -19,7 +19,7 @@ export function HeroSection() {
       description: t('about.hero.s1.desc').replace(' worldwide', ''),
     },
     {
-      image: '/images/banner-2-updated.png',
+      image: '/images/nawj.jpeg',
       title: t('about.hero.s2.title'),
       description: t('about.hero.s2.desc'),
     },

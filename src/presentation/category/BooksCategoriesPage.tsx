@@ -11,7 +11,7 @@ import { getBooks, getTopCategories } from '@/lib/home-api'
 import { BookProductCard } from '@/presentation/home/BookProductCard'
 import { StateMessageCard } from '@/presentation/home/StateMessageCard'
 
-const LIMIT = 8
+const LIMIT = 16
 const EMPTY_CATEGORIES: {
   id: string
   title: string

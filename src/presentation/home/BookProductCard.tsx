@@ -95,7 +95,7 @@ export function BookProductCard({ product }: { product: ProductItem }) {
 
   return (
     <Card
-      className="cursor-pointer overflow-hidden rounded-[12px]"
+      className="flex h-full cursor-pointer flex-col overflow-hidden rounded-[12px]"
       onClick={() => router.push(`/product-details/${product.id}`)}
     >
       <div className="px-3 pt-3">
@@ -110,28 +110,28 @@ export function BookProductCard({ product }: { product: ProductItem }) {
         </div>
       </div>
 
-      <CardContent className="px-4 pb-4 pt-3">
-        <div className="flex items-start justify-between gap-3">
-          <div>
-            <h3 className="font-display text-[18px] leading-tight text-[#202020]">
+      <CardContent className="flex flex-1 flex-col px-4 pb-4 pt-3">
+        <div className="flex min-h-[66px] items-start justify-between gap-3">
+          <div className="min-w-0">
+            <h3 className="line-clamp-2 font-display text-[18px] leading-tight text-[#202020]">
               {product.title}
             </h3>
-            <p className="mt-1 text-[14px] leading-5 text-[#6b7280]">
+            <p className="mt-1 truncate text-[14px] leading-5 text-[#6b7280]">
               {product.author}
             </p>
           </div>
-          <div className="flex items-center gap-1 pt-1 text-[14px] text-[#374151]">
+          <div className="flex shrink-0 items-center gap-1 pt-1 text-[14px] text-[#374151]">
             <Star className="h-4 w-4 fill-[#F5B301] text-[#F5B301]" />
             <span>{product.rating}</span>
           </div>
         </div>
 
         <div className="mt-3 flex items-center gap-2 text-[14px] text-[#7b7b7b]">
-          <MapPin className="h-4 w-4 text-[#459AE4]" />
-          <span>{product.location}</span>
+          <MapPin className="h-4 w-4 shrink-0 text-[#459AE4]" />
+          <span className="truncate">{product.location}</span>
         </div>
 
-        <div className="mt-3 flex items-center justify-between">
+        <div className="mt-auto flex items-center justify-between pt-3">
           <span className="text-[32px] font-semibold leading-none text-[#459AE4]">
             {product.price}
           </span>

@@ -1,12 +1,12 @@
 import SuccessPage from '@/presentation/cart/SuccessPage'
-import React from 'react'
+import { Suspense } from 'react'
 
-function page() {
+function SuccessRoute() {
   return (
-    <div>
+    <Suspense fallback={<div className="min-h-[50vh] bg-[#f7fafc]" />}>
       <SuccessPage />
-    </div>
+    </Suspense>
   )
 }
 
-export default page
+export default SuccessRoute

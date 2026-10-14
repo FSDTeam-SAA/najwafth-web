@@ -1,271 +1,168 @@
-"use client";
+'use client'
 
-import React from "react";
-import {
-  User,
-  MapPin,
-  Phone,
-  ClipboardList,
-  Wallet,
-  ShoppingCart,
-} from "lucide-react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import { useTranslation } from "react-i18next";
+import { useEffect, useRef } from 'react'
+import { Loader2, LockKeyhole } from 'lucide-react'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { useSession } from 'next-auth/react'
 
 type CartItem = {
-  _id: string;
-  quantity: number;
-  product?: {
-    _id: string;
-    title: string;
-    price: number;
-    stock: boolean;
-  };
-};
+  _id: string
+  quantity: number
+  product?: { _id: string }
+}
 
 type CartResponse = {
-  data?: {
-    items?: CartItem[];
-    totalAmount?: number;
-  };
-};
+  data?: { items?: CartItem[] }
+}
 
-const CheckoutPage = () => {
-  const { data: session } = useSession();
-  const TOKEN = session?.user?.accessToken;
-  const router = useRouter();
-  const queryClient = useQueryClient();
-  const [address, setAddress] = React.useState("Demo street");
-  const { t } = useTranslation();
+type CreatedOrder = {
+  _id: string
+}
 
-  const { data: cartResponse, isLoading } = useQuery<CartResponse>({
-    queryKey: ["cart", TOKEN],
+async function readJson(response: Response) {
+  return response.json().catch(() => null)
+}
+
+export default function CheckoutPage() {
+  const { data: session, status } = useSession()
+  const token = session?.user?.accessToken
+  const startedRef = useRef(false)
+  const orderRef = useRef<CreatedOrder | null>(null)
+
+  const cartQuery = useQuery<CartResponse>({
+    queryKey: ['cart', token],
     queryFn: async () => {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/cart`, {
-        headers: {
-          Authorization: `Bearer ${TOKEN}`,
-        },
-      });
-
-      if (!res.ok) throw new Error(t("cart.fetchFail"));
-      return res.json();
+      const response = await fetch(
+        process.env.NEXT_PUBLIC_BACKEND_API_URL + '/cart',
+        { headers: { Authorization: 'Bearer ' + token } },
+      )
+      const payload = await readJson(response)
+      if (!response.ok) throw new Error(payload?.message || 'Unable to load your cart')
+      return payload
     },
-    enabled: !!TOKEN,
-  });
+    enabled: Boolean(token),
+  })
 
-  const cartItems = cartResponse?.data?.items || [];
-  const totalAmount = cartResponse?.data?.totalAmount || 0;
+  const cartItems = cartQuery.data?.data?.items || []
 
-  const createOrderMutation = useMutation({
+  const checkoutMutation = useMutation({
     mutationFn: async () => {
-      if (!TOKEN) {
-        throw new Error(t("cart.loginPlace"));
+      if (!token) throw new Error('Please sign in to continue')
+      if (!cartItems.length) throw new Error('Your cart is empty')
+
+      let order = orderRef.current
+      if (!order) {
+        const orderResponse = await fetch(
+          process.env.NEXT_PUBLIC_BACKEND_API_URL + '/order/create',
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: 'Bearer ' + token,
+            },
+            body: JSON.stringify({
+              items: cartItems.map(item => ({
+                product: item.product?._id,
+                quantity: item.quantity || 1,
+              })),
+            }),
+          },
+        )
+        const orderPayload = await readJson(orderResponse)
+        if (!orderResponse.ok || !orderPayload?.data?._id) {
+          throw new Error(orderPayload?.message || 'Unable to create your order')
+        }
+        order = orderPayload.data as CreatedOrder
+        orderRef.current = order
       }
 
-      if (cartItems.length === 0) {
-        throw new Error(t("cart.empty"));
-      }
-
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/order/create`,
+      const paymentResponse = await fetch(
+        process.env.NEXT_PUBLIC_BACKEND_API_URL + '/payment/create',
         {
-          method: "POST",
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${TOKEN}`,
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + token,
           },
           body: JSON.stringify({
-            items: cartItems.map((item) => ({
-              product: item.product?._id,
-              quantity: item.quantity || 1,
-            })),
-            address: address || "Demo street",
+            orderId: order._id,
+            type: 'order',
+            flow: 'hosted',
           }),
         },
-      );
-
-      const result = await res.json().catch(() => null);
-
-      if (!res.ok) {
-        throw new Error(result?.message || t("cart.createOrderFail"));
+      )
+      const paymentPayload = await readJson(paymentResponse)
+      if (!paymentResponse.ok || !paymentPayload?.checkoutUrl) {
+        throw new Error(
+          paymentPayload?.error ||
+            paymentPayload?.message ||
+            'Unable to open Stripe Checkout',
+        )
       }
-
-      return result;
+      return paymentPayload.checkoutUrl as string
     },
-    onSuccess: () => {
-      toast.success(t("cart.orderCreated"));
-      queryClient.invalidateQueries({ queryKey: ["cart", TOKEN] });
-      queryClient.invalidateQueries({ queryKey: ["my-order", TOKEN] });
-      router.push("/order");
+    onSuccess: checkoutUrl => {
+      window.location.assign(checkoutUrl)
     },
-    onError: (error: Error) => {
-      toast.error(error.message || "Something went wrong");
-    },
-  });
+  })
 
-  if (isLoading) {
-    return (
-      <div className="bg-gray-50 py-10 px-4">
-        <div className="max-w-4xl mx-auto bg-white border border-gray-100 rounded-xl p-10 shadow-sm">
-          <div className="mb-10 space-y-3">
-            <div className="h-10 w-48 animate-pulse rounded bg-[#e8eef4]" />
-            <div className="h-4 w-72 max-w-full animate-pulse rounded bg-[#e8eef4]" />
-          </div>
+  useEffect(() => {
+    if (
+      token &&
+      cartItems.length > 0 &&
+      !startedRef.current &&
+      checkoutMutation.isIdle
+    ) {
+      startedRef.current = true
+      checkoutMutation.mutate()
+    }
+  }, [token, cartItems.length, checkoutMutation])
 
-          <div className="mb-10 grid grid-cols-1 gap-4 md:grid-cols-3">
-            {[1, 2, 3].map((item) => (
-              <div key={`checkout-input-skeleton-${item}`} className="space-y-2">
-                <div className="h-5 w-32 animate-pulse rounded bg-[#e8eef4]" />
-                <div className="h-11 w-full animate-pulse rounded-lg bg-[#e8eef4]" />
-              </div>
-            ))}
-          </div>
-
-          <div className="mb-10">
-            <div className="mb-6 h-6 w-44 animate-pulse rounded bg-[#e8eef4]" />
-            <div className="space-y-3 border-b border-gray-100 py-4">
-              {[1, 2, 3].map((item) => (
-                <div
-                  key={`checkout-summary-skeleton-${item}`}
-                  className="flex justify-between gap-4"
-                >
-                  <div className="h-4 w-44 animate-pulse rounded bg-[#e8eef4]" />
-                  <div className="h-4 w-20 animate-pulse rounded bg-[#e8eef4]" />
-                </div>
-              ))}
-              <div className="flex justify-between gap-4">
-                <div className="h-4 w-24 animate-pulse rounded bg-[#e8eef4]" />
-                <div className="h-4 w-24 animate-pulse rounded bg-[#e8eef4]" />
-              </div>
-            </div>
-            <div className="flex justify-between gap-4 py-4">
-              <div className="h-6 w-20 animate-pulse rounded bg-[#e8eef4]" />
-              <div className="h-6 w-28 animate-pulse rounded bg-[#e8eef4]" />
-            </div>
-          </div>
-
-          <div className="mb-10">
-            <div className="mb-6 h-6 w-32 animate-pulse rounded bg-[#e8eef4]" />
-            <div className="flex items-center justify-center rounded-xl bg-gray-50 p-8">
-              <div className="h-10 w-32 animate-pulse rounded bg-[#e8eef4]" />
-            </div>
-          </div>
-
-          <div className="h-14 w-full animate-pulse rounded-lg bg-[#e8eef4]" />
-        </div>
-      </div>
-    );
+  if (status === 'loading' || cartQuery.isLoading || checkoutMutation.isPending) {
+    return <PaymentLoading />
+  }
+  if (!token) {
+    return <PaymentMessage title="Sign in to checkout" description="Please sign in before paying for your order." />
+  }
+  if (cartQuery.error) {
+    return <PaymentMessage title="Unable to load your cart" description={cartQuery.error.message} />
+  }
+  if (!cartItems.length) {
+    return <PaymentMessage title="Your cart is empty" description="Add a book to your cart before checking out." />
+  }
+  if (checkoutMutation.error) {
+    return <PaymentMessage title="Unable to open secure payment" description={checkoutMutation.error.message} />
   }
 
+  return <PaymentLoading />
+}
+
+function PaymentLoading() {
   return (
-    <div className="bg-gray-50 py-10 px-4">
-      <div className="max-w-4xl mx-auto bg-white border border-gray-100 rounded-xl p-10 shadow-sm">
-        <div className="mb-10">
-          <h1 className="text-4xl font-serif text-gray-800">{t("cart.checkoutTitle")}</h1>
-          <p className="text-gray-500 mt-1">{t("cart.checkoutSub")}</p>
+    <main className="flex min-h-screen items-center justify-center bg-[#f7fafc] px-4">
+      <div className="max-w-md rounded-2xl border border-[#dce8f2] bg-white p-8 text-center shadow-sm">
+        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#eaf5ff] text-[#287dc2]">
+          <LockKeyhole className="h-7 w-7" />
         </div>
-
-        {/* Inputs */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
-          <div className="space-y-2">
-            <label className="flex items-center gap-2 text-gray-700 font-bold">
-              <User size={18} className="text-blue-500" /> {t("account.fullName")}
-            </label>
-            <input
-              type="text"
-              placeholder="Tanjila Hafsa Lata"
-              className="w-full bg-gray-100 border-none rounded-lg p-3 text-sm text-gray-500"
-            />
-          </div>
-          <div className="space-y-2">
-            <label className="flex items-center gap-2 text-gray-700 font-bold">
-              <MapPin size={18} className="text-blue-500" /> {t("account.address")}
-            </label>
-            <input
-              type="text"
-              value={address}
-              onChange={(event) => setAddress(event.target.value)}
-              placeholder="Demo street"
-              className="w-full bg-gray-100 border-none rounded-lg p-3 text-sm text-gray-500"
-            />
-          </div>
-          <div className="space-y-2">
-            <label className="flex items-center gap-2 text-gray-700 font-bold">
-              <Phone size={18} className="text-blue-500" /> {t("account.phoneNumber")}
-            </label>
-            <input
-              type="text"
-              placeholder="01810641003"
-              className="w-full bg-gray-100 border-none rounded-lg p-3 text-sm text-gray-500"
-            />
-          </div>
-        </div>
-
-        {/* {t("order.orderSummary")} */}
-        <div className="mb-10">
-          <h3 className="flex items-center gap-2 text-gray-700 font-bold mb-4 underline decoration-blue-500 underline-offset-8">
-            <ClipboardList size={18} className="text-blue-500" /> {t("order.orderSummary")}
-          </h3>
-          <div className="space-y-2 py-4 border-b border-gray-100">
-            {cartItems.length > 0 ? (
-              cartItems.map((item) => (
-                <div
-                  key={item._id}
-                  className="flex justify-between gap-4 text-gray-500"
-                >
-                  <span>
-                    {item.product?.title || t("cart.untitled")} x {item.quantity || 1}
-                  </span>
-                  <span>
-                    ৳
-                    {(
-                      Number(item.product?.price || 0) * (item.quantity || 1)
-                    ).toFixed(2)}
-                  </span>
-                </div>
-              ))
-            ) : (
-              <div className="text-gray-400">{t("cart.empty")}</div>
-            )}
-            <div className="flex justify-between text-gray-500">
-              <span>{t("order.subtotal")}</span>
-              <span>৳{Number(totalAmount).toFixed(2)}</span>
-            </div>
-          </div>
-          <div className="flex justify-between py-4 text-xl font-bold">
-            <span className="text-gray-800">{t("order.total")}</span>
-            <span className="text-blue-500">
-              ৳{Number(totalAmount).toFixed(2)}
-            </span>
-          </div>
-        </div>
-
-        {/* {t("order.payment")} */}
-        <div className="mb-10">
-          <h3 className="flex items-center gap-2 text-gray-700 font-bold mb-6">
-            <Wallet size={18} className="text-blue-500" /> {t("order.payment")}
-          </h3>
-          <div className="bg-gray-50 rounded-xl p-8 flex justify-center items-center">
-            <h2 className="text-[#5F83A2] font-black text-4xl italic tracking-tighter">
-              Stripe
-            </h2>
-          </div>
-        </div>
-
-        <button
-          disabled={createOrderMutation.isPending || cartItems.length === 0}
-          onClick={() => createOrderMutation.mutate()}
-          className="w-full bg-[linear-gradient(90deg,#5F83A2_0%,#5E92C0_100%)] disabled:bg-none disabled:bg-gray-400 disabled:shadow-none text-white rounded-lg py-4 font-bold flex items-center justify-center gap-2 shadow-lg shadow-[#5F83A2]/20 hover:opacity-95 disabled:hover:opacity-100"
-        >
-          <ShoppingCart size={18} />{" "}
-          {createOrderMutation.isPending ? t("cart.placingOrder") : t("cart.placeOrder")}
-        </button>
+        <Loader2 className="mx-auto mt-5 h-8 w-8 animate-spin text-[#459AE4]" />
+        <h1 className="mt-4 font-display text-3xl text-[#1f2937]">
+          Opening Stripe Checkout
+        </h1>
+        <p className="mt-3 text-[#64748b]">
+          Please wait while we securely redirect you to payment.
+        </p>
       </div>
-    </div>
-  );
-};
+    </main>
+  )
+}
 
-export default CheckoutPage;
+function PaymentMessage({ title, description }: { title: string; description: string }) {
+  return (
+    <main className="min-h-screen bg-[#f7fafc] px-4 py-16">
+      <div className="mx-auto max-w-lg rounded-2xl border border-[#dce8f2] bg-white p-8 text-center shadow-sm">
+        <h1 className="font-display text-3xl text-[#1f2937]">{title}</h1>
+        <p className="mt-3 text-[#64748b]">{description}</p>
+      </div>
+    </main>
+  )
+}

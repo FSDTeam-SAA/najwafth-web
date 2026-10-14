@@ -17,6 +17,8 @@ export type HomeCategoryItem = {
   title: string
   image: string
   imagePosition: string
+  level?: number
+  parentName?: string | null
 }
 
 export type HomeCategoriesApiResponse = {

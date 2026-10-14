@@ -49,6 +49,10 @@ export function getTopCategories() {
   return fetchJson<HomeCategoriesApiResponse>('/api/home/categories')
 }
 
+export function getAllCategories() {
+  return fetchJson<HomeCategoriesApiResponse>('/api/categories')
+}
+
 export function getHomeReviews() {
   return fetchJson<HomeReviewsApiResponse>('/api/home/reviews')
 }

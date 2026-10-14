@@ -78,7 +78,7 @@ export function ExploreCategoriesSection({
               <CategoryTile
                 category={romance}
                 href={
-                  romance ? `/categories?category=${romance.id}` : undefined
+                  romance ? `/categories/${romance.id}` : undefined
                 }
                 className="lg:mt-3"
               />
@@ -95,7 +95,7 @@ export function ExploreCategoriesSection({
               <CategoryTile
                 category={fiction}
                 href={
-                  fiction ? `/categories?category=${fiction.id}` : undefined
+                  fiction ? `/categories/${fiction.id}` : undefined
                 }
                 className="lg:mt-3"
               />
@@ -105,28 +105,28 @@ export function ExploreCategoriesSection({
               <CategoryTile
                 category={classic}
                 href={
-                  classic ? `/categories?category=${classic.id}` : undefined
+                  classic ? `/categories/${classic.id}` : undefined
                 }
                 compact
               />
               <CategoryTile
                 category={fantasy}
                 href={
-                  fantasy ? `/categories?category=${fantasy.id}` : undefined
+                  fantasy ? `/categories/${fantasy.id}` : undefined
                 }
                 compact
               />
               <CategoryTile
                 category={adventure}
                 href={
-                  adventure ? `/categories?category=${adventure.id}` : undefined
+                  adventure ? `/categories/${adventure.id}` : undefined
                 }
                 compact
               />
               <CategoryTile
                 category={mystery}
                 href={
-                  mystery ? `/categories?category=${mystery.id}` : undefined
+                  mystery ? `/categories/${mystery.id}` : undefined
                 }
                 compact
               />
